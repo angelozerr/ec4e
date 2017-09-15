@@ -4,16 +4,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.eclipse.ec4e.services.handlers.EditorConfigHandlerAdapter;
 import org.eclipse.ec4e.services.handlers.IEditorConfigHandler;
 
-public class EditorConfigParser {
+public class EditorConfigParser<Section, Option> {
 
 	private static final int MIN_BUFFER_SIZE = 10;
 	private static final int DEFAULT_BUFFER_SIZE = 1024;
-	private static final IEditorConfigHandler<Object, Object> DEFAULT_HANDLER = new EditorConfigHandlerAdapter<Object, Object>();
 
-	private final IEditorConfigHandler<Object, Object> handler;
+	private final IEditorConfigHandler<Section, Option> handler;
 	private Reader reader;
 	private char[] buffer;
 	private int bufferOffset;
@@ -26,17 +24,13 @@ public class EditorConfigParser {
 	private int captureStart;
 
 	private boolean tolerant;
+	private Section currentSection;
 
-	public EditorConfigParser() {
-		this(DEFAULT_HANDLER);
-	}
-
-	@SuppressWarnings("unchecked")
-	public EditorConfigParser(IEditorConfigHandler<?, ?> handler) {
+	public EditorConfigParser(IEditorConfigHandler<Section, Option> handler) {
 		if (handler == null) {
 			throw new NullPointerException("handler is null");
 		}
-		this.handler = (IEditorConfigHandler<Object, Object>) handler;
+		this.handler = handler;
 		handler.setParser(this);
 		setTolerant(false);
 	}
@@ -50,8 +44,8 @@ public class EditorConfigParser {
 	}
 
 	/**
-	 * Parses the given input string. The input must contain a valid
-	 * .editorconfig value, optionally padded with whitespace.
+	 * Parses the given input string. The input must contain a valid .editorconfig
+	 * value, optionally padded with whitespace.
 	 *
 	 * @param string
 	 *            the input string, must be valid .editorconfig
@@ -72,13 +66,13 @@ public class EditorConfigParser {
 	}
 
 	/**
-	 * Reads the entire input from the given reader and parses it as
-	 * .editorconfig. The input must contain a valid .editorconfig value,
-	 * optionally padded with whitespace.
+	 * Reads the entire input from the given reader and parses it as .editorconfig.
+	 * The input must contain a valid .editorconfig value, optionally padded with
+	 * whitespace.
 	 * <p>
 	 * Characters are read in chunks into a default-sized input buffer. Hence,
-	 * wrapping a reader in an additional <code>BufferedReader</code> likely
-	 * won't improve reading performance.
+	 * wrapping a reader in an additional <code>BufferedReader</code> likely won't
+	 * improve reading performance.
 	 * </p>
 	 *
 	 * @param reader
@@ -93,12 +87,12 @@ public class EditorConfigParser {
 	}
 
 	/**
-	 * Reads the entire input from the given reader and parses it as JSON. The
-	 * input must contain a valid JSON value, optionally padded with whitespace.
+	 * Reads the entire input from the given reader and parses it as JSON. The input
+	 * must contain a valid JSON value, optionally padded with whitespace.
 	 * <p>
-	 * Characters are read in chunks into an input buffer of the given size.
-	 * Hence, wrapping a reader in an additional <code>BufferedReader</code>
-	 * likely won't improve reading performance.
+	 * Characters are read in chunks into an input buffer of the given size. Hence,
+	 * wrapping a reader in an additional <code>BufferedReader</code> likely won't
+	 * improve reading performance.
 	 * </p>
 	 *
 	 * @param reader
@@ -166,7 +160,7 @@ public class EditorConfigParser {
 			readComment();
 			break;
 		case '[':
-			readSection();
+			currentSection = readSection();
 			break;
 		default:
 			readOption();
@@ -179,8 +173,8 @@ public class EditorConfigParser {
 		} while (!isEndOfText() && !isNewLine());
 	}
 
-	private void readSection() throws IOException {
-		Object section = handler.startSection();
+	private Section readSection() throws IOException {
+		Section section = handler.startSection();
 		read();
 		if (isEndOfText()) {
 			throw new SectionNotClosedException(getLocation());
@@ -188,7 +182,7 @@ public class EditorConfigParser {
 		skipWhiteSpace();
 		if (readChar(']')) {
 			handler.endSection(section);
-			return;
+			return section;
 		}
 		// read pattern of the given section
 		readPattern(section);
@@ -197,9 +191,10 @@ public class EditorConfigParser {
 			throw new SectionNotClosedException(getLocation());
 		}
 		handler.endSection(section);
+		return section;
 	}
 
-	private void readPattern(Object section) throws IOException {
+	private void readPattern(Section section) throws IOException {
 		// read pattern
 		boolean multiPattern = readChar('{');
 		if (multiPattern) {
@@ -209,7 +204,7 @@ public class EditorConfigParser {
 		}
 	}
 
-	private void readMultiPatterns(Object section) throws IOException {
+	private void readMultiPatterns(Section section) throws IOException {
 		handler.startMultiPatternSection(section);
 		int i = 0;
 		do {
@@ -224,7 +219,7 @@ public class EditorConfigParser {
 		handler.endMultiPatternSection(section);
 	}
 
-	private void readSinglePattern(Object section) throws IOException {
+	private void readSinglePattern(Section section) throws IOException {
 		handler.startPattern(section, 0);
 		String pattern = readString(StopReading.SimplePattern);
 		handler.endPattern(section, pattern, 0);
@@ -271,7 +266,7 @@ public class EditorConfigParser {
 	}
 
 	private void readOption() throws IOException {
-		Object option = handler.startOption();
+		Option option = handler.startOption();
 		// option name
 		skipWhiteSpace();
 		handler.startOptionName(option);
@@ -289,6 +284,7 @@ public class EditorConfigParser {
 			throw new OptionValueMissingException(name, getLocation());
 		}
 		handler.endOptionValue(option, value, name);
+		handler.endOption(option, currentSection);
 	}
 
 	private void readEscape() throws IOException {

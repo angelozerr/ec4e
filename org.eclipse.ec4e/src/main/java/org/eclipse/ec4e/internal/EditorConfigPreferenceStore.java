@@ -1,61 +1,90 @@
 package org.eclipse.ec4e.internal;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.io.File;
+import java.util.Collection;
 
+import org.eclipse.ec4e.services.EditorConfigException;
+import org.eclipse.ec4e.services.dom.Option;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
-import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class EditorConfigPreferenceStore implements IPreferenceStore {
 
+	private static final String EDITOR_SPACES_FOR_TABS = AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS;
+	private static final String EDITOR_TAB_WIDTH = AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH;
+
 	private final ITextEditor textEditor;
-	private ChainedPreferenceStore newStore;
+	private IPreferenceStore editorStore;
+
+	private boolean spacesForTabs;
+	private int tabWidth;
 
 	public EditorConfigPreferenceStore(ITextEditor textEditor) throws Exception {
 		this.textEditor = textEditor;
+		this.editorStore = PreferenceStoreHelper.contributeToPreferenceStore(textEditor, this);
+	}
 
-		Field field = AbstractTextEditor.class.getDeclaredField("fPreferenceStore");
-		field.setAccessible(true);
-		IPreferenceStore oldStore = (IPreferenceStore) field.get(textEditor);
-		newStore = new ChainedPreferenceStore(new IPreferenceStore[] { this, oldStore });
-
-		// field.set(textEditor, newStore);
-
-		Method m = AbstractTextEditor.class.getDeclaredMethod("setPreferenceStore",
-				new Class[] { IPreferenceStore.class });
-		m.setAccessible(true);
-		m.invoke(textEditor, newStore);
-
-		Field f = AbstractTextEditor.class.getDeclaredField("fConfiguration");
-		f.setAccessible(true);
-		SourceViewerConfiguration oldConfig = (SourceViewerConfiguration) f.get(textEditor);
-		if (oldConfig instanceof TextSourceViewerConfiguration) {
-			Field f2 = TextSourceViewerConfiguration.class.getDeclaredField("fPreferenceStore");
-			f2.setAccessible(true);
-			f2.set(oldConfig, newStore);
-		}
+	public void setEditorStore(IPreferenceStore editorStore) {
+		this.editorStore = editorStore;
 	}
 
 	public void applyConfig() {
-		newStore.firePropertyChangeEvent(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH, 0, 50);
-		newStore.firePropertyChangeEvent(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS, false, true);
+		File file = getFile(textEditor);
+		if (file != null) {
+			try {
+				Collection<Option> options = IDEEditorConfigManager.getInstance().getOptions(file);
+				for (Option option : options) {
+
+					if ("indent_style".equals(option.getName())) {
+						boolean oldSpacesForTabs = spacesForTabs;
+						spacesForTabs = "space".equals(option.getValue());
+						if (oldSpacesForTabs != spacesForTabs) {
+							editorStore.firePropertyChangeEvent(EDITOR_SPACES_FOR_TABS, oldSpacesForTabs,
+									spacesForTabs);
+						}
+					} else if ("indent_size".equals(option.getName())) {
+						int oldTabWidth = tabWidth;
+						tabWidth = Integer.parseInt(option.getValue());
+						if (oldTabWidth != tabWidth) {
+							editorStore.firePropertyChangeEvent(EDITOR_TAB_WIDTH, oldTabWidth, tabWidth);
+						}
+					}
+				}
+
+				// newStore.firePropertyChangeEvent(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH,
+				// 0,
+				// 50);
+				// newStore.firePropertyChangeEvent(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS,
+				// false, true);
+			} catch (EditorConfigException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	private static File getFile(ITextEditor textEditor) {
+		IEditorInput input = textEditor.getEditorInput();
+		if (input instanceof IFileEditorInput) {
+			return ((IFileEditorInput) input).getFile().getLocation().toFile();
+		}
+		return null;
 	}
 
 	@Override
 	public void addPropertyChangeListener(IPropertyChangeListener listener) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean contains(String name) {
-		if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS.equals(name)) {
+		if (EDITOR_SPACES_FOR_TABS.equals(name)) {
+			return true;
+		} else if (EDITOR_TAB_WIDTH.equals(name)) {
 			return true;
 		}
 		return false;
@@ -63,21 +92,19 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 
 	@Override
 	public void firePropertyChangeEvent(String name, Object oldValue, Object newValue) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean getBoolean(String name) {
-		if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS.equals(name)) {
-			return true;
+		if (EDITOR_SPACES_FOR_TABS.equals(name)) {
+			return spacesForTabs;
 		}
 		return false;
 	}
 
 	@Override
 	public boolean getDefaultBoolean(String name) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -125,7 +152,9 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 
 	@Override
 	public int getInt(String name) {
-		// TODO Auto-generated method stub
+		if (EDITOR_TAB_WIDTH.equals(name)) {
+			return tabWidth;
+		}
 		return 0;
 	}
 

@@ -19,7 +19,7 @@ import org.osgi.framework.BundleContext;
 public class EditorConfigPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.ini.editorconfig"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.ec4e"; //$NON-NLS-1$
 
 	// The shared instance
 	private static EditorConfigPlugin plugin;

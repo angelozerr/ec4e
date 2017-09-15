@@ -8,18 +8,18 @@ import org.eclipse.ec4e.services.validator.ISeverityProvider;
 import org.eclipse.ec4e.services.validator.ValidationEditorConfigHandler;
 
 /**
- * EditorConfig utilities useful for IDE.
+ * EditorConfig service helpful for IDE.
  *
  */
-public class EditorConfig {
+public class EditorConfigService {
 
 	public static void validate(String content, IReporter reporter) {
 		validate(content, reporter, null);
 	}
 
 	/**
-	 * Validate the given content of an .editorconfig and report errors in the
-	 * given reporter. This validator is able to validate:
+	 * Validate the given content of an .editorconfig and report errors in the given
+	 * reporter. This validator is able to validate:
 	 * 
 	 * <ul>
 	 * <li>Syntax error like section which are not closed.</li>

@@ -143,16 +143,14 @@ public class EditorTracker implements IWindowListener, IPageListener, IPartListe
 			EditorConfigPreferenceStore preferenceStore = preferencesStores.get(editor);
 			if (preferenceStore == null) {
 				try {
-					preferenceStore = new EditorConfigPreferenceStore(editor);
+					preferenceStore = new EditorConfigPreferenceStore(editor);					
 					preferencesStores.put(editor, preferenceStore);
 				} catch (Exception e) {
 					e.printStackTrace();
 					return;
 				}
 			}
-			if (preferenceStore != null) {
-				preferenceStore.applyConfig();
-			}
+			preferenceStore.applyConfig();
 		}
 	}
 

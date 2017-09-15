@@ -2,55 +2,55 @@ package org.eclipse.ec4e.services.handlers;
 
 import org.eclipse.ec4e.services.parser.ParseException;
 
-public class EditorConfigHandlerAdapter<S, O> extends AbstractEditorConfigHandler<S, O> {
+public class EditorConfigHandlerAdapter<Section, Option> extends AbstractEditorConfigHandler<Section, Option> {
 
 	@Override
-	public S startSection() {
+	public Section startSection() {
 		return null;
 	}
 
 	@Override
-	public void endSection(S section) {
+	public void endSection(Section section) {
 
 	}
 
 	@Override
-	public void startMultiPatternSection(S section) {
+	public void startMultiPatternSection(Section section) {
 
 	}
 
 	@Override
-	public void endMultiPatternSection(S section) {
+	public void endMultiPatternSection(Section section) {
 
 	}
 
 	@Override
-	public void startPattern(S section, int i) {
+	public void startPattern(Section section, int i) {
 
 	}
 
 	@Override
-	public void endPattern(S section, String pattern, int i) {
+	public void endPattern(Section section, String pattern, int i) {
 
 	}
 
 	@Override
-	public O startOption() {
+	public Option startOption() {
 		return null;
 	}
 
 	@Override
-	public void endOption(O option) {
+	public void endOption(Option option, Section section) {
 
 	}
 
 	@Override
-	public void startOptionName(O option) {
+	public void startOptionName(Option option) {
 
 	}
 
 	@Override
-	public void endOptionName(O option, String name) {
+	public void endOptionName(Option option, String name) {
 
 	}
 

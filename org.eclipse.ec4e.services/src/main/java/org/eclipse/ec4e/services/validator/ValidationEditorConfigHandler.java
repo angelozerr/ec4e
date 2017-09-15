@@ -2,7 +2,7 @@ package org.eclipse.ec4e.services.validator;
 
 import java.text.MessageFormat;
 
-import org.eclipse.ec4e.services.EditorConfig;
+import org.eclipse.ec4e.services.EditorConfigService;
 import org.eclipse.ec4e.services.handlers.EditorConfigHandlerAdapter;
 import org.eclipse.ec4e.services.model.ConfigPropertyException;
 import org.eclipse.ec4e.services.parser.ErrorType;
@@ -30,7 +30,7 @@ public class ValidationEditorConfigHandler extends EditorConfigHandlerAdapter<Ob
 	@Override
 	public void endOptionName(Object option, String name) {
 		// Validate option name
-		if (!EditorConfig.isOptionExists(name)) {
+		if (!EditorConfigService.isOptionExists(name)) {
 			Location location = getLocation();
 			ErrorType errorType = ErrorType.OptionNameNotExists;
 			reporter.addError(MessageFormat.format(OPTION_NAME_NOT_EXISTS_MESSAGE, name), location, null, errorType,
@@ -42,7 +42,7 @@ public class ValidationEditorConfigHandler extends EditorConfigHandlerAdapter<Ob
 	public void endOptionValue(Object option, String value, String name) {
 		// Validate value of the option name
 		try {
-			EditorConfig.validateOptionValue(name, value);
+			EditorConfigService.validateOptionValue(name, value);
 		} catch (ConfigPropertyException e) {
 			Location location = getLocation();
 			ErrorType errorType = ErrorType.OptionValueType;
