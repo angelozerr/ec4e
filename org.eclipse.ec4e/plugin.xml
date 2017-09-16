@@ -132,6 +132,14 @@
    </extension>
    
    <extension
+         point="org.eclipse.tm4e.ui.snippets">
+      <snippet
+            name="EditorConfig"
+            path="snippets/editorconfig.txt"
+            scopeName="source.ini">
+      </snippet>
+   </extension>
+   <extension
 	       point="org.eclipse.ui.startup">	
 	       <startup class="org.eclipse.ec4e.internal.EditorConfigStartup" />       
    </extension>
