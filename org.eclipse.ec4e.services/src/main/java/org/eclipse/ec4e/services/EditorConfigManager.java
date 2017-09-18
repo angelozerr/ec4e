@@ -1,15 +1,13 @@
 package org.eclipse.ec4e.services;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.ec4e.services.dom.EditorConfig;
 import org.eclipse.ec4e.services.dom.Option;
@@ -45,7 +43,7 @@ public class EditorConfigManager {
 		this.version = version;
 	}
 
-	public Collection<Option> getOptions(File file) throws EditorConfigException {
+	public Collection<Option> getOptions(File file, Set<File> explicitRootDirs) throws EditorConfigException {
 		Map<String, Option> oldOptions = Collections.emptyMap();
 		Map<String, Option> options = new LinkedHashMap<>();
 
@@ -55,19 +53,20 @@ public class EditorConfigManager {
 			while (dir != null && !root) {
 				File configFile = new File(dir, configFilename);
 				if (configFile.exists()) {
-					try (BufferedReader reader = new BufferedReader(
-							new InputStreamReader(new FileInputStream(configFile), "UTF-8"));) {
-						EditorConfig config = EditorConfig.load(reader);
-						root = config.isRoot();						
-						List<Section> sections = config.getSections();
-						for (Section section : sections) {
+					EditorConfig config = EditorConfig.load(configFile);
+					root = config.isRoot();
+					List<Section> sections = config.getSections();
+					for (Section section : sections) {
+						if (section.match(file)) {
+							// Section matches the editor file, collect options of the section
 							List<Option> o = section.getOptions();
 							for (Option option : o) {
-								options.put(option.getName(), option);								
+								options.put(option.getName(), option);
 							}
-						}						
+						}
 					}
 				}
+				root |= explicitRootDirs != null && explicitRootDirs.contains(dir);
 				dir = dir.getParentFile();
 			}
 		} catch (IOException e) {

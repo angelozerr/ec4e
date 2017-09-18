@@ -13,7 +13,7 @@ class EditorConfigHandler extends AbstractEditorConfigHandler<Section, Option> {
 
 	@Override
 	public Section startSection() {
-		return new Section();
+		return new Section(editorConfig);
 	}
 
 	@Override

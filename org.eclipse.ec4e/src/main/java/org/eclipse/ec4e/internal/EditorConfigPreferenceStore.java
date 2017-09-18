@@ -36,7 +36,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 		File file = getFile(textEditor);
 		if (file != null) {
 			try {
-				Collection<Option> options = IDEEditorConfigManager.getInstance().getOptions(file);
+				Collection<Option> options = IDEEditorConfigManager.getInstance().getOptions(file, null);
 				for (Option option : options) {
 
 					if ("indent_style".equals(option.getName())) {

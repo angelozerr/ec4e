@@ -1,6 +1,10 @@
 package org.eclipse.ec4e.services.dom;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +17,29 @@ public class EditorConfig {
 
 	private final List<Section> sections;
 
+	private File configFile;
+
 	public EditorConfig() {
 		this.sections = new ArrayList<>();
+	}
+
+	public static EditorConfig load(File configFile) throws IOException {
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(new FileInputStream(configFile), "UTF-8"));) {
+			EditorConfig config = EditorConfig.load(reader);
+			config.configFile = configFile;
+			return config;
+		}
 	}
 
 	public static EditorConfig load(Reader reader) throws IOException {
 		EditorConfigHandler handler = new EditorConfigHandler();
 		new EditorConfigParser<Section, Option>(handler).parse(reader);
 		return handler.getEditorConfig();
+	}
+
+	public File getConfigFile() {
+		return configFile;
 	}
 
 	public void addSection(Section section) {
