@@ -69,6 +69,7 @@ public class Section {
 			s.append(patterns.get(0));
 		} else {
 			int i = 0;
+			s.append("{");
 			for (String pattern : patterns) {
 				if (i > 0) {
 					s.append(",");
@@ -76,6 +77,7 @@ public class Section {
 				s.append(pattern);
 				i++;
 			}
+			s.append("}");
 		}
 		return s.toString();
 	}
