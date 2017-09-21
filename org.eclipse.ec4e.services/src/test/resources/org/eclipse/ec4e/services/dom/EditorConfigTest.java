@@ -3,6 +3,7 @@ package org.eclipse.ec4e.services.dom;
 import java.io.IOException;
 import java.io.StringReader;
 
+import org.eclipse.ec4e.services.model.EditorConfig;
 import org.junit.Assert;
 import org.junit.Test;
 
