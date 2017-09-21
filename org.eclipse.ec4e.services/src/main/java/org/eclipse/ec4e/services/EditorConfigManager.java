@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.ec4e.services.dom.EditorConfig;
-import org.eclipse.ec4e.services.dom.Option;
-import org.eclipse.ec4e.services.dom.Section;
+import org.eclipse.ec4e.services.model.EditorConfig;
+import org.eclipse.ec4e.services.model.Option;
+import org.eclipse.ec4e.services.model.Section;
 
 public class EditorConfigManager {
 

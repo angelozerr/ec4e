@@ -123,7 +123,7 @@
       </scopeNameContentTypeBinding>
    </extension>
    
-      <extension
+   <extension
          point="org.eclipse.tm4e.languageconfiguration.languageConfigurations">
       <languageConfiguration
             contentTypeId="org.eclipse.ec4e.editorconfig"
@@ -139,6 +139,15 @@
             scopeName="source.ini">
       </snippet>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.genericeditor.contentAssistProcessors">
+      <contentAssistProcessor
+            class="org.eclipse.ec4e.internal.completion.EditorConfigContentAssistProcessor"
+            contentType="org.eclipse.ec4e.editorconfig">
+      </contentAssistProcessor>
+   </extension>
+      
    <extension
 	       point="org.eclipse.ui.startup">	
 	       <startup class="org.eclipse.ec4e.internal.EditorConfigStartup" />       

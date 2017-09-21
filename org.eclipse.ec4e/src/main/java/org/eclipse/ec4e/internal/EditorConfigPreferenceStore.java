@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Collection;
 
 import org.eclipse.ec4e.services.EditorConfigException;
-import org.eclipse.ec4e.services.dom.Option;
+import org.eclipse.ec4e.services.model.Option;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.IEditorInput;

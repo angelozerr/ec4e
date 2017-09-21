@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.eclipse.ec4e.services.handlers.IEditorConfigHandler;
+import org.eclipse.ec4e.services.parser.handlers.IEditorConfigHandler;
 
 public class EditorConfigParser<Section, Option> {
 
