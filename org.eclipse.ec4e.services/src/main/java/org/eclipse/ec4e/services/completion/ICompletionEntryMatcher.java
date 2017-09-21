@@ -14,9 +14,9 @@ package org.eclipse.ec4e.services.completion;
  * Matcher for completion entry.
  * 
  */
-public interface ICompletionMatcher {
+public interface ICompletionEntryMatcher {
 
-	public static ICompletionMatcher LCS = new ICompletionMatcher() {
+	public static ICompletionEntryMatcher LCS = new ICompletionEntryMatcher() {
 
 		@Override
 		public int[] bestSubsequence(String completion, String token) {
@@ -25,7 +25,7 @@ public interface ICompletionMatcher {
 
 	};
 	
-	public static ICompletionMatcher START_WITH_MATCHER = new ICompletionMatcher() {
+	public static ICompletionEntryMatcher START_WITH_MATCHER = new ICompletionEntryMatcher() {
 
 		@Override
 		public int[] bestSubsequence(String completion, String token) {

@@ -22,44 +22,11 @@ import java.util.Map;
 
 public abstract class ConfigPropertyType<T> implements Comparable<ConfigPropertyType<T>> {
 
-	public static class Root extends ConfigPropertyType<Boolean> {
-		@Override
-		public String getId() {
-			return "ROOT";
-		}
-
-		@Override
-		public String getName() {
-			return "root";
-		}
-
-		@Override
-		public String getDisplayLabel() {
-			return "root";
-		}
-
-		@Override
-		public ValueParser<Boolean> getValueParser() {
-			return ValueParser.BOOLEAN_VALUE_PARSER;
-		}
-
-		@Override
-		public ValueRenderer getValueRenderer() {
-			return ValueRenderer.BOOLEAN_VALUE_RENDERER;
-		}
-
-		@Override
-		public ValueValidator<Boolean> getValueValidator() {
-			return ValueValidator.BOOLEAN_VALUE_VALIDATOR;
-		}
-
-		@Override
-		public void accept(final ConfigPropertyVisitor visitor, final ConfigProperty<Boolean> property) {
-		}
-
-	}
+	private static final String[] BOOLEAN_POSSIBLE_VALUES = new String[] { "true", "false" };
 
 	public static class IndentStyle extends ConfigPropertyType<IndentStyleOption> {
+
+		private static final String[] POSSIBLE_VALUES = new String[] { "tab", "space" };
 
 		@Override
 		public String getId() {
@@ -73,7 +40,7 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 		@Override
 		public String getDisplayLabel() {
-			return "Indent Style";
+			return "set to tab or space to use hard tabs or soft tabs respectively.";
 		}
 
 		@Override
@@ -95,9 +62,18 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 		public void accept(final ConfigPropertyVisitor visitor, final ConfigProperty<IndentStyleOption> property) {
 			visitor.visitIndentStyle(property);
 		}
+
+		@Override
+		public String[] getPossibleValues() {
+			return POSSIBLE_VALUES;
+		}
+
 	}
 
 	public static class IndentSize extends ConfigPropertyType<Integer> {
+
+		private static final String[] POSSIBLE_VALUES = new String[] { "tab" };
+
 		@Override
 		public String getId() {
 			return "INDENT_SIZE";
@@ -110,7 +86,7 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 		@Override
 		public String getDisplayLabel() {
-			return "Indent Size";
+			return "a whole number defining the number of columns used for each indentation level and the width of soft tabs (when supported). When set to tab, the value of tab_width (if specified) will be used.";
 		}
 
 		@Override
@@ -127,9 +103,16 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 		public void accept(final ConfigPropertyVisitor visitor, final ConfigProperty<Integer> property) {
 			visitor.visitIndentSize(property);
 		}
+
+		@Override
+		public String[] getPossibleValues() {
+			return POSSIBLE_VALUES;
+		}
+
 	}
 
 	public static class TabWidth extends ConfigPropertyType<Integer> {
+		
 		@Override
 		public String getId() {
 			return "TAB_WIDTH";
@@ -142,7 +125,7 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 		@Override
 		public String getDisplayLabel() {
-			return "Tab Width";
+			return "a whole number defining the number of columns used to represent a tab character. This defaults to the value of indent_size and doesn't usually need to be specified.";
 		}
 
 		@Override
@@ -160,9 +143,16 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 			visitor.visitTabWidth(property);
 		}
 
+		@Override
+		public String[] getPossibleValues() {
+			return null;
+		}
 	}
 
 	public static class EndOfLine extends ConfigPropertyType<EndOfLineOption> {
+		
+		private static final String[] POSSIBLE_VALUES = new String[] { "lf", "crlf", "cr" };
+		
 		@Override
 		public String getId() {
 			return "END_OF_LINE";
@@ -175,7 +165,7 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 		@Override
 		public String getDisplayLabel() {
-			return "End of Line";
+			return "set to lf, cr, or crlf to control how line breaks are represented.";
 		}
 
 		@Override
@@ -198,9 +188,14 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 			visitor.visitEndOfLine(property);
 		}
 
+		@Override
+		public String[] getPossibleValues() {
+			return POSSIBLE_VALUES;
+		}
 	}
 
 	public static class Charset extends ConfigPropertyType<String> {
+		
 		@Override
 		public String getId() {
 			return "CHARSET";
@@ -213,7 +208,7 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 		@Override
 		public String getDisplayLabel() {
-			return "Charset";
+			return "set to latin1, utf-8, utf-8-bom, utf-16be or utf-16le to control the character set. Use of utf-8-bom is discouraged.";
 		}
 
 		@Override
@@ -230,10 +225,16 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 		public void accept(final ConfigPropertyVisitor visitor, final ConfigProperty<String> property) {
 			visitor.visitCharset(property);
 		}
+		
+		@Override
+		public String[] getPossibleValues() {
+			return null;
+		}
 
 	}
-
+	
 	public static class TrimTrailingWhitespace extends ConfigPropertyType<Boolean> {
+
 		@Override
 		public String getId() {
 			return "TRIM_TRAILING_WHITESPACE";
@@ -246,7 +247,7 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 		@Override
 		public String getDisplayLabel() {
-			return "Trim Trailing Whitespace";
+			return "set to true to remove any whitespace characters preceding newline characters and false to ensure it doesn't.";
 		}
 
 		@Override
@@ -268,8 +269,13 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 		public void accept(final ConfigPropertyVisitor visitor, final ConfigProperty<Boolean> property) {
 			visitor.visitTrimTrailingWhitespace(property);
 		}
+		
+		@Override
+		public String[] getPossibleValues() {
+			return BOOLEAN_POSSIBLE_VALUES;
+		}
 	}
-
+	
 	public static class InsertFinalNewline extends ConfigPropertyType<Boolean> {
 		@Override
 		public String getId() {
@@ -283,7 +289,7 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 		@Override
 		public String getDisplayLabel() {
-			return "Insert Final Newline";
+			return "set to true to ensure file ends with a newline when saving and false to ensure it doesn't.";
 		}
 
 		@Override
@@ -306,6 +312,53 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 			visitor.visitInsertFinalNewLine(property);
 		}
 
+		@Override
+		public String[] getPossibleValues() {
+			return BOOLEAN_POSSIBLE_VALUES;
+		}
+	}
+
+
+	public static class Root extends ConfigPropertyType<Boolean> {
+
+		@Override
+		public String getId() {
+			return "ROOT";
+		}
+
+		@Override
+		public String getName() {
+			return "root";
+		}
+
+		@Override
+		public String getDisplayLabel() {
+			return "special property that should be specified at the top of the file outside of any sections. Set to true to stop .editorconfig files search on current file.";
+		}
+
+		@Override
+		public ValueParser<Boolean> getValueParser() {
+			return ValueParser.BOOLEAN_VALUE_PARSER;
+		}
+
+		@Override
+		public ValueRenderer getValueRenderer() {
+			return ValueRenderer.BOOLEAN_VALUE_RENDERER;
+		}
+
+		@Override
+		public ValueValidator<Boolean> getValueValidator() {
+			return ValueValidator.BOOLEAN_VALUE_VALIDATOR;
+		}
+
+		@Override
+		public void accept(final ConfigPropertyVisitor visitor, final ConfigProperty<Boolean> property) {
+		}
+
+		@Override
+		public String[] getPossibleValues() {
+			return BOOLEAN_POSSIBLE_VALUES;
+		}
 	}
 
 	public static final Root ROOT = new Root();
@@ -331,7 +384,10 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 	}
 
 	public static ConfigPropertyType<?> valueOf(final String name) {
-		return ALL_TYPES_MAP.get(name);
+		if (name == null) {
+			return null;
+		}
+		return ALL_TYPES_MAP.get(name.toUpperCase());
 	}
 
 	public abstract String getId();
@@ -349,6 +405,8 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 	public void validate(String value) throws ConfigPropertyException {
 		getValueValidator().validate(getName(), value);
 	}
+
+	public abstract String[] getPossibleValues();
 
 	public ValueRenderer getValueRenderer() {
 		return ValueRenderer.TO_STRING_VALUE_RENDERER;

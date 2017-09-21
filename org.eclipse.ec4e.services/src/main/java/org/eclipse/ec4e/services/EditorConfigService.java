@@ -1,10 +1,18 @@
 package org.eclipse.ec4e.services;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.eclipse.ec4e.services.completion.CharProvider;
 import org.eclipse.ec4e.services.completion.CharProvider.StringCharProvider;
 import org.eclipse.ec4e.services.completion.CompletionContext;
 import org.eclipse.ec4e.services.completion.CompletionContextType;
+import org.eclipse.ec4e.services.completion.CompletionEntry;
 import org.eclipse.ec4e.services.completion.ICompletionEntry;
+import org.eclipse.ec4e.services.completion.ICompletionEntryMatcher;
 import org.eclipse.ec4e.services.model.options.ConfigPropertyException;
 import org.eclipse.ec4e.services.model.options.ConfigPropertyType;
 import org.eclipse.ec4e.services.parser.EditorConfigParser;
@@ -131,7 +139,47 @@ public class EditorConfigService {
 		return new CompletionContext(prefix.toString(), name != null ? name.toString() : null, type);
 	}
 
-	public static ICompletionEntry getCompletionEntries() {
-		return null;
+	public static List<ICompletionEntry> getCompletionEntries(int offset, String document,
+			ICompletionEntryMatcher matcher) throws Exception {
+		return getCompletionEntries(offset, document, matcher, CompletionEntry::new, StringCharProvider.INSTANCE);
+	}
+
+	public static <T, C extends ICompletionEntry> List<C> getCompletionEntries(int offset, T document,
+			ICompletionEntryMatcher matcher, final Function<String, C> factory, CharProvider<T> provider)
+			throws Exception {
+		CompletionContext context = getCompletionContext(offset, document, provider);
+
+		switch (context.type) {
+		case OPTION_NAME:
+			return Stream.of(ConfigPropertyType.ALL_TYPES).map(type -> {
+				C entry = factory.apply(type.getName());
+				entry.setMatcher(matcher);
+				entry.setOptionType(type);
+				entry.setContextType(context.type);
+				entry.setInitialOffset(offset);
+				return entry;
+			}).filter(entry -> entry.updatePrefix(context.prefix)).collect(Collectors.toList());
+		case OPTION_VALUE:
+			ConfigPropertyType<?> optionType = ConfigPropertyType.valueOf(context.name);
+			if (optionType != null) {
+				String values[] = optionType.getPossibleValues();
+				if (values != null) {
+					return Stream.of(values).map(value -> {
+						C entry = factory.apply(value);
+						entry.setMatcher(matcher);
+						entry.setOptionType(optionType);
+						entry.setContextType(context.type);
+						entry.setInitialOffset(offset);
+						return entry;
+					}).filter(entry -> entry.updatePrefix(context.prefix)).collect(Collectors.toList());
+				}
+
+			}
+			break;
+		default:
+			break;
+		}
+
+		return Collections.emptyList();
 	}
 }

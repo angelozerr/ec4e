@@ -12,7 +12,7 @@ package org.eclipse.ec4e.internal.completion;
 
 import org.eclipse.ec4e.services.EditorConfigService;
 import org.eclipse.ec4e.services.completion.CharProvider;
-import org.eclipse.ec4e.services.completion.CompletionContext;
+import org.eclipse.ec4e.services.completion.ICompletionEntryMatcher;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -39,31 +39,11 @@ public class EditorConfigContentAssistProcessor implements IContentAssistProcess
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		IDocument document = viewer.getDocument();
 		try {
-			CompletionContext context = EditorConfigService.getCompletionContext(offset,
-					document, DOCUMENT_CHAR_PROVIDER);
-			switch (context.type) {
-			case OPTION_NAME:
-				return computeOptionNameCompletionProposals(viewer, offset, context.prefix);
-			case OPTION_VALUE:
-				return computeOptionValueCompletionProposals(viewer, offset, context.prefix);
-			default:
-				return null;
-			}
+			return EditorConfigService.getCompletionEntries(offset, document, ICompletionEntryMatcher.LCS,
+					EditorConfigCompletionProposal::new, DOCUMENT_CHAR_PROVIDER)
+					.stream().toArray(ICompletionProposal[]::new);
 		} catch (Exception e) {
 		}
-		return null;
-	}
-
-	private ICompletionProposal[] computeOptionNameCompletionProposals(ITextViewer viewer, int offset, String prefix) {
-		System.err.println("name=" + prefix);
-		// Do nothing
-		//Stream.of(ConfigPropertyType.ALL_TYPES).filter(t -> t.getName().)
-		return null;
-	}
-
-	private ICompletionProposal[] computeOptionValueCompletionProposals(ITextViewer viewer, int offset, String prefix) {
-		System.err.println("value=" + prefix);
-		// Do nothing
 		return null;
 	}
 
