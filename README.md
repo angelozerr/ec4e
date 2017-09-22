@@ -1,12 +1,16 @@
 # ec4e
 
-EditorConfig for Eclipse based on GenericEditor and tm4e:
+`ec4e` is the [EditorConfig](http://editorconfig.org/) support for Eclipse which works only with `GenericEditor`:
 
- * provides an editor for .editorconfig:
+ ![Editor Config](screenshots/EditorConfigDemo.gif)
+
+`ec4e` provides :
+
+ * an editor for `.editorconfig` based [tm4e](https://github.com/eclipse/tm4e/) and `GenericEditor`:
  
  ![Editor Config](screenshots/EditorConfigSyntaxColor.png)
  
- * apply config of .editorconfig: supported properties are:
+ * apply config of `.editorconfig` only for `GenericEditor`. Supported properties are:
  
    * `indent_style` 
    * `indent_size`
