@@ -107,14 +107,19 @@
 
 	<repositories>
 		<repository>
-			<id>kepler</id>
+			<id>oxygen</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/kepler</url>
+			<url>http://download.eclipse.org/releases/oxygen/</url>
 		</repository>
 		<repository>
 			<id>orbit</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/tools/orbit/downloads/drops/S20170804160030/repository</url>
+		</repository>
+		<repository>
+			<id>tm4e</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/tm4e/snapshots/</url>
 		</repository>
 	</repositories>
 	<name>EditorConfig 4 Eclipse - Parent</name>
