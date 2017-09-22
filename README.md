@@ -1,5 +1,7 @@
 # ec4e
 
+[![Build Status](https://secure.travis-ci.org/angelozerr/ec4e.png)](http://travis-ci.org/angelozerr/ec4e)
+
 `ec4e` is the [EditorConfig](http://editorconfig.org/) support for Eclipse which works only with `GenericEditor`:
 
  ![Editor Config](screenshots/EditorConfigDemo.gif)
