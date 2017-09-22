@@ -72,7 +72,7 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 	public static class IndentSize extends ConfigPropertyType<Integer> {
 
-		private static final String[] POSSIBLE_VALUES = new String[] { "tab" };
+		private static final String[] POSSIBLE_VALUES = new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "tab" };
 
 		@Override
 		public String getId() {
@@ -113,6 +113,8 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 	public static class TabWidth extends ConfigPropertyType<Integer> {
 		
+		private static final String[] POSSIBLE_VALUES = new String[] { "1", "2", "3", "4", "5", "6", "7", "8" };
+		
 		@Override
 		public String getId() {
 			return "TAB_WIDTH";
@@ -145,7 +147,7 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 		@Override
 		public String[] getPossibleValues() {
-			return null;
+			return POSSIBLE_VALUES;
 		}
 	}
 
@@ -196,6 +198,8 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 	public static class Charset extends ConfigPropertyType<String> {
 		
+		private static final String[] POSSIBLE_VALUES = new String[] { "utf-8", "utf-8-bom", "utf-16be", "utf-16le", "latin1", "tab" };
+		
 		@Override
 		public String getId() {
 			return "CHARSET";
@@ -228,7 +232,7 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 		
 		@Override
 		public String[] getPossibleValues() {
-			return null;
+			return POSSIBLE_VALUES;
 		}
 
 	}
