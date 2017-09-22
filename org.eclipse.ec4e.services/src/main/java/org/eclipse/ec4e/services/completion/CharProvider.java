@@ -12,9 +12,17 @@ public interface CharProvider<T> {
 		public char getChar(String document, int index) throws Exception {
 			return document.charAt(index);
 		}
+		
+		@Override
+		public int getLength(String document) {
+			return document.length();
+		}
 
 	}
 
 	char getChar(T document, int offset) throws Exception;
+	
+	int getLength(T document);
+	
 
 }

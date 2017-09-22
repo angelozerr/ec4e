@@ -10,8 +10,8 @@
  */
 package org.eclipse.ec4e.internal.completion;
 
+import org.eclipse.ec4e.internal.DocumentCharProvider;
 import org.eclipse.ec4e.services.EditorConfigService;
-import org.eclipse.ec4e.services.completion.CharProvider;
 import org.eclipse.ec4e.services.completion.ICompletionEntryMatcher;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -28,19 +28,12 @@ public class EditorConfigContentAssistProcessor implements IContentAssistProcess
 
 	private static final char[] AUTO_ACTIVATION_CHARACTERS = new char[] { '=' };
 
-	private static final CharProvider<IDocument> DOCUMENT_CHAR_PROVIDER = new CharProvider<IDocument>() {
-		@Override
-		public char getChar(IDocument document, int offset) throws Exception {
-			return document.getChar(offset);
-		}
-	};
-
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		IDocument document = viewer.getDocument();
 		try {
 			return EditorConfigService.getCompletionEntries(offset, document, ICompletionEntryMatcher.LCS,
-					EditorConfigCompletionProposal::new, DOCUMENT_CHAR_PROVIDER)
+					EditorConfigCompletionProposal::new, DocumentCharProvider.INSTANCE)
 					.stream().toArray(ICompletionProposal[]::new);
 		} catch (Exception e) {
 		}
