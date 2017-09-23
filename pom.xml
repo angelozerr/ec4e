@@ -7,7 +7,8 @@
 	<packaging>pom</packaging>
 	<modules>
         <module>org.eclipse.ec4e.services</module>
-		<module>org.eclipse.ec4e</module>		
+		<module>org.eclipse.ec4e</module>
+		<module>org.eclipse.ec4e.repository</module>
 	</modules>
 
 	<scm>
@@ -145,11 +146,6 @@
 			<id>oxygen</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/oxygen/</url>
-		</repository>
-		<repository>
-			<id>orbit</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/S20170804160030/repository</url>
 		</repository>
 		<repository>
 			<id>tm4e</id>
