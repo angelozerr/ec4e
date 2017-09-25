@@ -5,7 +5,10 @@ import java.util.Collection;
 
 import org.eclipse.ec4e.services.EditorConfigException;
 import org.eclipse.ec4e.services.model.Option;
+import org.eclipse.ec4e.services.model.options.EndOfLineOption;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -22,6 +25,8 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 
 	private boolean spacesForTabs;
 	private int tabWidth;
+	private boolean applyingConfig;
+	private String endOfLine;
 
 	public EditorConfigPreferenceStore(ITextEditor textEditor) throws Exception {
 		this.textEditor = textEditor;
@@ -36,6 +41,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 		File file = getFile(textEditor);
 		if (file != null) {
 			try {
+				applyingConfig = true;
 				Collection<Option> options = IDEEditorConfigManager.getInstance().getOptions(file, null);
 				for (Option option : options) {
 
@@ -52,16 +58,22 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 						if (oldTabWidth != tabWidth) {
 							editorStore.firePropertyChangeEvent(EDITOR_TAB_WIDTH, oldTabWidth, tabWidth);
 						}
+					} else if ("end_of_line".equals(option.getName())) {
+						IEditorInput editorInput = textEditor.getEditorInput();
+						IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
+						if (document instanceof IDocumentExtension4) {
+							EndOfLineOption endOfLineOption = EndOfLineOption.valueOf(option.getValue().toUpperCase());
+							if (endOfLineOption != null) {
+								((IDocumentExtension4) document)
+										.setInitialLineDelimiter(endOfLineOption.getEndOfLineString());
+							}
+						}
 					}
 				}
-
-				// newStore.firePropertyChangeEvent(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH,
-				// 0,
-				// 50);
-				// newStore.firePropertyChangeEvent(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS,
-				// false, true);
 			} catch (EditorConfigException e) {
 				e.printStackTrace();
+			} finally {
+				applyingConfig = false;
 			}
 
 		}
@@ -82,6 +94,9 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 
 	@Override
 	public boolean contains(String name) {
+		if (!applyingConfig) {
+			return false;
+		}
 		if (EDITOR_SPACES_FOR_TABS.equals(name)) {
 			return true;
 		} else if (EDITOR_TAB_WIDTH.equals(name)) {
