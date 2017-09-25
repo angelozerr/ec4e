@@ -12,6 +12,7 @@ import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.editors.text.IEncodingSupport;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -67,6 +68,11 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 								((IDocumentExtension4) document)
 										.setInitialLineDelimiter(endOfLineOption.getEndOfLineString());
 							}
+						}
+					} else if ("charset".equals(option.getName())) {
+						IEncodingSupport encodingSupport = textEditor.getAdapter(IEncodingSupport.class);
+						if (encodingSupport != null) {
+							encodingSupport.setEncoding(option.getValue().toUpperCase());
 						}
 					}
 				}
