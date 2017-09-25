@@ -158,6 +158,15 @@
       </hoverProvider>
    </extension>
         
+   <!-- cannot use this extension because EditorConfigReconciler needs the text editor (preference store)
+   <extension
+         point="org.eclipse.ui.genericeditor.reconcilers">
+      <reconciler
+            class="org.eclipse.ec4e.internal.validation.EditorConfigReconciler"
+            contentType="org.eclipse.core.runtime.text">
+      </reconciler>
+   </extension> -->
+           
    <extension
 	       point="org.eclipse.ui.startup">	
 	       <startup class="org.eclipse.ec4e.internal.EditorConfigStartup" />       

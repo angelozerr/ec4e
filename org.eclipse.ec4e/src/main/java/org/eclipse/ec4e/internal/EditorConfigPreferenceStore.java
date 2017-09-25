@@ -18,8 +18,10 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class EditorConfigPreferenceStore implements IPreferenceStore {
 
-	private static final String EDITOR_SPACES_FOR_TABS = AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS;
-	private static final String EDITOR_TAB_WIDTH = AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH;
+	public static final String EDITOR_SPACES_FOR_TABS = AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS;
+	public static final String EDITOR_TAB_WIDTH = AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH;
+	public static final String EDITOR_TRIM_TRAILING_WHITESPACE = "trim_trailing_whitespace";
+	public static final String EDITOR_INSERT_FINAL_NEWLINE = "insert_final_newline";
 
 	private final ITextEditor textEditor;
 	private IPreferenceStore editorStore;
@@ -28,14 +30,12 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 	private int tabWidth;
 	private boolean applyingConfig;
 	private String endOfLine;
+	private boolean trimTrailingWhitespace;
+	private boolean insertFinalNewline;
 
 	public EditorConfigPreferenceStore(ITextEditor textEditor) throws Exception {
 		this.textEditor = textEditor;
 		this.editorStore = PreferenceStoreHelper.contributeToPreferenceStore(textEditor, this);
-	}
-
-	public void setEditorStore(IPreferenceStore editorStore) {
-		this.editorStore = editorStore;
 	}
 
 	public void applyConfig() {
@@ -74,6 +74,20 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 						if (encodingSupport != null) {
 							encodingSupport.setEncoding(option.getValue().toUpperCase());
 						}
+					} else if ("trim_trailing_whitespace".equals(option.getName())) {
+						boolean oldTrimTrailingWhitespace = trimTrailingWhitespace;
+						trimTrailingWhitespace = "true".equals(option.getValue());
+						if (oldTrimTrailingWhitespace != trimTrailingWhitespace) {
+							editorStore.firePropertyChangeEvent(EDITOR_TRIM_TRAILING_WHITESPACE,
+									oldTrimTrailingWhitespace, trimTrailingWhitespace);
+						}
+					} else if ("insert_final_newline".equals(option.getName())) {
+						boolean oldInsertFinalNewline = insertFinalNewline;
+						insertFinalNewline = "true".equals(option.getValue());
+						if (oldInsertFinalNewline != insertFinalNewline) {
+							editorStore.firePropertyChangeEvent(EDITOR_INSERT_FINAL_NEWLINE, oldInsertFinalNewline,
+									insertFinalNewline);
+						}
 					}
 				}
 			} catch (EditorConfigException e) {
@@ -83,6 +97,10 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 			}
 
 		}
+	}
+
+	public IPreferenceStore getEditorStore() {
+		return editorStore;
 	}
 
 	private static File getFile(ITextEditor textEditor) {
@@ -100,28 +118,39 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 
 	@Override
 	public boolean contains(String name) {
-		if (!applyingConfig) {
-			return false;
-		}
-		if (EDITOR_SPACES_FOR_TABS.equals(name)) {
+		if (EDITOR_SPACES_FOR_TABS.equals(name) || EDITOR_TAB_WIDTH.equals(name)) {
+			return applyingConfig;
+		} else if (EDITOR_TRIM_TRAILING_WHITESPACE.equals(name)) {
 			return true;
-		} else if (EDITOR_TAB_WIDTH.equals(name)) {
+		} else if (EDITOR_INSERT_FINAL_NEWLINE.equals(name)) {
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void firePropertyChangeEvent(String name, Object oldValue, Object newValue) {
-
 	}
 
 	@Override
 	public boolean getBoolean(String name) {
 		if (EDITOR_SPACES_FOR_TABS.equals(name)) {
 			return spacesForTabs;
+		} else if (EDITOR_TRIM_TRAILING_WHITESPACE.equals(name)) {
+			return trimTrailingWhitespace;
+		} else if (EDITOR_INSERT_FINAL_NEWLINE.equals(name)) {
+			return insertFinalNewline;
 		}
 		return false;
+	}
+
+	@Override
+	public int getInt(String name) {
+		if (EDITOR_TAB_WIDTH.equals(name)) {
+			return tabWidth;
+		}
+		return 0;
+	}
+
+	@Override
+	public void firePropertyChangeEvent(String name, Object oldValue, Object newValue) {
+
 	}
 
 	@Override
@@ -168,14 +197,6 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 	@Override
 	public float getFloat(String name) {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getInt(String name) {
-		if (EDITOR_TAB_WIDTH.equals(name)) {
-			return tabWidth;
-		}
 		return 0;
 	}
 

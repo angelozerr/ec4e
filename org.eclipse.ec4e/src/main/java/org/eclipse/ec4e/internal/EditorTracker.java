@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.ec4e.EditorConfigPlugin;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPageListener;
@@ -22,7 +21,7 @@ public class EditorTracker implements IWindowListener, IPageListener, IPartListe
 
 	private static EditorTracker INSTANCE;
 
-	private Map<AbstractTextEditor, EditorConfigPreferenceStore> preferencesStores = new HashMap<>();
+	private Map<AbstractTextEditor, ApplyEditorConfig> applies = new HashMap<>();
 
 	private EditorTracker() {
 		init();
@@ -108,9 +107,9 @@ public class EditorTracker implements IWindowListener, IPageListener, IPartListe
 	public void partActivated(IWorkbenchPart part) {
 		if (part instanceof AbstractTextEditor) {
 			AbstractTextEditor editor = (AbstractTextEditor) part;
-			EditorConfigPreferenceStore preferenceStore = preferencesStores.get(editor);
-			if (preferenceStore != null) {
-				preferenceStore.applyConfig();
+			ApplyEditorConfig apply = applies.get(editor);
+			if (apply != null) {
+				apply.applyConfig();
 			}
 		}
 	}
@@ -140,26 +139,27 @@ public class EditorTracker implements IWindowListener, IPageListener, IPartListe
 	private void editorOpened(IEditorPart part) {
 		if (part instanceof AbstractTextEditor) {
 			AbstractTextEditor editor = (AbstractTextEditor) part;
-			EditorConfigPreferenceStore preferenceStore = preferencesStores.get(editor);
-			if (preferenceStore == null) {
+			ApplyEditorConfig apply = applies.get(editor);
+			if (apply == null) {
 				try {
-					preferenceStore = new EditorConfigPreferenceStore(editor);					
-					preferencesStores.put(editor, preferenceStore);
+					apply = new ApplyEditorConfig(editor);
+					apply.install();
+					applies.put(editor, apply);
 				} catch (Exception e) {
 					e.printStackTrace();
 					return;
 				}
 			}
-			preferenceStore.applyConfig();
+			apply.applyConfig();
 		}
 	}
 
 	private void editorClosed(IEditorPart part) {
 		if (part instanceof AbstractTextEditor) {
-			IPreferenceStore controller = preferencesStores.remove(part);
-			if (controller != null) {
-				// controller.uninstall();
-				Assert.isTrue(null == preferencesStores.get(part),
+			ApplyEditorConfig apply = applies.remove(part);
+			if (apply != null) {
+				apply.uninstall();
+				Assert.isTrue(null == applies.get(part),
 						"An old ICodeLensController is not un-installed on Text Editor instance");
 			}
 		}
