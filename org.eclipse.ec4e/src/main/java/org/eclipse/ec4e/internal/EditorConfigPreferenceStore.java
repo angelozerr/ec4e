@@ -26,9 +26,8 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 	private final ITextEditor textEditor;
 	private IPreferenceStore editorStore;
 
-	private boolean spacesForTabs;
-	private int tabWidth;
-	private boolean applyingConfig;
+	private Boolean spacesForTabs;
+	private Integer tabWidth;
 	private String endOfLine;
 	private boolean trimTrailingWhitespace;
 	private boolean insertFinalNewline;
@@ -42,19 +41,19 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 		File file = getFile(textEditor);
 		if (file != null) {
 			try {
-				applyingConfig = true;
+				Boolean oldSpacesForTabs = spacesForTabs;
+				spacesForTabs = null;
+				Integer oldTabWidth = tabWidth;
+				tabWidth = null;
 				Collection<Option> options = IDEEditorConfigManager.getInstance().getOptions(file, null);
 				for (Option option : options) {
-
 					if ("indent_style".equals(option.getName())) {
-						boolean oldSpacesForTabs = spacesForTabs;
 						spacesForTabs = "space".equals(option.getValue());
 						if (oldSpacesForTabs != spacesForTabs) {
 							editorStore.firePropertyChangeEvent(EDITOR_SPACES_FOR_TABS, oldSpacesForTabs,
 									spacesForTabs);
 						}
 					} else if ("indent_size".equals(option.getName())) {
-						int oldTabWidth = tabWidth;
 						tabWidth = Integer.parseInt(option.getValue());
 						if (oldTabWidth != tabWidth) {
 							editorStore.firePropertyChangeEvent(EDITOR_TAB_WIDTH, oldTabWidth, tabWidth);
@@ -93,7 +92,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 			} catch (EditorConfigException e) {
 				e.printStackTrace();
 			} finally {
-				applyingConfig = false;
+
 			}
 
 		}
@@ -118,8 +117,10 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 
 	@Override
 	public boolean contains(String name) {
-		if (EDITOR_SPACES_FOR_TABS.equals(name) || EDITOR_TAB_WIDTH.equals(name)) {
-			return applyingConfig;
+		if (EDITOR_SPACES_FOR_TABS.equals(name)) {
+			return spacesForTabs != null;
+		} else if (EDITOR_TAB_WIDTH.equals(name)) {
+			return tabWidth != null;
 		} else if (EDITOR_TRIM_TRAILING_WHITESPACE.equals(name)) {
 			return true;
 		} else if (EDITOR_INSERT_FINAL_NEWLINE.equals(name)) {

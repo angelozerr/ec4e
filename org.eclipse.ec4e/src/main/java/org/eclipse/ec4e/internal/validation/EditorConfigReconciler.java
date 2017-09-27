@@ -1,5 +1,6 @@
 package org.eclipse.ec4e.internal.validation;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -7,8 +8,8 @@ import org.eclipse.jface.text.reconciler.MonoReconciler;
 
 public class EditorConfigReconciler extends MonoReconciler {
 
-	public EditorConfigReconciler(IPreferenceStore preferenceStore) {
-		super(new EditorConfigReconcilingStrategy(preferenceStore), false);
+	public EditorConfigReconciler(IPreferenceStore preferenceStore, IResource resource) {
+		super(new EditorConfigReconcilingStrategy(preferenceStore, resource), true);
 	}
 
 	@Override

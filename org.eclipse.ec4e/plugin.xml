@@ -157,7 +157,24 @@
             class="org.eclipse.ec4e.internal.hover.EditorConfigTextHover">
       </hoverProvider>
    </extension>
-        
+         
+   <!-- editorconfig validation -->
+   <extension
+         id="problem"
+         name="%EditorConfigProblem.name"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator
+            class="org.eclipse.ec4e.internal.validation.marker.EditorConfigMarkerResolution"
+            markerType="org.eclipse.ec4e.problem">
+      </markerResolutionGenerator>
+   </extension>
+      
    <!-- cannot use this extension because EditorConfigReconciler needs the text editor (preference store)
    <extension
          point="org.eclipse.ui.genericeditor.reconcilers">
