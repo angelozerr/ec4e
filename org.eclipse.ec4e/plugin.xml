@@ -184,6 +184,19 @@
       </reconciler>
    </extension> -->
            
+   <!-- Wizards -->
+   <extension
+	      point="org.eclipse.ui.newWizards">
+	 	<wizard
+		   id="org.eclipse.ec4e.wizards.new"
+	       name="%NewEditorConfigWizard.name"
+		   class="org.eclipse.ec4e.internal.wizards.NewEditorConfigWizard"
+		   category="org.eclipse.ui.Basic"
+		   icon="icons/editorconfig.png" >
+	       <description>%NewEditorConfigWizard.desc</description>
+		</wizard>		
+   </extension>
+	           
    <extension
 	       point="org.eclipse.ui.startup">	
 	       <startup class="org.eclipse.ec4e.internal.EditorConfigStartup" />       

@@ -6,8 +6,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.ec4e.services.completion.CharProvider;
-import org.eclipse.ec4e.services.completion.CharProvider.StringCharProvider;
 import org.eclipse.ec4e.services.completion.CompletionContextType;
 import org.eclipse.ec4e.services.completion.CompletionEntry;
 import org.eclipse.ec4e.services.completion.ICompletionEntry;
@@ -86,11 +84,11 @@ public class EditorConfigService {
 
 	public static List<ICompletionEntry> getCompletionEntries(int offset, String document,
 			ICompletionEntryMatcher matcher) throws Exception {
-		return getCompletionEntries(offset, document, matcher, CompletionEntry::new, StringCharProvider.INSTANCE);
+		return getCompletionEntries(offset, document, matcher, CompletionEntry::new, ContentProvider.STRING_CONTENT_PROVIDER);
 	}
 
 	public static <T, C extends ICompletionEntry> List<C> getCompletionEntries(int offset, T document,
-			ICompletionEntryMatcher matcher, final Function<String, C> factory, CharProvider<T> provider)
+			ICompletionEntryMatcher matcher, final Function<String, C> factory, ContentProvider<T> provider)
 			throws Exception {
 		TokenContext context = getTokenContext(offset, document, false, provider);
 		switch (context.type) {
@@ -128,7 +126,7 @@ public class EditorConfigService {
 
 	// ------------- Hover service
 
-	public static <T> String getHover(int offset, T document, CharProvider<T> provider) throws Exception {
+	public static <T> String getHover(int offset, T document, ContentProvider<T> provider) throws Exception {
 		TokenContext context = getTokenContext(offset, document, true, provider);
 		switch (context.type) {
 		case OPTION_NAME: {
@@ -157,7 +155,7 @@ public class EditorConfigService {
 	}
 
 	private static <T> TokenContext getTokenContext(int offset, T document, boolean collectWord,
-			CharProvider<T> provider) throws Exception {
+			ContentProvider<T> provider) throws Exception {
 		char c;
 		CompletionContextType type = CompletionContextType.OPTION_NAME;
 		StringBuilder prefix = new StringBuilder();

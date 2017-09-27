@@ -10,7 +10,7 @@
  */
 package org.eclipse.ec4e.internal.completion;
 
-import org.eclipse.ec4e.internal.DocumentCharProvider;
+import org.eclipse.ec4e.internal.DocumentContentProvider;
 import org.eclipse.ec4e.services.EditorConfigService;
 import org.eclipse.ec4e.services.completion.ICompletionEntryMatcher;
 import org.eclipse.jface.text.IDocument;
@@ -33,7 +33,7 @@ public class EditorConfigContentAssistProcessor implements IContentAssistProcess
 		IDocument document = viewer.getDocument();
 		try {
 			return EditorConfigService.getCompletionEntries(offset, document, ICompletionEntryMatcher.LCS,
-					EditorConfigCompletionProposal::new, DocumentCharProvider.INSTANCE)
+					EditorConfigCompletionProposal::new, DocumentContentProvider.INSTANCE)
 					.stream().toArray(ICompletionProposal[]::new);
 		} catch (Exception e) {
 		}

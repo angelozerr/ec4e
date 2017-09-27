@@ -1,6 +1,6 @@
 package org.eclipse.ec4e.internal.hover;
 
-import org.eclipse.ec4e.internal.DocumentCharProvider;
+import org.eclipse.ec4e.internal.DocumentContentProvider;
 import org.eclipse.ec4e.services.EditorConfigService;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
@@ -13,7 +13,7 @@ public class EditorConfigTextHover implements ITextHover {
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		try {
 			return EditorConfigService.getHover(hoverRegion.getOffset(), textViewer.getDocument(),
-					DocumentCharProvider.INSTANCE);
+					DocumentContentProvider.INSTANCE);
 		} catch (Exception e) {
 			return null;
 		}
