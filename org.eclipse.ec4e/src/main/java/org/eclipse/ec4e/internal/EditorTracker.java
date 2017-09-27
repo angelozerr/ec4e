@@ -1,3 +1,13 @@
+/**
+ *  Copyright (c) 2017 Angelo ZERR.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *
+ *  Contributors:
+ *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
+ */
 package org.eclipse.ec4e.internal;
 
 import java.util.HashMap;
@@ -5,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.ec4e.EditorConfigPlugin;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPageListener;
@@ -17,6 +28,17 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
+/**
+ * Editor tracker used to
+ * 
+ * <ul>
+ * <li>update {@link IPreferenceStore} of the opened text editor by adding the
+ * {@link EditorConfigPreferenceStore}.</li>
+ * <li>call {@link EditorConfigPreferenceStore#applyConfig()} when editor has
+ * focus to apply properties coming from .editorconfig files.</li>
+ * </ul>
+ *
+ */
 public class EditorTracker implements IWindowListener, IPageListener, IPartListener {
 
 	private static EditorTracker INSTANCE;
@@ -160,7 +182,7 @@ public class EditorTracker implements IWindowListener, IPageListener, IPartListe
 			if (apply != null) {
 				apply.uninstall();
 				Assert.isTrue(null == applies.get(part),
-						"An old ICodeLensController is not un-installed on Text Editor instance");
+						"An old ApplyEditorConfig is not un-installed on Text Editor instance");
 			}
 		}
 	}

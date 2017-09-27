@@ -1,3 +1,13 @@
+/**
+ *  Copyright (c) 2017 Angelo ZERR.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *
+ *  Contributors:
+ *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
+ */
 package org.eclipse.ec4e.internal;
 
 import java.lang.reflect.Field;
@@ -10,6 +20,14 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+/**
+ * 
+ * Helper to update the {@link IPreferenceStore} of a text editor with a
+ * {@link ChainedPreferenceStore} which contains on the first
+ * {@link EditorConfigPreferenceStore} instance and the original preference
+ * store.
+ *
+ */
 public class PreferenceStoreHelper {
 
 	public static IPreferenceStore contributeToPreferenceStore(ITextEditor textEditor,

@@ -1,3 +1,6 @@
+/**
+ *  Code copied from https://github.com/editorconfig/editorconfig-core-java/blob/master/src/main/java/org/editorconfig/core/EditorConfig.java
+ */
 package org.eclipse.ec4e.services.model;
 
 import java.util.List;
