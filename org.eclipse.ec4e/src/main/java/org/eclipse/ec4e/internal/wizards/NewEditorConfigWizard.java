@@ -19,68 +19,62 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.ec4e.EditorConfigPlugin;
+import org.eclipse.ec4e.internal.EditorConfigMessages;
+import org.eclipse.ec4e.services.EditorConfigConstants;
+import org.eclipse.ec4e.services.EditorConfigService;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 
 /**
- * This is a sample new wizard. Its role is to create a new file 
- * resource in the provided container. If the container resource
- * (a folder or a project) is selected in the workspace 
- * when the wizard is opened, it will accept it as the target
- * container. The wizard creates one file with the extension
- * "mpe". If a sample multi-page editor (also available
- * as a template) is registered for the same extension, it will
- * be able to open it.
+ * Wizard to create an .editorconfig file by using Eclipse preferences.
  */
 
 public class NewEditorConfigWizard extends Wizard implements INewWizard {
+
 	private NewEditorConfigFileWizardPage page;
 	private ISelection selection;
 
-	/**
-	 * Constructor for SampleNewWizard.
-	 */
-	public NewEditorConfigWizard() {
-		super();
-		setNeedsProgressMonitor(true);
-	}
-	
-	/**
-	 * Adding the page to the wizard.
-	 */
-
+	@Override
 	public void addPages() {
 		page = new NewEditorConfigFileWizardPage(selection);
 		addPage(page);
 	}
 
-	/**
-	 * This method is called when 'Finish' button is pressed in
-	 * the wizard. We will create an operation and run it
-	 * using wizard as execution context.
-	 */
+	@Override
+	public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
+		setWindowTitle(EditorConfigMessages.NewEditorConfigWizard_windowTitle);
+		setNeedsProgressMonitor(true);
+		this.selection = currentSelection;
+	}
+
+	@Override
 	public boolean performFinish() {
 		final String containerName = page.getContainerName();
-		final String fileName = page.getFileName();
-		IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException {
+		final String fileName = EditorConfigConstants.EDITORCONFIG;
+		try {
+			getContainer().run(true, false, (monitor) -> {
 				try {
 					doFinish(containerName, fileName, monitor);
 				} catch (CoreException e) {
@@ -88,10 +82,7 @@ public class NewEditorConfigWizard extends Wizard implements INewWizard {
 				} finally {
 					monitor.done();
 				}
-			}
-		};
-		try {
-			getContainer().run(true, false, op);
+			});
 		} catch (InterruptedException e) {
 			return false;
 		} catch (InvocationTargetException e) {
@@ -101,18 +92,13 @@ public class NewEditorConfigWizard extends Wizard implements INewWizard {
 		}
 		return true;
 	}
-	
+
 	/**
-	 * The worker method. It will find the container, create the
-	 * file if missing or just replace its contents, and open
-	 * the editor on the newly created file.
+	 * The worker method. It will find the container, create the file if missing or
+	 * just replace its contents, and open the editor on the newly created file.
 	 */
 
-	private void doFinish(
-		String containerName,
-		String fileName,
-		IProgressMonitor monitor)
-		throws CoreException {
+	private void doFinish(String containerName, String fileName, IProgressMonitor monitor) throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + fileName, 2);
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -122,56 +108,85 @@ public class NewEditorConfigWizard extends Wizard implements INewWizard {
 		}
 		IContainer container = (IContainer) resource;
 		final IFile file = container.getFile(new Path(fileName));
-		try {
-			InputStream stream = openContentStream();
-			if (file.exists()) {
-				file.setContents(stream, true, true, monitor);
-			} else {
-				file.create(stream, true, monitor);
-			}
-			stream.close();
+		try (InputStream stream = openContentStream(container);) {
+			file.create(stream, false, monitor);
 		} catch (IOException e) {
 		}
 		monitor.worked(1);
 		monitor.setTaskName("Opening file for editing...");
-		getShell().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				IWorkbenchPage page =
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				try {
-					IDE.openEditor(page, file, true);
-				} catch (PartInitException e) {
-				}
+		getShell().getDisplay().asyncExec(() -> {
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			try {
+				IDE.openEditor(page, file, true);
+			} catch (PartInitException e) {
 			}
 		});
 		monitor.worked(1);
 	}
-	
-	/**
-	 * We will initialize file contents with a sample text.
-	 */
 
-	private InputStream openContentStream() {
-		String contents =
-			"# EditorConfig is awesome: http://EditorConfig.org" +
-		    "\n" +
-		    "\n" + 
-			"[*]";
-		return new ByteArrayInputStream(contents.getBytes());
+	/**
+	 * Returns the content of the .editorconfig file to generate.
+	 * 
+	 * @param container
+	 * 
+	 * @return the content of the .editorconfig file to generate.
+	 */
+	private InputStream openContentStream(IContainer container) {
+		IPreferenceStore store = EditorsUI.getPreferenceStore();
+		boolean spacesForTabs = store.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS);
+		int tabWidth = store.getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
+		String lineDelimiter = getLineDelimiter(container);
+		String endOfLine = EditorConfigService.getEndOfLine(lineDelimiter);
+
+		StringBuilder content = new StringBuilder("# EditorConfig is awesome: http://EditorConfig.org");
+		content.append(lineDelimiter);
+		content.append(lineDelimiter);
+		content.append("[*]");
+		content.append(lineDelimiter);
+		content.append("indent_style = ");
+		content.append(spacesForTabs ? "space" : "tab");
+		content.append(lineDelimiter);
+		content.append("indent_size = ");
+		content.append(tabWidth);
+		if (endOfLine != null) {
+			content.append(lineDelimiter);
+			content.append("end_of_line = ");
+			content.append(endOfLine);
+		}
+
+		return new ByteArrayInputStream(content.toString().getBytes());
 	}
 
 	private void throwCoreException(String message) throws CoreException {
-		IStatus status =
-			new Status(IStatus.ERROR, EditorConfigPlugin.PLUGIN_ID, IStatus.OK, message, null);
+		IStatus status = new Status(IStatus.ERROR, EditorConfigPlugin.PLUGIN_ID, IStatus.OK, message, null);
 		throw new CoreException(status);
 	}
 
-	/**
-	 * We will accept the selection in the workbench to see if
-	 * we can initialize from it.
-	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
-	 */
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		this.selection = selection;
+	private static String getLineDelimiter(IContainer file) {
+		String lineDelimiter = getLineDelimiterPreference(file);
+		if (lineDelimiter == null) {
+			lineDelimiter = System.getProperty("line.separator");
+		}
+		if (lineDelimiter != null) {
+			return lineDelimiter;
+		}
+		return "\n";
 	}
+
+	private static String getLineDelimiterPreference(IContainer file) {
+		IScopeContext[] scopeContext;
+		if (file != null && file.getProject() != null) {
+			// project preference
+			scopeContext = new IScopeContext[] { new ProjectScope(file.getProject()) };
+			String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
+					Platform.PREF_LINE_SEPARATOR, null, scopeContext);
+			if (lineDelimiter != null)
+				return lineDelimiter;
+		}
+		// workspace preference
+		scopeContext = new IScopeContext[] { InstanceScope.INSTANCE };
+		return Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
+				scopeContext);
+	}
+
 }

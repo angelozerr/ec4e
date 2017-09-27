@@ -13,7 +13,10 @@ package org.eclipse.ec4e.internal.wizards;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.ec4e.internal.EditorConfigMessages;
+import org.eclipse.ec4e.services.EditorConfigConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
@@ -31,33 +34,32 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
 /**
- * The "New" wizard page allows setting the container for the new file as well
- * as the file name. The page will only accept file name without the extension
- * OR with the extension that matches the expected one (mpe).
+ * Wizard page to fill information of .editorconfig file to create.
+ *
  */
-
 public class NewEditorConfigFileWizardPage extends WizardPage {
-	private Text containerText;
 
-	private Text fileText;
+	private static final String PAGE_NAME = NewEditorConfigFileWizardPage.class.getName();
+
+	private static final IPath EDITOTR_CONFIG_PATH = new Path(EditorConfigConstants.EDITORCONFIG);
+
+	private Text folderText;
 
 	private ISelection selection;
 
 	/**
-	 * Constructor for SampleNewWizardPage.
+	 * Constructor for NewEditorConfigFileWizardPage.
 	 * 
 	 * @param pageName
 	 */
 	public NewEditorConfigFileWizardPage(ISelection selection) {
-		super("wizardPage");
-		// setTitle("Multi-page Editor File");
-		// setDescription("This wizard creates a new file with *.mpe extension that can be opened by a multi-page editor.");
+		super(PAGE_NAME);
+		setTitle(EditorConfigMessages.NewEditorConfigFileWizardPage_title);
+		setDescription(EditorConfigMessages.NewEditorConfigFileWizardPage_description);
 		this.selection = selection;
 	}
 
-	/**
-	 * @see IDialogPage#createControl(Composite)
-	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
@@ -65,33 +67,22 @@ public class NewEditorConfigFileWizardPage extends WizardPage {
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
 		Label label = new Label(container, SWT.NULL);
-		label.setText("&Container:");
+		label.setText(EditorConfigMessages.NewEditorConfigFileWizardPage_folderText_Label);
 
-		containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
+		folderText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		containerText.setLayoutData(gd);
-		containerText.addModifyListener(new ModifyListener() {
+		folderText.setLayoutData(gd);
+		folderText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				dialogChanged();
 			}
 		});
 
 		Button button = new Button(container, SWT.PUSH);
-		button.setText("Browse...");
+		button.setText(EditorConfigMessages.Browse_button);
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				handleBrowse();
-			}
-		});
-		label = new Label(container, SWT.NULL);
-		label.setText("&File name:");
-
-		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);		
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		fileText.setLayoutData(gd);
-		fileText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				dialogChanged();
 			}
 		});
 		initialize();
@@ -102,10 +93,8 @@ public class NewEditorConfigFileWizardPage extends WizardPage {
 	/**
 	 * Tests if the current workbench selection is a suitable container to use.
 	 */
-
 	private void initialize() {
-		if (selection != null && selection.isEmpty() == false
-				&& selection instanceof IStructuredSelection) {
+		if (selection != null && selection.isEmpty() == false && selection instanceof IStructuredSelection) {
 			IStructuredSelection ssel = (IStructuredSelection) selection;
 			if (ssel.size() > 1)
 				return;
@@ -116,25 +105,23 @@ public class NewEditorConfigFileWizardPage extends WizardPage {
 					container = (IContainer) obj;
 				else
 					container = ((IResource) obj).getParent();
-				containerText.setText(container.getFullPath().toString());
+				folderText.setText(container.getFullPath().toString());
 			}
 		}
-		fileText.setText(".editorconfig");
 	}
 
 	/**
-	 * Uses the standard container selection dialog to choose the new value for
-	 * the container field.
+	 * Uses the standard container selection dialog to choose the new value for the
+	 * container field.
 	 */
-
 	private void handleBrowse() {
-		ContainerSelectionDialog dialog = new ContainerSelectionDialog(
-				getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
-				"Select new file container");
+		ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(),
+				ResourcesPlugin.getWorkspace().getRoot(), false,
+				EditorConfigMessages.NewEditorConfigFileWizardPage_containerSelectionDialog_title);
 		if (dialog.open() == ContainerSelectionDialog.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
-				containerText.setText(((Path) result[0]).toString());
+				folderText.setText(((Path) result[0]).toString());
 			}
 		}
 	}
@@ -142,21 +129,22 @@ public class NewEditorConfigFileWizardPage extends WizardPage {
 	/**
 	 * Ensures that both text fields are set.
 	 */
-
 	private void dialogChanged() {
-		IResource container = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(new Path(getContainerName()));
+		IResource container = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(getContainerName()));
 		if (getContainerName().length() == 0) {
-			updateStatus("File container must be specified");
+			updateStatus(EditorConfigMessages.NewEditorConfigFileWizardPage_folder_required_error);
 			return;
 		}
-		if (container == null
-				|| (container.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
-			updateStatus("File container must exist");
+		if (container == null || (container.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
+			updateStatus(EditorConfigMessages.NewEditorConfigFileWizardPage_folder_noexists_error);
 			return;
 		}
 		if (!container.isAccessible()) {
-			updateStatus("Project must be writable");
+			updateStatus(EditorConfigMessages.NewEditorConfigFileWizardPage_project_noaccessible_error);
+			return;
+		}
+		if (((IContainer) container).exists(EDITOTR_CONFIG_PATH)) {
+			updateStatus(EditorConfigMessages.NewEditorConfigFileWizardPage_folder_already_editorconfig_error);
 			return;
 		}
 		updateStatus(null);
@@ -168,10 +156,7 @@ public class NewEditorConfigFileWizardPage extends WizardPage {
 	}
 
 	public String getContainerName() {
-		return containerText.getText();
+		return folderText.getText();
 	}
 
-	public String getFileName() {
-		return fileText.getText();
-	}
 }

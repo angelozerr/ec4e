@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class EditorConfig {
 
 	public static EditorConfig load(File configFile) throws IOException {
 		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(new FileInputStream(configFile), "UTF-8"));) {
+				new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8));) {
 			EditorConfig config = EditorConfig.load(reader);
 			config.configFile = configFile;
 			return config;

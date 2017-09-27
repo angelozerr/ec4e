@@ -196,7 +196,23 @@
 	       <description>%NewEditorConfigWizard.desc</description>
 		</wizard>		
    </extension>
-	           
+
+   <extension
+		point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard
+			type="new"
+			wizardId="org.eclipse.ec4e.wizards.new">
+			<enablement>
+         		<or>
+            	<adapt type="org.eclipse.core.resources.IFile" /> 
+    			<adapt type="org.eclipse.core.resources.IFolder" />
+           		<adapt type="org.eclipse.core.resources.IProject" /> 
+             	<adapt type="org.eclipse.core.resources.IWorkspaceRoot" /> 
+         		</or>
+      		</enablement>
+		</commonWizard>
+   </extension> 
+		           
    <extension
 	       point="org.eclipse.ui.startup">	
 	       <startup class="org.eclipse.ec4e.internal.EditorConfigStartup" />       

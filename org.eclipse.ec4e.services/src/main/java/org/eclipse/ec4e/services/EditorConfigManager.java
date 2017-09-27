@@ -35,7 +35,7 @@ public class EditorConfigManager {
 	 * (.editorconfig) and version {@link EditorConfig#VERSION}
 	 */
 	public EditorConfigManager() {
-		this(".editorconfig", VERSION);
+		this(EditorConfigConstants.EDITORCONFIG, VERSION);
 	}
 
 	/**

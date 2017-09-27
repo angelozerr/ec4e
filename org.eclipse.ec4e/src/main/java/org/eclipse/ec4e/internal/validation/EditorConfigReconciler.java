@@ -11,27 +11,41 @@
 package org.eclipse.ec4e.internal.validation;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.ec4e.services.EditorConfigConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
 
 public class EditorConfigReconciler extends MonoReconciler {
 
 	public EditorConfigReconciler(IPreferenceStore preferenceStore, IResource resource) {
-		super(new EditorConfigReconcilingStrategy(preferenceStore, resource), true);
+		super(create(preferenceStore, resource), true);
+	}
+
+	private static IReconcilingStrategy create(IPreferenceStore preferenceStore, IResource resource) {
+		if (EditorConfigConstants.EDITORCONFIG.equals(resource.getName())) {
+			// it's an .editorconfig file, add validation
+			CompositeReconcilingStrategy strategy = new CompositeReconcilingStrategy();
+			strategy.setReconcilingStrategies(new IReconcilingStrategy[] { new EditorConfigReconcilingStrategy(),
+					new ApplyConfigReconcilingStrategy(preferenceStore, resource) });
+			return strategy;
+		}
+		return new ApplyConfigReconcilingStrategy(preferenceStore, resource);
 	}
 
 	@Override
 	public void install(ITextViewer textViewer) {
 		super.install(textViewer);
-		((EditorConfigReconcilingStrategy) getReconcilingStrategy(IDocument.DEFAULT_CONTENT_TYPE)).install(textViewer);
+		((IReconciler) getReconcilingStrategy(IDocument.DEFAULT_CONTENT_TYPE)).install(textViewer);
 	}
 
 	@Override
 	public void uninstall() {
 		super.uninstall();
-		((EditorConfigReconcilingStrategy) getReconcilingStrategy(IDocument.DEFAULT_CONTENT_TYPE)).uninstall();
+		((IReconciler) getReconcilingStrategy(IDocument.DEFAULT_CONTENT_TYPE)).uninstall();
 	}
 
 }

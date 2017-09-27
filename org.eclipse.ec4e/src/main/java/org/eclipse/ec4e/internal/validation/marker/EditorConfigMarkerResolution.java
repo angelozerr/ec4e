@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ec4e.internal.validation.EditorConfigReconcilingStrategy;
+import org.eclipse.ec4e.internal.validation.ApplyConfigReconcilingStrategy;
 import org.eclipse.ec4e.services.model.options.ConfigPropertyType;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator2;
@@ -27,7 +27,7 @@ public class EditorConfigMarkerResolution implements IMarkerResolutionGenerator2
 		List<IMarkerResolution> res = new ArrayList<>(1);
 		try {
 			ConfigPropertyType<?> type = (ConfigPropertyType<?>) marker
-					.getAttribute(EditorConfigReconcilingStrategy.EC_OPTION_TYPE);
+					.getAttribute(ApplyConfigReconcilingStrategy.EC_OPTION_TYPE);
 			if (type == ConfigPropertyType.INSERT_FINAL_NEWLINE) {
 				res.add(InsertFinalNewLineMarkerResolution.INSTANCE);
 			} else if (type == ConfigPropertyType.TRIM_TRAILING_WHITESPACE) {
@@ -42,7 +42,7 @@ public class EditorConfigMarkerResolution implements IMarkerResolutionGenerator2
 	@Override
 	public boolean hasResolutions(IMarker marker) {
 		try {
-			return EditorConfigReconcilingStrategy.PROBLEM_MARKER_TYPE.equals(marker.getType());
+			return ApplyConfigReconcilingStrategy.PROBLEM_MARKER_TYPE.equals(marker.getType());
 		} catch (CoreException e) {
 			return false;
 		}
