@@ -153,14 +153,10 @@ public class EditorConfigReconcilingStrategy
 		int endLine = document.getLineOfOffset(partition.getOffset() + partition.getLength());
 
 		IRegion region = null;
-		Integer maxStart = null, maxEnd = null;
 		for (int i = startLine; i < endLine + 1; i++) {
 			region = document.getLineInformation(i);
 			if (region.getLength() == 0)
 				continue;
-			if (maxStart == null) {
-				maxStart = region.getOffset();
-			}
 			int lineStart = region.getOffset();
 			int lineExclusiveEnd = lineStart + region.getLength();
 			int j = lineExclusiveEnd - 1;
@@ -172,7 +168,6 @@ public class EditorConfigReconcilingStrategy
 			}
 		}
 		if (region != null) {
-			maxEnd = region.getOffset() + region.getLength();
 			for (IMarker marker : new HashSet<>(remainingMarkers)) {
 				if (marker.getAttribute(EC_OPTION_TYPE) == ConfigPropertyType.TRIM_TRAILING_WHITESPACE) {
 					int line = MarkerUtilities.getLineNumber(marker) + 1;
