@@ -17,7 +17,7 @@
  */
 package org.eclipse.ec4e.services.model.options;
 
-public enum IndentStyleOption implements Displayable {
+public enum IndentStyleOption  {
 
 	TAB("Tab"),
 
@@ -29,9 +29,5 @@ public enum IndentStyleOption implements Displayable {
 		this.displayValue = displayValue;
 	}
 
-	@Override
-	public String getDisplayValue() {
-		return displayValue;
-	}
 
 }

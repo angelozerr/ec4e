@@ -17,7 +17,7 @@
  */
 package org.eclipse.ec4e.services.model.options;
 
-public enum EndOfLineOption implements Displayable {
+public enum EndOfLineOption {
 
 	LF("Line Feed", "\n"),
 
@@ -32,11 +32,6 @@ public enum EndOfLineOption implements Displayable {
 	private EndOfLineOption(final String displayValue, final String eolString) {
 		this.displayValue = displayValue;
 		this.eolString = eolString;
-	}
-
-	@Override
-	public String getDisplayValue() {
-		return displayValue;
 	}
 
 	public String getEndOfLineString() {

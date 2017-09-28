@@ -142,11 +142,11 @@ public class EditorConfigService {
 		switch (context.type) {
 		case OPTION_NAME: {
 			ConfigPropertyType<?> type = ConfigPropertyType.valueOf(context.prefix);
-			return type != null ? type.getDisplayLabel() : null;
+			return type != null ? type.getDescription() : null;
 		}
 		case OPTION_VALUE: {
 			ConfigPropertyType<?> type = ConfigPropertyType.valueOf(context.name);
-			return type != null ? type.getDisplayLabel() : null;
+			return type != null ? type.getDescription() : null;
 		}
 		default:
 			return null;

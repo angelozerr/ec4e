@@ -48,7 +48,14 @@ public class Option {
 
 	@Override
 	public String toString() {
-		return new StringBuilder(name).append("=").append(value).toString();
+		return new StringBuilder(name).append(" = ").append(value).toString();
 	}
 
+	public int getIntValue() {
+		return Integer.parseInt(getValue());
+	}
+
+	public boolean isValid() {
+		return true;
+	}
 }

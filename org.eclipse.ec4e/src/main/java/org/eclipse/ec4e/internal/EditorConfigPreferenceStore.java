@@ -57,6 +57,9 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 				tabWidth = null;
 				Collection<Option> options = IDEEditorConfigManager.getInstance().getOptions(file, null);
 				for (Option option : options) {
+					if (!option.isValid()) {
+						continue;
+					}
 					if ("indent_style".equals(option.getName())) {
 						spacesForTabs = "space".equals(option.getValue());
 						if (oldSpacesForTabs != spacesForTabs) {

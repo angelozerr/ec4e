@@ -185,7 +185,7 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 	public String getAdditionalProposalInfo() {
 		initIfNeeded();
 		ConfigPropertyType<?> optionType = getOptionType();
-		return optionType != null ? optionType.getDisplayLabel() : null;
+		return optionType != null ? optionType.getDescription() : null;
 	}
 
 	@Override

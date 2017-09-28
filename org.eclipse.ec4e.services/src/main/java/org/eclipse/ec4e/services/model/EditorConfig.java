@@ -77,7 +77,7 @@ public class EditorConfig {
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		if (getRoot() != null) {
-			s.append("root=");
+			s.append("root = ");
 			s.append(isRoot());
 			s.append("\n\n");
 		}

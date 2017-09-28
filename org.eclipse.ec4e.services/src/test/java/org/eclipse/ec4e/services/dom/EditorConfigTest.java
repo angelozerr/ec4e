@@ -35,7 +35,7 @@ public class EditorConfigTest {
 		s += "[*.{js,py}]\n";
 		s += "charset = utf-8";
 		EditorConfig config = EditorConfig.load(new StringReader(s));
-		Assert.assertEquals("root=true\n" + "\n" + "[*]\n" + "end_of_line=lf\n" + "insert_final_newline=true\n" + "\n"
-				+ "[*.{js,py}]\n" + "charset=utf-8", config.toString());
+		Assert.assertEquals("root = true\n" + "\n" + "[*]\n" + "end_of_line = lf\n" + "insert_final_newline = true\n" + "\n"
+				+ "[*.{js,py}]\n" + "charset = utf-8", config.toString());
 	}
 }
