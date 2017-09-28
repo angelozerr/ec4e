@@ -41,9 +41,10 @@ public class ValidationEditorConfigHandler extends EditorConfigHandlerAdapter<Ob
 	public void endOptionName(Object option, String name) {
 		// Validate option name
 		if (!EditorConfigService.isOptionExists(name)) {
-			Location location = getLocation();
+			Location start = getLocation();
+			Location end = start.adjust(-name.length());
 			ErrorType errorType = ErrorType.OptionNameNotExists;
-			reporter.addError(MessageFormat.format(OPTION_NAME_NOT_EXISTS_MESSAGE, name), location, null, errorType,
+			reporter.addError(MessageFormat.format(OPTION_NAME_NOT_EXISTS_MESSAGE, name), start, end, errorType,
 					provider.getSeverity(errorType));
 		}
 	}
@@ -54,9 +55,10 @@ public class ValidationEditorConfigHandler extends EditorConfigHandlerAdapter<Ob
 		try {
 			EditorConfigService.validateOptionValue(name, value);
 		} catch (ConfigPropertyException e) {
-			Location location = getLocation();
+			Location start = getLocation();
 			ErrorType errorType = ErrorType.OptionValueType;
-			reporter.addError(e.getMessage(), location, null, errorType, provider.getSeverity(errorType));
+			Location end = start.adjust(-value.length());
+			reporter.addError(e.getMessage(), start, end, errorType, provider.getSeverity(errorType));
 		}
 	}
 
