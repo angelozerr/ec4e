@@ -29,11 +29,11 @@ public class EditorConfigReconciler extends MonoReconciler {
 		if (EditorConfigConstants.EDITORCONFIG.equals(resource.getName())) {
 			// it's an .editorconfig file, add validation
 			CompositeReconcilingStrategy strategy = new CompositeReconcilingStrategy();
-			strategy.setReconcilingStrategies(new IReconcilingStrategy[] { new EditorConfigReconcilingStrategy(),
-					new ApplyConfigReconcilingStrategy(preferenceStore, resource) });
+			strategy.setReconcilingStrategies(new IReconcilingStrategy[] { new ValidateEditorConfigStrategy(resource),
+					new ValidateAppliedOptionsStrategy(preferenceStore, resource) });
 			return strategy;
 		}
-		return new ApplyConfigReconcilingStrategy(preferenceStore, resource);
+		return new ValidateAppliedOptionsStrategy(preferenceStore, resource);
 	}
 
 	@Override
