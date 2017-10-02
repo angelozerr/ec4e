@@ -5,6 +5,6 @@
   <parent>
     <groupId>org.eclipse.ec4e</groupId>
     <version>0.1.0-SNAPSHOT</version>
-    <artifactId>parent</artifactId>
+    <artifactId>org.eclipse.ec4e.parent</artifactId>
   </parent>
 </project>
