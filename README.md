@@ -19,6 +19,8 @@
 
 Syntax coloration, auto close brackets are available for other files (properties/ini files) like .gitattributes, .gitconfig, gitconfig etc
 
+See [ec4e wiki](https://github.com/angelozerr/ec4e/wiki) for more informations.
+
 ## Similar project
 
 [editorconfig-eclipse](https://github.com/ncjones/editorconfig-eclipse) is an Eclipse plugin for editorconfig, so why developping an another plugin:
