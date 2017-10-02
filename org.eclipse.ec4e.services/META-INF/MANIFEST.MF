@@ -10,7 +10,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.ec4e.services,
  org.eclipse.ec4e.services.completion,
- org.eclipse.ec4e.services.dom,
  org.eclipse.ec4e.services.model,
  org.eclipse.ec4e.services.model.options,
  org.eclipse.ec4e.services.parser,
