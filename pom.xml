@@ -5,6 +5,13 @@
 	<artifactId>org.eclipse.ec4e.parent</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
+	<properties>
+		<tycho.strictVersions>true</tycho.strictVersions>
+		<tycho.attachP2Metadata>true</tycho.attachP2Metadata>
+		<tycho.defaultP2Metadata>true</tycho.defaultP2Metadata>
+	</properties>
+
 	<modules>
         <module>org.eclipse.ec4e.services</module>
 		<module>org.eclipse.ec4e</module>
@@ -69,6 +76,10 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
 				<version>1.0.0</version>
+				<configuration>
+					<attachP2Metadata>${tycho.attachP2Metadata}</attachP2Metadata>
+					<defaultP2Metadata>${tycho.defaultP2Metadata}</defaultP2Metadata>
+				</configuration>
 				<executions>
 					<execution>
 						<id>attach-p2-metadata</id>
@@ -78,6 +89,14 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>1.0.0</version>
+				<configuration>
+					<strictVersions>${tycho.strictVersions}</strictVersions>
+				</configuration>
 			</plugin>
 			<!-- see: http://mukis.de/pages/simple-junit-tests-with-tycho-and-surefire/ -->
 			<plugin>
