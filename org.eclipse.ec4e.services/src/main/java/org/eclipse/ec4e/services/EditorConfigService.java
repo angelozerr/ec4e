@@ -10,11 +10,10 @@
  */
 package org.eclipse.ec4e.services;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.ec4e.services.completion.CompletionContextType;
 import org.eclipse.ec4e.services.completion.CompletionEntry;
@@ -77,9 +76,16 @@ public class EditorConfigService {
 
 	// ------------- Completion service
 
+	public static final Function<String, ICompletionEntry> COMPLETION_ENTRY_FACTORY = new Function<String, ICompletionEntry>() {
+		@Override
+		public CompletionEntry apply(String name) {
+			return new CompletionEntry(name);
+		}
+	};
+
 	public static List<ICompletionEntry> getCompletionEntries(int offset, String document,
 			ICompletionEntryMatcher matcher) throws Exception {
-		return getCompletionEntries(offset, document, matcher, CompletionEntry::new,
+		return getCompletionEntries(offset, document, matcher, COMPLETION_ENTRY_FACTORY,
 				ContentProvider.STRING_CONTENT_PROVIDER);
 	}
 
@@ -97,35 +103,46 @@ public class EditorConfigService {
 		}
 		TokenContext context = getTokenContext(offset, document, false, provider);
 		switch (context.type) {
-		case OPTION_NAME:
-			registry.getTypes().stream().map(type -> {
-				C entry = factory.apply(type.getName());
+		case OPTION_NAME: {
+			C entry = null;
+			List<C> entries = new ArrayList<>();
+			for (OptionType<?> type : registry.getTypes()) {
+				entry = factory.apply(type.getName());
 				entry.setMatcher(matcher);
 				entry.setOptionType(type);
 				entry.setContextType(context.type);
 				entry.setInitialOffset(offset);
-				return entry;
-			}).filter(entry -> entry.updatePrefix(context.prefix)).collect(Collectors.toList());
-		case OPTION_VALUE:
+				if (entry.updatePrefix(context.prefix)) {
+					entries.add(entry);
+				}
+			}
+			return entries;
+		}
+		case OPTION_VALUE: {
 			OptionType<?> optionType = registry.getType(context.name);
 			if (optionType != null) {
 				String values[] = optionType.getPossibleValues();
 				if (values != null) {
-					return Stream.of(values).map(value -> {
-						C entry = factory.apply(value);
+					C entry = null;
+					List<C> entries = new ArrayList<>();
+					for (String value : values) {
+						entry = factory.apply(value);
 						entry.setMatcher(matcher);
 						entry.setOptionType(optionType);
 						entry.setContextType(context.type);
 						entry.setInitialOffset(offset);
-						return entry;
-					}).filter(entry -> entry.updatePrefix(context.prefix)).collect(Collectors.toList());
+						if (entry.updatePrefix(context.prefix)) {
+							entries.add(entry);
+						}
+					}
+					return entries;
 				}
 			}
+		}
 			break;
 		default:
 			break;
 		}
-
 		return Collections.emptyList();
 	}
 
