@@ -34,11 +34,11 @@ public class EditorConfig {
 	private OptionTypeRegistry registry;
 
 	public EditorConfig() {
-		this.sections = new ArrayList<>();
-		setRegistry(OptionTypeRegistry.DEFAULT);
+		this(OptionTypeRegistry.DEFAULT);
 	}
 
-	public void setRegistry(OptionTypeRegistry registry) {
+	public EditorConfig(OptionTypeRegistry registry) {
+		this.sections = new ArrayList<>();
 		this.registry = registry;
 	}
 
@@ -47,16 +47,24 @@ public class EditorConfig {
 	}
 
 	public static EditorConfig load(File configFile) throws IOException {
+		return load(configFile, OptionTypeRegistry.DEFAULT);
+	}
+
+	public static EditorConfig load(File configFile, OptionTypeRegistry registry) throws IOException {
 		try (BufferedReader reader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8));) {
-			EditorConfig config = EditorConfig.load(reader);
+			EditorConfig config = EditorConfig.load(reader, registry);
 			config.configFile = configFile;
 			return config;
 		}
 	}
 
 	public static EditorConfig load(Reader reader) throws IOException {
-		EditorConfigHandler handler = new EditorConfigHandler();
+		return load(reader, OptionTypeRegistry.DEFAULT);
+	}
+
+	public static EditorConfig load(Reader reader, OptionTypeRegistry registry) throws IOException {
+		EditorConfigHandler handler = new EditorConfigHandler(registry);
 		new EditorConfigParser<Section, Option>(handler).parse(reader);
 		return handler.getEditorConfig();
 	}

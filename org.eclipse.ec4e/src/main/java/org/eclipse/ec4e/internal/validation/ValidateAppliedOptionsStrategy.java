@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ec4e.internal.IDEEditorConfigManager;
 import org.eclipse.ec4e.internal.validation.marker.MarkerUtils;
 import org.eclipse.ec4e.services.model.optiontypes.OptionNames;
 import org.eclipse.ec4e.services.model.optiontypes.OptionType;
@@ -59,8 +60,9 @@ public class ValidateAppliedOptionsStrategy
 	public ValidateAppliedOptionsStrategy(IPreferenceStore preferenceStore, IResource resource) {
 		this.preferenceStore = preferenceStore;
 		this.resource = resource;
-		insertFinalNewlineType = OptionTypeRegistry.DEFAULT.getType(OptionNames.insert_final_newline.name());
-		trimTrailingWhitespaceType = OptionTypeRegistry.DEFAULT.getType(OptionNames.trim_trailing_whitespace.name());
+		OptionTypeRegistry registry = IDEEditorConfigManager.getInstance().getRegistry();
+		insertFinalNewlineType = registry.getType(OptionNames.insert_final_newline.name());
+		trimTrailingWhitespaceType = registry.getType(OptionNames.trim_trailing_whitespace.name());
 	}
 
 	@Override

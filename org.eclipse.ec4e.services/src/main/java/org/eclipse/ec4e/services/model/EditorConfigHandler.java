@@ -10,6 +10,7 @@
  */
 package org.eclipse.ec4e.services.model;
 
+import org.eclipse.ec4e.services.model.optiontypes.OptionTypeRegistry;
 import org.eclipse.ec4e.services.parser.ParseException;
 import org.eclipse.ec4e.services.parser.handlers.AbstractEditorConfigHandler;
 
@@ -17,8 +18,8 @@ class EditorConfigHandler extends AbstractEditorConfigHandler<Section, Option> {
 
 	private final EditorConfig editorConfig;
 
-	public EditorConfigHandler() {
-		this.editorConfig = new EditorConfig();
+	public EditorConfigHandler(OptionTypeRegistry registry) {
+		this.editorConfig = new EditorConfig(registry);
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import java.util.Set;
 import org.eclipse.ec4e.services.model.EditorConfig;
 import org.eclipse.ec4e.services.model.Option;
 import org.eclipse.ec4e.services.model.Section;
+import org.eclipse.ec4e.services.model.optiontypes.OptionTypeRegistry;
 
 public class EditorConfigManager {
 
@@ -29,26 +30,30 @@ public class EditorConfigManager {
 
 	private final String configFilename;
 	private final String version;
+	private final OptionTypeRegistry registry;
 
 	/**
 	 * Creates EditorConfig handler with default configuration filename
 	 * (.editorconfig) and version {@link EditorConfig#VERSION}
 	 */
 	public EditorConfigManager() {
-		this(EditorConfigConstants.EDITORCONFIG, VERSION);
+		this(OptionTypeRegistry.DEFAULT, EditorConfigConstants.EDITORCONFIG, VERSION);
 	}
 
 	/**
 	 * Creates EditorConfig handler with specified configuration filename and
 	 * version. Used mostly for debugging/testing.
 	 * 
+	 * @param option
+	 *            type registry
 	 * @param configFilename
 	 *            configuration file name to be searched for instead of
 	 *            .editorconfig
 	 * @param version
 	 *            required version
 	 */
-	public EditorConfigManager(String configFilename, String version) {
+	public EditorConfigManager(OptionTypeRegistry registry, String configFilename, String version) {
+		this.registry = registry;
 		this.configFilename = configFilename;
 		this.version = version;
 	}
@@ -63,7 +68,7 @@ public class EditorConfigManager {
 			while (dir != null && !root) {
 				File configFile = new File(dir, configFilename);
 				if (configFile.exists()) {
-					EditorConfig config = EditorConfig.load(configFile);
+					EditorConfig config = EditorConfig.load(configFile, getRegistry());
 					root = config.isRoot();
 					List<Section> sections = config.getSections();
 					for (Section section : sections) {
@@ -84,5 +89,9 @@ public class EditorConfigManager {
 		}
 
 		return options.values();
+	}
+
+	public OptionTypeRegistry getRegistry() {
+		return registry;
 	}
 }
