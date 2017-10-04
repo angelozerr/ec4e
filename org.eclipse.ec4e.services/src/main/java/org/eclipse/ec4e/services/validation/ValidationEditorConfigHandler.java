@@ -12,8 +12,9 @@ package org.eclipse.ec4e.services.validation;
 
 import java.text.MessageFormat;
 
-import org.eclipse.ec4e.services.EditorConfigService;
-import org.eclipse.ec4e.services.model.options.ConfigPropertyException;
+import org.eclipse.ec4e.services.model.optiontypes.OptionException;
+import org.eclipse.ec4e.services.model.optiontypes.OptionType;
+import org.eclipse.ec4e.services.model.optiontypes.OptionTypeRegistry;
 import org.eclipse.ec4e.services.parser.ErrorType;
 import org.eclipse.ec4e.services.parser.Location;
 import org.eclipse.ec4e.services.parser.ParseException;
@@ -26,10 +27,12 @@ public class ValidationEditorConfigHandler extends EditorConfigHandlerAdapter<Ob
 
 	private final IReporter reporter;
 	private final ISeverityProvider provider;
+	private final OptionTypeRegistry registry;
 
-	public ValidationEditorConfigHandler(IReporter reporter, ISeverityProvider provider) {
+	public ValidationEditorConfigHandler(IReporter reporter, ISeverityProvider provider, OptionTypeRegistry registry) {
 		this.reporter = reporter;
 		this.provider = provider != null ? provider : ISeverityProvider.DEFAULT;
+		this.registry = registry != null ? registry : OptionTypeRegistry.DEFAULT;
 	}
 
 	@Override
@@ -38,23 +41,24 @@ public class ValidationEditorConfigHandler extends EditorConfigHandlerAdapter<Ob
 	}
 
 	@Override
-	public void endOptionName(Object option, String name) {
+	public Object endOptionName(String name) {
 		// Validate option name
-		if (!EditorConfigService.isOptionExists(name)) {
+		if (!isOptionExists(name)) {
 			Location start = getLocation();
 			Location end = start.adjust(-name.length());
 			ErrorType errorType = ErrorType.OptionNameNotExists;
 			reporter.addError(MessageFormat.format(OPTION_NAME_NOT_EXISTS_MESSAGE, name), start, end, errorType,
 					provider.getSeverity(errorType));
 		}
+		return null;
 	}
 
 	@Override
 	public void endOptionValue(Object option, String value, String name) {
 		// Validate value of the option name
 		try {
-			EditorConfigService.validateOptionValue(name, value);
-		} catch (ConfigPropertyException e) {
+			validateOptionValue(name, value);
+		} catch (OptionException e) {
 			Location start = getLocation();
 			ErrorType errorType = ErrorType.OptionValueType;
 			Location end = start.adjust(-value.length());
@@ -71,4 +75,19 @@ public class ValidationEditorConfigHandler extends EditorConfigHandlerAdapter<Ob
 		return provider.getSeverity(e.getErrorType());
 	}
 
+	private boolean validateOptionValue(String name, String value) throws OptionException {
+		OptionType<?> type = getOption(name);
+		if (type != null) {
+			type.validate(value);
+		}
+		return true;
+	}
+
+	private boolean isOptionExists(String name) {
+		return getOption(name) != null;
+	}
+
+	private OptionType<?> getOption(String name) {
+		return registry.getType(name);
+	}
 }

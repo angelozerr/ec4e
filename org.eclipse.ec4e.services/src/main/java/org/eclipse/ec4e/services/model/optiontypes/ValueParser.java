@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.eclipse.ec4e.services.model.options;
+package org.eclipse.ec4e.services.model.optiontypes;
 
 interface ValueParser<T> {
 

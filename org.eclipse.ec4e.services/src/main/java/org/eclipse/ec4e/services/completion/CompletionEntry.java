@@ -10,7 +10,7 @@
  */
 package org.eclipse.ec4e.services.completion;
 
-import org.eclipse.ec4e.services.model.options.ConfigPropertyType;
+import org.eclipse.ec4e.services.model.optiontypes.OptionType;
 
 public class CompletionEntry implements ICompletionEntry {
 
@@ -26,7 +26,7 @@ public class CompletionEntry implements ICompletionEntry {
 	private String prefix;
 	private int initialOffset;
 	private CompletionContextType contextType;
-	private ConfigPropertyType<?> optionType;
+	private OptionType<?> optionType;
 
 	public CompletionEntry(String name) {
 		this.name = name;
@@ -56,11 +56,11 @@ public class CompletionEntry implements ICompletionEntry {
 	}
 
 	@Override
-	public void setOptionType(ConfigPropertyType<?> optionType) {
+	public void setOptionType(OptionType<?> optionType) {
 		this.optionType = optionType;
 	}
 
-	public ConfigPropertyType<?> getOptionType() {
+	public OptionType<?> getOptionType() {
 		return optionType;
 	}
 

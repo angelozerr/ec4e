@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.eclipse.ec4e.services.model.options;
+package org.eclipse.ec4e.services.model.optiontypes;
 
 interface ValueValidator<T> {
 
 	public static ValueValidator<String> IDENTITY_VALUE_VALIDATOR = new ValueValidator<String>() {
 
 		@Override
-		public void validate(String name, String value) throws ConfigPropertyException {
+		public void validate(String name, String value) throws OptionException {
 
 		}
 	};
@@ -30,10 +30,10 @@ interface ValueValidator<T> {
 	public static ValueValidator<Boolean> BOOLEAN_VALUE_VALIDATOR = new ValueValidator<Boolean>() {
 
 		@Override
-		public void validate(String name, String value) throws ConfigPropertyException {
+		public void validate(String name, String value) throws OptionException {
 			value = value.toLowerCase();
 			if (!"true".equals(value) && !"false".equals(value)) {
-				throw new ConfigPropertyException(
+				throw new OptionException(
 						"Option '" + name + "' expects a boolean. The value '" + value + "' is not a boolean.");
 			}
 		}
@@ -42,16 +42,16 @@ interface ValueValidator<T> {
 	public static ValueValidator<Integer> POSITIVE_INT_VALUE_VALIDATOR = new ValueValidator<Integer>() {
 
 		@Override
-		public void validate(String name, String value) throws ConfigPropertyException {
+		public void validate(String name, String value) throws OptionException {
 			try {
 				Integer.valueOf(value);
 			} catch (final NumberFormatException e) {
-				throw new ConfigPropertyException(
+				throw new OptionException(
 						"Option '" + name + "' expects an integer. The value '" + value + "' is not an integer.");
 			}
 		}
 	};
 
-	void validate(String name, String value) throws ConfigPropertyException;
+	void validate(String name, String value) throws OptionException;
 
 }

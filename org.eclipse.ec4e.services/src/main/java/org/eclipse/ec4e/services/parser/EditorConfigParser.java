@@ -276,12 +276,12 @@ public class EditorConfigParser<Section, Option> {
 	}
 
 	private void readOption() throws IOException {
-		Option option = handler.startOption();
+		handler.startOption();
 		// option name
 		skipWhiteSpace();
-		handler.startOptionName(option);
+		handler.startOptionName();
 		String name = readString(StopReading.OptionName);
-		handler.endOptionName(option, name);
+		Option option = handler.endOptionName(name);
 		skipWhiteSpace();
 		if (!readChar('=')) {
 			throw new OptionAssignementMissingException(name, getLocation());

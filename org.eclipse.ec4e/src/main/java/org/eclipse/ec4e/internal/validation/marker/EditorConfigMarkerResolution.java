@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ec4e.services.model.options.ConfigPropertyType;
+import org.eclipse.ec4e.services.model.optiontypes.OptionNames;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator2;
 
@@ -25,10 +25,9 @@ public class EditorConfigMarkerResolution implements IMarkerResolutionGenerator2
 	public IMarkerResolution[] getResolutions(IMarker marker) {
 		List<IMarkerResolution> res = new ArrayList<>(1);
 		try {
-			ConfigPropertyType<?> type = MarkerUtils.getOptionType(marker);
-			if (type == ConfigPropertyType.INSERT_FINAL_NEWLINE) {
+			if (MarkerUtils.isOptionType(marker, OptionNames.insert_final_newline.name())) {
 				res.add(InsertFinalNewLineMarkerResolution.INSTANCE);
-			} else if (type == ConfigPropertyType.TRIM_TRAILING_WHITESPACE) {
+			} else if (MarkerUtils.isOptionType(marker, OptionNames.trim_trailing_whitespace.name())) {
 				res.add(TrimTrailingWhitespaceMarkerResolution.INSTANCE);
 			}
 		} catch (CoreException e) {

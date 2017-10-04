@@ -46,9 +46,8 @@ public class LoggerEditorConfigHandler<Section, Option> extends AbstractEditorCo
 	}
 
 	@Override
-	public Option startOption() {
+	public void startOption() {
 		System.err.println("Start option at " + getLocation());
-		return null;
 	}
 
 	@Override
@@ -57,13 +56,14 @@ public class LoggerEditorConfigHandler<Section, Option> extends AbstractEditorCo
 	}
 
 	@Override
-	public void startOptionName(Option option) {
+	public void startOptionName() {
 		System.err.println("Start option name at " + getLocation());
 	}
 
 	@Override
-	public void endOptionName(Option option, String name) {
+	public Option endOptionName(String name) {
 		System.err.println("End option name at " + getLocation() + ", name=" + name);
+		return null;
 	}
 
 	@Override

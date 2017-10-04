@@ -1,36 +1,16 @@
-/*
- * Copyright 2014 Nathan Jones
- *
- * This file is part of "EditorConfig Eclipse".
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package org.eclipse.ec4e.services.model.options;
+package org.eclipse.ec4e.services.model.optiontypes;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public abstract class ConfigPropertyType<T> implements Comparable<ConfigPropertyType<T>> {
+public abstract class OptionType<T> {
 
 	private static final String[] BOOLEAN_POSSIBLE_VALUES = new String[] { "true", "false" };
 
-	public static class IndentStyle extends ConfigPropertyType<IndentStyleOption> {
+	public static class IndentStyle extends OptionType<IndentStyleOption> {
 
 		private static final String[] POSSIBLE_VALUES = new String[] { "tab", "space" };
 
 		@Override
 		public String getName() {
-			return "indent_style";
+			return OptionNames.indent_style.name();
 		}
 
 		@Override
@@ -55,13 +35,13 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 	}
 
-	public static class IndentSize extends ConfigPropertyType<Integer> {
+	public static class IndentSize extends OptionType<Integer> {
 
 		private static final String[] POSSIBLE_VALUES = new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "tab" };
 
 		@Override
 		public String getName() {
-			return "indent_size";
+			return OptionNames.indent_size.name();
 		}
 
 		@Override
@@ -86,13 +66,13 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 	}
 
-	public static class TabWidth extends ConfigPropertyType<Integer> {
+	public static class TabWidth extends OptionType<Integer> {
 
 		private static final String[] POSSIBLE_VALUES = new String[] { "1", "2", "3", "4", "5", "6", "7", "8" };
 
 		@Override
 		public String getName() {
-			return "tab_width";
+			return OptionNames.tab_width.name();
 		}
 
 		@Override
@@ -116,13 +96,13 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 		}
 	}
 
-	public static class EndOfLine extends ConfigPropertyType<EndOfLineOption> {
+	public static class EndOfLine extends OptionType<EndOfLineOption> {
 
 		private static final String[] POSSIBLE_VALUES = new String[] { "lf", "crlf", "cr" };
 
 		@Override
 		public String getName() {
-			return "end_of_line";
+			return OptionNames.end_of_line.name();
 		}
 
 		@Override
@@ -146,14 +126,14 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 		}
 	}
 
-	public static class Charset extends ConfigPropertyType<String> {
+	public static class Charset extends OptionType<String> {
 
 		private static final String[] POSSIBLE_VALUES = new String[] { "utf-8", "utf-8-bom", "utf-16be", "utf-16le",
 				"latin1", "tab" };
 
 		@Override
 		public String getName() {
-			return "charset";
+			return OptionNames.charset.name();
 		}
 
 		@Override
@@ -178,11 +158,11 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 	}
 
-	public static class TrimTrailingWhitespace extends ConfigPropertyType<Boolean> {
+	public static class TrimTrailingWhitespace extends OptionType<Boolean> {
 
 		@Override
 		public String getName() {
-			return "trim_trailing_whitespace";
+			return OptionNames.trim_trailing_whitespace.name();
 		}
 
 		@Override
@@ -206,11 +186,11 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 		}
 	}
 
-	public static class InsertFinalNewline extends ConfigPropertyType<Boolean> {
+	public static class InsertFinalNewline extends OptionType<Boolean> {
 
 		@Override
 		public String getName() {
-			return "insert_final_newline";
+			return OptionNames.insert_final_newline.name();
 		}
 
 		@Override
@@ -234,11 +214,11 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 		}
 	}
 
-	public static class Root extends ConfigPropertyType<Boolean> {
+	public static class Root extends OptionType<Boolean> {
 
 		@Override
 		public String getName() {
-			return "root";
+			return OptionNames.root.name();
 		}
 
 		@Override
@@ -262,35 +242,6 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 		}
 	}
 
-	public static final Root ROOT = new Root();
-	public static final IndentStyle INDENT_STYLE = new IndentStyle();
-	public static final IndentSize INDENT_SIZE = new IndentSize();
-	public static final TabWidth TAB_WIDTH = new TabWidth();
-	public static final EndOfLine END_OF_LINE = new EndOfLine();
-	public static final Charset CHARSET = new Charset();
-	public static final TrimTrailingWhitespace TRIM_TRAILING_WHITESPACE = new TrimTrailingWhitespace();
-	public static final InsertFinalNewline INSERT_FINAL_NEWLINE = new InsertFinalNewline();
-
-	public static final ConfigPropertyType<?>[] ALL_TYPES = { ROOT, INDENT_STYLE, INDENT_SIZE, TAB_WIDTH, END_OF_LINE,
-			CHARSET, TRIM_TRAILING_WHITESPACE, INSERT_FINAL_NEWLINE };
-	private static final Map<String, ConfigPropertyType<?>> ALL_TYPES_MAP = new HashMap<String, ConfigPropertyType<?>>();
-	private static final Map<String, Integer> ALL_TYPES_INDICES = new HashMap<String, Integer>();
-	static {
-		int index = 0;
-		for (final ConfigPropertyType<?> type : ALL_TYPES) {
-			ALL_TYPES_MAP.put(type.getName().toUpperCase(), type);
-			ALL_TYPES_INDICES.put(type.getName().toUpperCase(), index);
-			index += 1;
-		}
-	}
-
-	public static ConfigPropertyType<?> valueOf(final String name) {
-		if (name == null) {
-			return null;
-		}
-		return ALL_TYPES_MAP.get(name.toUpperCase());
-	}
-
 	public abstract String getName();
 
 	public abstract String getDescription();
@@ -299,20 +250,11 @@ public abstract class ConfigPropertyType<T> implements Comparable<ConfigProperty
 
 	public abstract ValueValidator<T> getValueValidator();
 
-	public void validate(String value) throws ConfigPropertyException {
+	public void validate(String value) throws OptionException {
 		getValueValidator().validate(getName(), value);
 	}
 
 	public abstract String[] getPossibleValues();
-
-	private Integer getIndex() {
-		return ALL_TYPES_INDICES.get(getName());
-	}
-
-	@Override
-	public int compareTo(final ConfigPropertyType<T> o) {
-		return getIndex().compareTo(o.getIndex());
-	}
 
 	@Override
 	public String toString() {

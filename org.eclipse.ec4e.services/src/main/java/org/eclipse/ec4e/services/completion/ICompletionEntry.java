@@ -10,7 +10,7 @@
  */
 package org.eclipse.ec4e.services.completion;
 
-import org.eclipse.ec4e.services.model.options.ConfigPropertyType;
+import org.eclipse.ec4e.services.model.optiontypes.OptionType;
 
 public interface ICompletionEntry {
 
@@ -18,7 +18,7 @@ public interface ICompletionEntry {
 	
 	void setContextType(CompletionContextType type);
 
-	void setOptionType(ConfigPropertyType<?> optionType);
+	void setOptionType(OptionType<?> optionType);
 	
 	void setMatcher(ICompletionEntryMatcher matcher);
 	

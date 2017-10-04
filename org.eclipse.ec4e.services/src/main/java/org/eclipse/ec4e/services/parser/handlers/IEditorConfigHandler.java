@@ -1,7 +1,7 @@
 /**
  *  Copyright (c) 2017 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse  License v1.0
  *  which accompanies this distribution, and is available at
  *  http://www.eclipse.org/legal/epl-v10.html
  *
@@ -15,32 +15,32 @@ import org.eclipse.ec4e.services.parser.ParseException;
 
 public interface IEditorConfigHandler<Section, Option> {
 
-	public void setParser(EditorConfigParser<Section, Option> parser);
-	
-	public Section startSection();
+	void setParser(EditorConfigParser<Section, Option> parser);
 
-	public void endSection(Section section);
+	Section startSection();
 
-	public void startMultiPatternSection(Section section);
+	void endSection(Section section);
 
-	public void endMultiPatternSection(Section section);
+	void startMultiPatternSection(Section section);
 
-	public void startPattern(Section section, int i);
+	void endMultiPatternSection(Section section);
 
-	public void endPattern(Section section, String pattern, int i);
+	void startPattern(Section section, int i);
 
-	public Option startOption();
+	void endPattern(Section section, String pattern, int i);
 
-	public void endOption(Option option, Section section);
+	void startOption();
 
-	public void startOptionName(Option option);
+	void startOptionName();
 
-	public void endOptionName(Option option, String name);
+	Option endOptionName(String name);
 
-	public void startOptionValue(Option option, String name);
+	void endOption(Option option, Section section);
 
-	public void endOptionValue(Option option, String value, String name);
+	void startOptionValue(Option option, String name);
 
-	public void error(ParseException e);
+	void endOptionValue(Option option, String value, String name);
+
+	void error(ParseException e);
 
 }

@@ -22,7 +22,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ec4e.internal.validation.marker.MarkerUtils;
-import org.eclipse.ec4e.services.model.options.ConfigPropertyType;
+import org.eclipse.ec4e.services.model.optiontypes.OptionNames;
+import org.eclipse.ec4e.services.model.optiontypes.OptionType;
+import org.eclipse.ec4e.services.model.optiontypes.OptionTypeRegistry;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -51,10 +53,14 @@ public class ValidateAppliedOptionsStrategy
 
 	// Text viewer of the editor to validate
 	private ITextViewer textViewer;
+	private OptionType<?> insertFinalNewlineType;
+	private OptionType<?> trimTrailingWhitespaceType;
 
 	public ValidateAppliedOptionsStrategy(IPreferenceStore preferenceStore, IResource resource) {
 		this.preferenceStore = preferenceStore;
 		this.resource = resource;
+		insertFinalNewlineType = OptionTypeRegistry.DEFAULT.getType(OptionNames.insert_final_newline.name());
+		trimTrailingWhitespaceType = OptionTypeRegistry.DEFAULT.getType(OptionNames.trim_trailing_whitespace.name());
 	}
 
 	@Override
@@ -117,7 +123,7 @@ public class ValidateAppliedOptionsStrategy
 		try {
 			Set<IMarker> remainingMarkers = MarkerUtils.findEditorConfigMarkers(resource).stream().filter(marker -> {
 				try {
-					return MarkerUtils.getOptionType(marker) == ConfigPropertyType.TRIM_TRAILING_WHITESPACE;
+					return MarkerUtils.getOptionType(marker) == trimTrailingWhitespaceType;
 				} catch (CoreException e) {
 					return false;
 				}
@@ -164,13 +170,12 @@ public class ValidateAppliedOptionsStrategy
 				--j;
 			++j;
 			if (j < lineExclusiveEnd) {
-				addOrUpdateMarker(j, lineExclusiveEnd, ConfigPropertyType.TRIM_TRAILING_WHITESPACE, document,
-						remainingMarkers);
+				addOrUpdateMarker(j, lineExclusiveEnd, trimTrailingWhitespaceType, document, remainingMarkers);
 			}
 		}
 		if (region != null) {
 			for (IMarker marker : new HashSet<>(remainingMarkers)) {
-				if (MarkerUtils.getOptionType(marker) == ConfigPropertyType.TRIM_TRAILING_WHITESPACE) {
+				if (MarkerUtils.getOptionType(marker) == trimTrailingWhitespaceType) {
 					int line = MarkerUtilities.getLineNumber(marker) + 1;
 					if (line < startLine || line > endLine) {
 						remainingMarkers.remove(marker);
@@ -190,7 +195,7 @@ public class ValidateAppliedOptionsStrategy
 		try {
 			Set<IMarker> remainingMarkers = MarkerUtils.findEditorConfigMarkers(resource).stream().filter(marker -> {
 				try {
-					return MarkerUtils.getOptionType(marker) == ConfigPropertyType.INSERT_FINAL_NEWLINE;
+					return MarkerUtils.getOptionType(marker) == insertFinalNewlineType;
 				} catch (CoreException e) {
 					return false;
 				}
@@ -229,7 +234,7 @@ public class ValidateAppliedOptionsStrategy
 		if (region.getLength() > 0) {
 			int end = region.getOffset() + region.getLength();
 			int start = end - 1;
-			addOrUpdateMarker(start, end, ConfigPropertyType.INSERT_FINAL_NEWLINE, document, remainingMarkers);
+			addOrUpdateMarker(start, end, insertFinalNewlineType, document, remainingMarkers);
 		}
 	}
 
@@ -247,7 +252,7 @@ public class ValidateAppliedOptionsStrategy
 	 * @param remainingMarkers
 	 *            set of markers to update.
 	 */
-	private void addOrUpdateMarker(int start, int end, ConfigPropertyType<?> type, IDocument document,
+	private void addOrUpdateMarker(int start, int end, OptionType<?> type, IDocument document,
 			Set<IMarker> remainingMarkers) {
 		try {
 			IMarker associatedMarker = getExistingMarkerFor(start, end, type, remainingMarkers);
@@ -276,7 +281,7 @@ public class ValidateAppliedOptionsStrategy
 	 * @param marker
 	 *            the marker to update.
 	 */
-	private void updateMarker(int start, int end, ConfigPropertyType<?> type, IDocument document, IMarker marker) {
+	private void updateMarker(int start, int end, OptionType<?> type, IDocument document, IMarker marker) {
 		try {
 			MarkerUtils.setOptionType(marker, type);
 			marker.setAttribute(IMarker.MESSAGE, getMessage(type));
@@ -299,10 +304,10 @@ public class ValidateAppliedOptionsStrategy
 	 *            the option type.
 	 * @return the error message according the option type.
 	 */
-	private String getMessage(ConfigPropertyType<?> type) {
-		if (ConfigPropertyType.INSERT_FINAL_NEWLINE == type) {
+	private String getMessage(OptionType<?> type) {
+		if (insertFinalNewlineType == type) {
 			return "Insert final newline";
-		} else if (ConfigPropertyType.TRIM_TRAILING_WHITESPACE == type) {
+		} else if (trimTrailingWhitespaceType == type) {
 			return "Trim traling whitespace";
 		}
 		return null;
@@ -321,16 +326,15 @@ public class ValidateAppliedOptionsStrategy
 	 *            set of markers to update.
 	 * @return the existing marker and null otherwise.
 	 */
-	private IMarker getExistingMarkerFor(int start, int end, ConfigPropertyType<?> type,
-			Set<IMarker> remainingMarkers) {
+	private IMarker getExistingMarkerFor(int start, int end, OptionType<?> type, Set<IMarker> remainingMarkers) {
 		try {
-			if (ConfigPropertyType.INSERT_FINAL_NEWLINE == type) {
+			if (insertFinalNewlineType == type) {
 				for (IMarker marker : remainingMarkers) {
 					if (type == MarkerUtils.getOptionType(marker)) {
 						return marker;
 					}
 				}
-			} else if (ConfigPropertyType.TRIM_TRAILING_WHITESPACE == type) {
+			} else if (trimTrailingWhitespaceType == type) {
 				for (IMarker marker : remainingMarkers) {
 					int startOffset = MarkerUtilities.getCharStart(marker);
 					int endOffset = MarkerUtilities.getCharEnd(marker);

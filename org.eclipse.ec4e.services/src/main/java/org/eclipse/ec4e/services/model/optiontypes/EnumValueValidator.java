@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.eclipse.ec4e.services.model.options;
+package org.eclipse.ec4e.services.model.optiontypes;
 
 class EnumValueValidator<T extends Enum<T>> implements ValueValidator<T> {
 
@@ -26,11 +26,11 @@ class EnumValueValidator<T extends Enum<T>> implements ValueValidator<T> {
 	}
 
 	@Override
-	public void validate(final String name, final String value) throws ConfigPropertyException {
+	public void validate(final String name, final String value) throws OptionException {
 		try {
 			Enum.valueOf(enumType, value.toUpperCase());
 		} catch (final IllegalArgumentException e) {
-			throw new ConfigPropertyException("enum");
+			throw new OptionException("enum");
 		}
 	}
 

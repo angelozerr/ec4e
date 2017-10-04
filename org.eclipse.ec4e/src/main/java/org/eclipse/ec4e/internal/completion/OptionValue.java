@@ -13,7 +13,7 @@ package org.eclipse.ec4e.internal.completion;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.ec4e.services.model.options.ConfigPropertyType;
+import org.eclipse.ec4e.services.model.optiontypes.OptionType;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.Image;
@@ -38,7 +38,7 @@ public class OptionValue extends Position {
 		this.name = name;
 	}
 
-	public OptionValue(int offset, ConfigPropertyType<?> optionType) {
+	public OptionValue(int offset, OptionType<?> optionType) {
 		this(offset, optionType.getPossibleValues()[0].length());
 		for (String value : optionType.getPossibleValues()) {
 			addProposal(value, value, null, null);

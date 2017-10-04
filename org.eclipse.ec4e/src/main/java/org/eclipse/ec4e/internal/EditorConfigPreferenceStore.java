@@ -15,7 +15,7 @@ import java.util.Collection;
 
 import org.eclipse.ec4e.services.EditorConfigException;
 import org.eclipse.ec4e.services.model.Option;
-import org.eclipse.ec4e.services.model.options.EndOfLineOption;
+import org.eclipse.ec4e.services.model.optiontypes.EndOfLineOption;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension4;
@@ -59,7 +59,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 				for (Option option : options) {
 					if (!option.isValid()) {
 						continue;
-					}
+					}					
 					if ("indent_style".equals(option.getName())) {
 						spacesForTabs = "space".equals(option.getValue());
 						if (oldSpacesForTabs != spacesForTabs) {

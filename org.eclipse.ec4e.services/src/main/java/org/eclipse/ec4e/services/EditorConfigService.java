@@ -20,8 +20,8 @@ import org.eclipse.ec4e.services.completion.CompletionContextType;
 import org.eclipse.ec4e.services.completion.CompletionEntry;
 import org.eclipse.ec4e.services.completion.ICompletionEntry;
 import org.eclipse.ec4e.services.completion.ICompletionEntryMatcher;
-import org.eclipse.ec4e.services.model.options.ConfigPropertyException;
-import org.eclipse.ec4e.services.model.options.ConfigPropertyType;
+import org.eclipse.ec4e.services.model.optiontypes.OptionType;
+import org.eclipse.ec4e.services.model.optiontypes.OptionTypeRegistry;
 import org.eclipse.ec4e.services.parser.EditorConfigParser;
 import org.eclipse.ec4e.services.validation.IReporter;
 import org.eclipse.ec4e.services.validation.ISeverityProvider;
@@ -41,7 +41,7 @@ public class EditorConfigService {
 	// ------------- Validation service
 
 	public static void validate(String content, IReporter reporter) {
-		validate(content, reporter, null);
+		validate(content, reporter, null, null);
 	}
 
 	/**
@@ -65,29 +65,14 @@ public class EditorConfigService {
 	 * @param reporter
 	 *            used to report errors.
 	 */
-	public static void validate(String content, IReporter reporter, ISeverityProvider provider) {
-		ValidationEditorConfigHandler handler = new ValidationEditorConfigHandler(reporter, provider);
+	public static void validate(String content, IReporter reporter, ISeverityProvider provider,
+			OptionTypeRegistry registry) {
+		ValidationEditorConfigHandler handler = new ValidationEditorConfigHandler(reporter, provider, registry);
 		EditorConfigParser parser = new EditorConfigParser(handler);
 		// Set parser as tolerant to collect the full errors of each line of the
 		// editorconfig.
 		parser.setTolerant(true);
 		parser.parse(content);
-	}
-
-	public static boolean validateOptionValue(String name, String value) throws ConfigPropertyException {
-		ConfigPropertyType<?> type = getOption(name);
-		if (type != null) {
-			type.validate(value);
-		}
-		return true;
-	}
-
-	public static boolean isOptionExists(String name) {
-		return getOption(name) != null;
-	}
-
-	public static ConfigPropertyType<?> getOption(String name) {
-		return ConfigPropertyType.valueOf(name.toUpperCase());
 	}
 
 	// ------------- Completion service
@@ -101,10 +86,19 @@ public class EditorConfigService {
 	public static <T, C extends ICompletionEntry> List<C> getCompletionEntries(int offset, T document,
 			ICompletionEntryMatcher matcher, final Function<String, C> factory, ContentProvider<T> provider)
 			throws Exception {
+		return getCompletionEntries(offset, document, matcher, factory, provider, null);
+	}
+
+	public static <T, C extends ICompletionEntry> List<C> getCompletionEntries(int offset, T document,
+			ICompletionEntryMatcher matcher, final Function<String, C> factory, ContentProvider<T> provider,
+			OptionTypeRegistry registry) throws Exception {
+		if (registry == null) {
+			registry = OptionTypeRegistry.DEFAULT;
+		}
 		TokenContext context = getTokenContext(offset, document, false, provider);
 		switch (context.type) {
 		case OPTION_NAME:
-			return Stream.of(ConfigPropertyType.ALL_TYPES).map(type -> {
+			registry.getTypes().stream().map(type -> {
 				C entry = factory.apply(type.getName());
 				entry.setMatcher(matcher);
 				entry.setOptionType(type);
@@ -113,7 +107,7 @@ public class EditorConfigService {
 				return entry;
 			}).filter(entry -> entry.updatePrefix(context.prefix)).collect(Collectors.toList());
 		case OPTION_VALUE:
-			ConfigPropertyType<?> optionType = getOption(context.name);
+			OptionType<?> optionType = registry.getType(context.name);
 			if (optionType != null) {
 				String values[] = optionType.getPossibleValues();
 				if (values != null) {
@@ -138,14 +132,22 @@ public class EditorConfigService {
 	// ------------- Hover service
 
 	public static <T> String getHover(int offset, T document, ContentProvider<T> provider) throws Exception {
+		return getHover(offset, document, provider, null);
+	}
+
+	public static <T> String getHover(int offset, T document, ContentProvider<T> provider, OptionTypeRegistry registry)
+			throws Exception {
+		if (registry == null) {
+			registry = OptionTypeRegistry.DEFAULT;
+		}
 		TokenContext context = getTokenContext(offset, document, true, provider);
 		switch (context.type) {
 		case OPTION_NAME: {
-			ConfigPropertyType<?> type = ConfigPropertyType.valueOf(context.prefix);
+			OptionType<?> type = registry.getType(context.prefix);
 			return type != null ? type.getDescription() : null;
 		}
 		case OPTION_VALUE: {
-			ConfigPropertyType<?> type = ConfigPropertyType.valueOf(context.name);
+			OptionType<?> type = registry.getType(context.name);
 			return type != null ? type.getDescription() : null;
 		}
 		default:

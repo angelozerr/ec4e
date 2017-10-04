@@ -45,8 +45,8 @@ public class EditorConfigHandlerAdapter<Section, Option> extends AbstractEditorC
 	}
 
 	@Override
-	public Option startOption() {
-		return null;
+	public void startOption() {
+
 	}
 
 	@Override
@@ -55,13 +55,13 @@ public class EditorConfigHandlerAdapter<Section, Option> extends AbstractEditorC
 	}
 
 	@Override
-	public void startOptionName(Option option) {
+	public void startOptionName() {
 
 	}
 
 	@Override
-	public void endOptionName(Option option, String name) {
-
+	public Option endOptionName(String name) {
+		return null;
 	}
 
 	@Override

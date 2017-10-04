@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.ec4e.services.model.optiontypes.OptionTypeRegistry;
 import org.eclipse.ec4e.services.parser.EditorConfigParser;
 
 public class EditorConfig {
@@ -30,8 +31,19 @@ public class EditorConfig {
 
 	private File configFile;
 
+	private OptionTypeRegistry registry;
+
 	public EditorConfig() {
 		this.sections = new ArrayList<>();
+		setRegistry(OptionTypeRegistry.DEFAULT);
+	}
+
+	public void setRegistry(OptionTypeRegistry registry) {
+		this.registry = registry;
+	}
+
+	public OptionTypeRegistry getRegistry() {
+		return registry;
 	}
 
 	public static EditorConfig load(File configFile) throws IOException {

@@ -12,7 +12,7 @@ package org.eclipse.ec4e.internal.completion;
 
 import org.eclipse.ec4e.services.completion.CompletionContextType;
 import org.eclipse.ec4e.services.completion.CompletionEntry;
-import org.eclipse.ec4e.services.model.options.ConfigPropertyType;
+import org.eclipse.ec4e.services.model.optiontypes.OptionType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -118,7 +118,7 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 				LinkedModeModel model = new LinkedModeModel();
 				LinkedPositionGroup group = new LinkedPositionGroup();
 
-				ConfigPropertyType<?> optionType = getOptionType();
+				OptionType<?> optionType = getOptionType();
 				OptionValue value = new OptionValue(replacement.length() - optionType.getPossibleValues()[0].length(),
 						optionType);
 				value.updateOffset(baseOffset);
@@ -184,7 +184,7 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 	@Override
 	public String getAdditionalProposalInfo() {
 		initIfNeeded();
-		ConfigPropertyType<?> optionType = getOptionType();
+		OptionType<?> optionType = getOptionType();
 		return optionType != null ? optionType.getDescription() : null;
 	}
 

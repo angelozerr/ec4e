@@ -12,23 +12,22 @@ package org.eclipse.ec4e.services.model;
 
 public class Option {
 
-	private String name;
+	private final String name;
 
+	private final EditorConfig editorConfig;
+	
 	private String value;
+
+	public Option(String name, EditorConfig editorConfig) {
+		this.name = name;
+		this.editorConfig = editorConfig;
+	}
 
 	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	/**
