@@ -21,6 +21,10 @@ Syntax coloration, auto close brackets are available for other files (properties
 
 See [ec4e wiki](https://github.com/angelozerr/ec4e/wiki) for more informations.
 
+## Install
+
+You can install `ec4e` with the update site `http://oss.opensagres.fr/ec4e/snapshots/`
+
 ## Similar project
 
 [editorconfig-eclipse](https://github.com/ncjones/editorconfig-eclipse) is an Eclipse plugin for editorconfig, so why developping an another plugin:
