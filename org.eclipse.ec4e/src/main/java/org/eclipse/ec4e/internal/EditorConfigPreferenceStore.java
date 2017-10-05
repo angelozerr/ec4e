@@ -13,9 +13,10 @@ package org.eclipse.ec4e.internal;
 import java.io.File;
 import java.util.Collection;
 
-import org.eclipse.ec4e.services.EditorConfigException;
-import org.eclipse.ec4e.services.model.Option;
-import org.eclipse.ec4e.services.model.optiontypes.EndOfLineOption;
+import org.eclipse.ec4j.EditorConfigException;
+import org.eclipse.ec4j.model.Option;
+import org.eclipse.ec4j.model.optiontypes.EndOfLineOption;
+import org.eclipse.ec4j.model.optiontypes.OptionNames;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension4;
@@ -59,19 +60,23 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 				for (Option option : options) {
 					if (!option.isValid()) {
 						continue;
-					}					
-					if ("indent_style".equals(option.getName())) {
+					}
+					OptionNames names = OptionNames.get(option.getName());
+					switch (names) {
+					case indent_style:
 						spacesForTabs = "space".equals(option.getValue());
 						if (oldSpacesForTabs != spacesForTabs) {
 							editorStore.firePropertyChangeEvent(EDITOR_SPACES_FOR_TABS, oldSpacesForTabs,
 									spacesForTabs);
 						}
-					} else if ("indent_size".equals(option.getName())) {
+						break;
+					case indent_size:
 						tabWidth = Integer.parseInt(option.getValue());
 						if (oldTabWidth != tabWidth) {
 							editorStore.firePropertyChangeEvent(EDITOR_TAB_WIDTH, oldTabWidth, tabWidth);
 						}
-					} else if ("end_of_line".equals(option.getName())) {
+						break;
+					case end_of_line:
 						IEditorInput editorInput = textEditor.getEditorInput();
 						IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
 						if (document instanceof IDocumentExtension4) {
@@ -81,25 +86,31 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 										.setInitialLineDelimiter(endOfLineOption.getEndOfLineString());
 							}
 						}
-					} else if ("charset".equals(option.getName())) {
+						break;
+					case charset:
 						IEncodingSupport encodingSupport = textEditor.getAdapter(IEncodingSupport.class);
 						if (encodingSupport != null) {
 							encodingSupport.setEncoding(option.getValue().toUpperCase());
 						}
-					} else if ("trim_trailing_whitespace".equals(option.getName())) {
+						break;
+					case trim_trailing_whitespace:
 						boolean oldTrimTrailingWhitespace = trimTrailingWhitespace;
-						trimTrailingWhitespace = "true".equals(option.getValue());
+						trimTrailingWhitespace = option.getBooleanValue();
 						if (oldTrimTrailingWhitespace != trimTrailingWhitespace) {
 							editorStore.firePropertyChangeEvent(EDITOR_TRIM_TRAILING_WHITESPACE,
 									oldTrimTrailingWhitespace, trimTrailingWhitespace);
 						}
-					} else if ("insert_final_newline".equals(option.getName())) {
+						break;
+					case insert_final_newline:
 						boolean oldInsertFinalNewline = insertFinalNewline;
-						insertFinalNewline = "true".equals(option.getValue());
+						insertFinalNewline = option.getBooleanValue();
 						if (oldInsertFinalNewline != insertFinalNewline) {
 							editorStore.firePropertyChangeEvent(EDITOR_INSERT_FINAL_NEWLINE, oldInsertFinalNewline,
 									insertFinalNewline);
 						}
+						break;
+					default:
+						// Do nothing
 					}
 				}
 			} catch (EditorConfigException e) {

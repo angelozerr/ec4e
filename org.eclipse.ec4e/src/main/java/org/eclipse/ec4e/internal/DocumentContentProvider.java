@@ -10,7 +10,7 @@
  */
 package org.eclipse.ec4e.internal;
 
-import org.eclipse.ec4e.services.ContentProvider;
+import org.eclipse.ec4j.ContentProvider;
 import org.eclipse.jface.text.IDocument;
 
 /**

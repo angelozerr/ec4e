@@ -8,20 +8,12 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.ec4e.internal;
+package org.eclipse.ec4j.parser;
 
-import org.eclipse.ec4j.EditorConfigManager;
+public class OptionAssignementMissingException extends ParseException {
 
-/**
- * IDE editorconfig manager.
- *
- */
-public class IDEEditorConfigManager extends EditorConfigManager {
-
-	public static final IDEEditorConfigManager INSTANCE = new IDEEditorConfigManager();
-
-	public static IDEEditorConfigManager getInstance() {
-		return INSTANCE;
+	public OptionAssignementMissingException(String name, Location location) {
+		super("Assignement misses for the option '" + name + "'. Expected '='", location,
+				ErrorType.OptionAssignementMissing);
 	}
-
 }

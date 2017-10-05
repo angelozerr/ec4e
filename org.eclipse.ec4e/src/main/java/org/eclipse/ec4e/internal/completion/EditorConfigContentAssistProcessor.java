@@ -11,8 +11,8 @@
 package org.eclipse.ec4e.internal.completion;
 
 import org.eclipse.ec4e.internal.DocumentContentProvider;
-import org.eclipse.ec4e.services.EditorConfigService;
-import org.eclipse.ec4e.services.completion.ICompletionEntryMatcher;
+import org.eclipse.ec4j.EditorConfigService;
+import org.eclipse.ec4j.completion.ICompletionEntryMatcher;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;

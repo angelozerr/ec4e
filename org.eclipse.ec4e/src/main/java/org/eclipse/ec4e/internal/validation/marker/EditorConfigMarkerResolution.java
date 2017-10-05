@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ec4e.services.model.optiontypes.OptionNames;
+import org.eclipse.ec4j.model.optiontypes.OptionNames;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator2;
 

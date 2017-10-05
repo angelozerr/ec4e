@@ -8,20 +8,12 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.ec4e.internal;
+package org.eclipse.ec4j.parser;
 
-import org.eclipse.ec4j.EditorConfigManager;
+public class OptionValueMissingException extends ParseException {
 
-/**
- * IDE editorconfig manager.
- *
- */
-public class IDEEditorConfigManager extends EditorConfigManager {
-
-	public static final IDEEditorConfigManager INSTANCE = new IDEEditorConfigManager();
-
-	public static IDEEditorConfigManager getInstance() {
-		return INSTANCE;
+	public OptionValueMissingException(String name, Location location) {
+		super("None value defined for the option '" + name + "'. Expected a value", location,
+				ErrorType.OptionValueMissing);
 	}
-
 }

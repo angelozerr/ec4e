@@ -8,20 +8,19 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.ec4e.internal;
+package org.eclipse.ec4j.validation;
 
-import org.eclipse.ec4j.EditorConfigManager;
+import org.eclipse.ec4j.parser.ErrorType;
 
-/**
- * IDE editorconfig manager.
- *
- */
-public class IDEEditorConfigManager extends EditorConfigManager {
+public interface ISeverityProvider {
 
-	public static final IDEEditorConfigManager INSTANCE = new IDEEditorConfigManager();
+	public static final ISeverityProvider DEFAULT = new ISeverityProvider() {
 
-	public static IDEEditorConfigManager getInstance() {
-		return INSTANCE;
-	}
+		@Override
+		public Severity getSeverity(ErrorType errorType) {
+			return errorType.isSyntaxError() ? Severity.error : Severity.warning;
+		}
+	};
 
+	Severity getSeverity(ErrorType errorType);
 }

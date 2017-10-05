@@ -8,20 +8,21 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.ec4e.internal;
+package org.eclipse.ec4j.completion;
 
-import org.eclipse.ec4j.EditorConfigManager;
+import org.eclipse.ec4j.model.optiontypes.OptionType;
 
-/**
- * IDE editorconfig manager.
- *
- */
-public class IDEEditorConfigManager extends EditorConfigManager {
+public interface ICompletionEntry {
 
-	public static final IDEEditorConfigManager INSTANCE = new IDEEditorConfigManager();
+	String getName();
+	
+	void setContextType(CompletionContextType type);
 
-	public static IDEEditorConfigManager getInstance() {
-		return INSTANCE;
-	}
+	void setOptionType(OptionType<?> optionType);
+	
+	void setMatcher(ICompletionEntryMatcher matcher);
+	
+	void setInitialOffset(int offset);
 
+	boolean updatePrefix(String prefix);
 }

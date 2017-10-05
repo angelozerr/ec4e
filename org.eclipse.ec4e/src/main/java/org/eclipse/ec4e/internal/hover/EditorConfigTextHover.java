@@ -13,7 +13,7 @@ package org.eclipse.ec4e.internal.hover;
 import java.util.Iterator;
 
 import org.eclipse.ec4e.internal.DocumentContentProvider;
-import org.eclipse.ec4e.services.EditorConfigService;
+import org.eclipse.ec4j.EditorConfigService;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;

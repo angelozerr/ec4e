@@ -8,20 +8,14 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.ec4e.internal;
+package org.eclipse.ec4j;
 
-import org.eclipse.ec4j.EditorConfigManager;
+import java.io.IOException;
 
-/**
- * IDE editorconfig manager.
- *
- */
-public class IDEEditorConfigManager extends EditorConfigManager {
+public class EditorConfigException extends Exception {
 
-	public static final IDEEditorConfigManager INSTANCE = new IDEEditorConfigManager();
-
-	public static IDEEditorConfigManager getInstance() {
-		return INSTANCE;
+	public EditorConfigException(String message, IOException e) {
+		super(message, e);
 	}
 
 }

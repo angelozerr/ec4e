@@ -8,20 +8,11 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.ec4e.internal;
+package org.eclipse.ec4j.completion;
 
-import org.eclipse.ec4j.EditorConfigManager;
+public interface RelevanceConstants {
 
-/**
- * IDE editorconfig manager.
- *
- */
-public class IDEEditorConfigManager extends EditorConfigManager {
+	public static final int R_EXACT_NAME = 4;
 
-	public static final IDEEditorConfigManager INSTANCE = new IDEEditorConfigManager();
-
-	public static IDEEditorConfigManager getInstance() {
-		return INSTANCE;
-	}
-
+	public static final int R_CASE = 10;
 }

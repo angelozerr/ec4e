@@ -6,7 +6,7 @@
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-        <module>org.eclipse.ec4e.services</module>
+        <module>org.eclipse.ec4j</module>
 		<module>org.eclipse.ec4e</module>
 		<module>org.eclipse.ec4e.repository</module>
 	</modules>

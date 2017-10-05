@@ -13,7 +13,7 @@ package org.eclipse.ec4e.internal.completion;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.ec4e.services.model.optiontypes.OptionType;
+import org.eclipse.ec4j.model.optiontypes.OptionType;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.Image;

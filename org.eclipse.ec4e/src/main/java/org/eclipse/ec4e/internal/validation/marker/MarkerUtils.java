@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ec4e.services.model.optiontypes.OptionType;
-import org.eclipse.ec4e.services.validation.Severity;
+import org.eclipse.ec4j.model.optiontypes.OptionType;
+import org.eclipse.ec4j.validation.Severity;
 
 /**
  * EditorConfig marker utilities.
