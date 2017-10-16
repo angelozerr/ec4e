@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.ec4j.EditorConfigException;
 import org.eclipse.ec4j.model.Option;
 import org.eclipse.ec4j.model.optiontypes.EndOfLineOption;
+import org.eclipse.ec4j.model.optiontypes.IndentStyleOption;
 import org.eclipse.ec4j.model.optiontypes.OptionNames;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
@@ -64,14 +65,15 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 					OptionNames names = OptionNames.get(option.getName());
 					switch (names) {
 					case indent_style:
-						spacesForTabs = "space".equals(option.getValue());
+						IndentStyleOption styleOption = option.getValueAs();
+						spacesForTabs = styleOption == IndentStyleOption.SPACE;
 						if (oldSpacesForTabs != spacesForTabs) {
 							editorStore.firePropertyChangeEvent(EDITOR_SPACES_FOR_TABS, oldSpacesForTabs,
 									spacesForTabs);
 						}
 						break;
 					case indent_size:
-						tabWidth = Integer.parseInt(option.getValue());
+						tabWidth = option.getValueAs();
 						if (oldTabWidth != tabWidth) {
 							editorStore.firePropertyChangeEvent(EDITOR_TAB_WIDTH, oldTabWidth, tabWidth);
 						}
@@ -80,7 +82,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 						IEditorInput editorInput = textEditor.getEditorInput();
 						IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
 						if (document instanceof IDocumentExtension4) {
-							EndOfLineOption endOfLineOption = EndOfLineOption.valueOf(option.getValue().toUpperCase());
+							EndOfLineOption endOfLineOption = option.getValueAs();
 							if (endOfLineOption != null) {
 								((IDocumentExtension4) document)
 										.setInitialLineDelimiter(endOfLineOption.getEndOfLineString());
@@ -95,7 +97,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 						break;
 					case trim_trailing_whitespace:
 						boolean oldTrimTrailingWhitespace = trimTrailingWhitespace;
-						trimTrailingWhitespace = option.getBooleanValue();
+						trimTrailingWhitespace = option.getValueAs();
 						if (oldTrimTrailingWhitespace != trimTrailingWhitespace) {
 							editorStore.firePropertyChangeEvent(EDITOR_TRIM_TRAILING_WHITESPACE,
 									oldTrimTrailingWhitespace, trimTrailingWhitespace);
@@ -103,7 +105,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 						break;
 					case insert_final_newline:
 						boolean oldInsertFinalNewline = insertFinalNewline;
-						insertFinalNewline = option.getBooleanValue();
+						insertFinalNewline = option.getValueAs();
 						if (oldInsertFinalNewline != insertFinalNewline) {
 							editorStore.firePropertyChangeEvent(EDITOR_INSERT_FINAL_NEWLINE, oldInsertFinalNewline,
 									insertFinalNewline);
