@@ -2,4 +2,30 @@
 <site>
    <bundle id="org.eclipse.ec4e" version="0.1.0.qualifier"/>
    <bundle id="org.eclipse.ec4e.services" version="0.1.0.qualifier"/>
+<feature id="tm-feature">
+      <category name="TextMate"/>
+   </feature>
+   <feature id="tm-feature.source">
+      <category name="Sources"/>
+   </feature>
+   <bundle id="org.eclipse.tm4e.samples" version="0.1.0.qualifier">
+      <category name="Samples"/>
+   </bundle>
+   <bundle id="org.eclipse.tm4e.samples.source" version="0.1.0.qualifier">
+      <category name="Sources"/>
+   </bundle>
+   <bundle id="org.joni" version="0.0.0">
+      <category name="Dependencies"/>
+   </bundle>
+   <bundle id="org.jcodings" version="0.0.0">
+      <category name="Dependencies"/>
+   </bundle>
+   <bundle id="org.eclipse.tm4e.ui.editor" version="0.1.0.qualifier">
+      <category name="TextMate Editor"/>
+   </bundle>
+   <category-def name="TextMate" label="TextMate"/>
+   <category-def name="Samples" label="Samples"/>
+   <category-def name="Sources" label="Sources"/>
+   <category-def name="Dependencies" label="Dependencies"/>
+   <category-def name="TextMate Editor" label="TextMate Editor"/>   
 </site>
