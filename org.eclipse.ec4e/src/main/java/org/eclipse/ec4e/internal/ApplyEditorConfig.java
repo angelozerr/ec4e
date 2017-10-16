@@ -48,7 +48,7 @@ public class ApplyEditorConfig {
 		reconciler.uninstall();
 	}
 
-	private static IFile getFile(ITextEditor textEditor) {
+	public static IFile getFile(ITextEditor textEditor) {
 		IEditorInput input = textEditor.getEditorInput();
 		if (input instanceof IFileEditorInput) {
 			return ((IFileEditorInput) input).getFile();

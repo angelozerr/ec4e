@@ -81,7 +81,9 @@ public class ValidateAppliedOptionsStrategy
 			}).collect(Collectors.toSet());
 			IDocument document = textViewer.getDocument();
 			// Validate 'trim_trailing_whitespace' if needed
-			validateTrimTrailingWhiteSpace(document, subRegion, remainingMarkers);
+			IRegion region = DirtyRegion.REMOVE.equals(dirtyRegion.getType()) ? new Region(subRegion.getOffset(), 0)
+					: subRegion;
+			validateTrimTrailingWhiteSpace(document, region, remainingMarkers);
 			// Validate 'insert_final_newline' if needed
 			validateInsertFinalNewline(document, remainingMarkers);
 			for (IMarker marker : remainingMarkers) {

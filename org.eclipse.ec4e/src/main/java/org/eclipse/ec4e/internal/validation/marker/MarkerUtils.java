@@ -16,8 +16,16 @@ import java.util.List;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ec4e.EditorConfigPlugin;
 import org.eclipse.ec4j.model.optiontypes.OptionType;
 import org.eclipse.ec4j.validation.Severity;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.RewriteSessionEditProcessor;
+import org.eclipse.text.edits.MalformedTreeException;
+import org.eclipse.text.edits.TextEdit;
+import org.eclipse.text.undo.DocumentUndoManagerRegistry;
+import org.eclipse.text.undo.IDocumentUndoManager;
 
 /**
  * EditorConfig marker utilities.
@@ -67,6 +75,36 @@ public class MarkerUtils {
 			return IMarker.SEVERITY_WARNING;
 		default:
 			return IMarker.SEVERITY_ERROR;
+		}
+	}
+	
+	/**
+	 * Method will apply all edits to document as single modification. Needs to
+	 * be executed in UI thread.
+	 *
+	 * @param document
+	 *            document to modify
+	 * @param edits
+	 *            list of LSP TextEdits
+	 */
+	public static void applyEdits(IDocument document, TextEdit edit) {
+		if (document == null) {
+			return;
+		}
+
+		IDocumentUndoManager manager = DocumentUndoManagerRegistry.getDocumentUndoManager(document);
+		if (manager != null) {
+			manager.beginCompoundChange();
+		}
+		try {
+			RewriteSessionEditProcessor editProcessor = new RewriteSessionEditProcessor(document, edit,
+					org.eclipse.text.edits.TextEdit.NONE);
+			editProcessor.performEdits();
+		} catch (MalformedTreeException | BadLocationException e) {
+			EditorConfigPlugin.logError(e);
+		}
+		if (manager != null) {
+			manager.endCompoundChange();
 		}
 	}
 }

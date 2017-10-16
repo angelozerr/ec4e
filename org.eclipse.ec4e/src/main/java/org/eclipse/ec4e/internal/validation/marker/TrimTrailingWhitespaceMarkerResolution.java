@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
@@ -32,8 +33,7 @@ final class TrimTrailingWhitespaceMarkerResolution extends AbstractMarkerResolut
 		int end = marker.getAttribute(IMarker.CHAR_END, -1);
 		StyledText text = (StyledText) editor.getAdapter(Control.class);
 		text.getDisplay().syncExec(() -> {
-			text.replaceTextRange(start, end - start, "");
-			text.setCaretOffset(start);
+			MarkerUtils.applyEdits(doc, new ReplaceEdit(start, end - start, ""));
 		});
 		return true;
 	}

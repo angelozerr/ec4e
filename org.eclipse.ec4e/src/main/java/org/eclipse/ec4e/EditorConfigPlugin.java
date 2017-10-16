@@ -10,6 +10,8 @@
  */
 package org.eclipse.ec4e;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -49,6 +51,28 @@ public class EditorConfigPlugin extends AbstractUIPlugin {
 	 */
 	public static EditorConfigPlugin getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * Utility method to log errors.
+	 *
+	 * @param thr
+	 *            The exception through which we noticed the error
+	 */
+	public static void logError(final Throwable thr) {
+		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, thr.getMessage(), thr));
+	}
+
+	/**
+	 * Utility method to log errors.
+	 *
+	 * @param message
+	 *            User comprehensible message
+	 * @param thr
+	 *            The exception through which we noticed the error
+	 */
+	public static void logError(final String message, final Throwable thr) {
+		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, message, thr));
 	}
 
 }

@@ -10,9 +10,9 @@
  */
 package org.eclipse.ec4e.internal;
 
-import java.io.File;
 import java.util.Collection;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.ec4j.EditorConfigException;
 import org.eclipse.ec4j.model.Option;
 import org.eclipse.ec4j.model.optiontypes.EndOfLineOption;
@@ -49,7 +49,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 	}
 
 	public void applyConfig() {
-		File file = getFile(textEditor);
+		IFile file = ApplyEditorConfig.getFile(textEditor);
 		if (file != null) {
 			try {
 				Boolean oldSpacesForTabs = spacesForTabs;
@@ -124,14 +124,6 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 
 	public IPreferenceStore getEditorStore() {
 		return editorStore;
-	}
-
-	private static File getFile(ITextEditor textEditor) {
-		IEditorInput input = textEditor.getEditorInput();
-		if (input instanceof IFileEditorInput) {
-			return ((IFileEditorInput) input).getFile().getLocation().toFile();
-		}
-		return null;
 	}
 
 	@Override
