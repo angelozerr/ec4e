@@ -10,6 +10,7 @@
  */
 package org.eclipse.ec4e.internal.completion;
 
+import org.eclipse.ec4e.internal.EditorConfigImages;
 import org.eclipse.ec4j.completion.CompletionContextType;
 import org.eclipse.ec4j.completion.CompletionEntry;
 import org.eclipse.ec4j.model.optiontypes.OptionType;
@@ -196,7 +197,14 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 
 	@Override
 	public Image getImage() {
-		return null;
+		switch (getContextType()) {
+		case OPTION_NAME:
+			return EditorConfigImages.getImage(EditorConfigImages.IMG_PROPERTY);
+		case OPTION_VALUE:
+			return EditorConfigImages.getImage(EditorConfigImages.IMG_VALUE);
+		default:
+			return null;
+		}
 	}
 
 	@Override
