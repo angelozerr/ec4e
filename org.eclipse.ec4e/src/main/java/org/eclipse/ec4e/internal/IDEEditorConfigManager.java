@@ -14,14 +14,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.ec4e.EditorConfigPlugin;
 import org.eclipse.ec4j.AbstractEditorConfigManager;
+import org.eclipse.ec4j.EditorConfigConstants;
 import org.eclipse.ec4j.ResourceProvider;
+import org.eclipse.ec4j.model.EditorConfig;
 
 /**
  * IDE editorconfig manager.
@@ -65,14 +74,80 @@ public class IDEEditorConfigManager extends AbstractEditorConfigManager<IResourc
 		}
 	};
 
+	/**
+	 * {@link EditorConfig} instance cache.
+	 *
+	 */
+	private static class EditorConfigCache extends HashMap<IResource, EditorConfig>
+			implements IResourceChangeListener, IResourceDeltaVisitor {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void resourceChanged(IResourceChangeEvent event) {
+			if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
+				IResourceDelta delta = event.getDelta();
+				if (delta != null) {
+					try {
+						delta.accept(this);
+					} catch (CoreException e) {
+						EditorConfigPlugin.logError("Error while .editorconfig resource changed", e);
+					}
+				}
+			}
+		}
+
+		@Override
+		public boolean visit(IResourceDelta delta) throws CoreException {
+			IResource resource = delta.getResource();
+			if (resource == null) {
+				return false;
+			}
+			switch (resource.getType()) {
+			case IResource.ROOT:
+			case IResource.PROJECT:
+			case IResource.FOLDER:
+				return true;
+			case IResource.FILE:
+				IFile file = (IFile) resource;
+				if (EditorConfigConstants.EDITORCONFIG.equals(file.getName())
+						&& delta.getKind() == IResourceDelta.CHANGED) {
+					super.remove(file);
+				}
+			}
+			return false;
+		}
+	}
+
 	public static final IDEEditorConfigManager INSTANCE = new IDEEditorConfigManager();
+
+	private final EditorConfigCache caches;
 
 	public IDEEditorConfigManager() {
 		super(ECLIPSE_RESOURCE_PROVIDER);
+		this.caches = new EditorConfigCache();
 	}
 
 	public static IDEEditorConfigManager getInstance() {
 		return INSTANCE;
 	}
 
+	public void init() {
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(caches);
+	}
+
+	public void dispose() {
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(caches);
+		caches.clear();
+	}
+
+	@Override
+	protected EditorConfig getEditorConfig(IResource configFile) throws IOException {
+		EditorConfig config = caches.get(configFile);
+		if (config == null) {
+			config = super.getEditorConfig(configFile);
+			caches.put(configFile, config);
+		}
+		return config;
+	}
 }

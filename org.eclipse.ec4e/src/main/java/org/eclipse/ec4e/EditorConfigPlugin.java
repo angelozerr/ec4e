@@ -12,6 +12,9 @@ package org.eclipse.ec4e;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ec4e.internal.EditorConfigImages;
+import org.eclipse.ec4e.internal.IDEEditorConfigManager;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -36,10 +39,12 @@ public class EditorConfigPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		IDEEditorConfigManager.getInstance().init();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		IDEEditorConfigManager.getInstance().dispose();
 		plugin = null;
 		super.stop(context);
 	}
@@ -75,4 +80,8 @@ public class EditorConfigPlugin extends AbstractUIPlugin {
 		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, message, thr));
 	}
 
+	@Override
+	protected void initializeImageRegistry(ImageRegistry registry) {
+		EditorConfigImages.initalize(registry);
+	}
 }
