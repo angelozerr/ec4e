@@ -13,6 +13,7 @@ package org.eclipse.ec4e.internal;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4j.EditorConfigException;
 import org.eclipse.ec4j.model.Option;
 import org.eclipse.ec4j.model.optiontypes.EndOfLineOption;

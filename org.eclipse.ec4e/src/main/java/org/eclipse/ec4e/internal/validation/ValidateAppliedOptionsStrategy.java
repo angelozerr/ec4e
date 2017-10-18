@@ -21,7 +21,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.ec4e.internal.IDEEditorConfigManager;
+import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4e.internal.validation.marker.MarkerUtils;
 import org.eclipse.ec4j.model.optiontypes.OptionNames;
 import org.eclipse.ec4j.model.optiontypes.OptionType;

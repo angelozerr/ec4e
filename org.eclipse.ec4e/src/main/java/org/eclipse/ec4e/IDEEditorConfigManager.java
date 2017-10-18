@@ -8,7 +8,7 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.ec4e.internal;
+package org.eclipse.ec4e;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,7 +26,6 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.ec4e.EditorConfigPlugin;
 import org.eclipse.ec4j.AbstractEditorConfigManager;
 import org.eclipse.ec4j.EditorConfigConstants;
 import org.eclipse.ec4j.ResourceProvider;
@@ -142,7 +141,7 @@ public class IDEEditorConfigManager extends AbstractEditorConfigManager<IResourc
 	}
 
 	@Override
-	protected EditorConfig getEditorConfig(IResource configFile) throws IOException {
+	public EditorConfig getEditorConfig(IResource configFile) throws IOException {
 		EditorConfig config = caches.get(configFile);
 		if (config == null) {
 			config = super.getEditorConfig(configFile);
