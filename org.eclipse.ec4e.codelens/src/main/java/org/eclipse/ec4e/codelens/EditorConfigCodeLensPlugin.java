@@ -8,42 +8,38 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.ec4e;
+package org.eclipse.ec4e.codelens;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ec4e.internal.EditorConfigImages;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class EditorConfigPlugin extends AbstractUIPlugin {
+public class EditorConfigCodeLensPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.ec4e"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.ec4e.codelens"; //$NON-NLS-1$
 
 	// The shared instance
-	private static EditorConfigPlugin plugin;
+	private static EditorConfigCodeLensPlugin plugin;
 
 	/**
 	 * The constructor
 	 */
-	public EditorConfigPlugin() {
+	public EditorConfigCodeLensPlugin() {
 	}
 
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		IDEEditorConfigManager.getInstance().init();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		IDEEditorConfigManager.getInstance().dispose();
 		plugin = null;
 		super.stop(context);
 	}
@@ -53,7 +49,7 @@ public class EditorConfigPlugin extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static EditorConfigPlugin getDefault() {
+	public static EditorConfigCodeLensPlugin getDefault() {
 		return plugin;
 	}
 
@@ -79,8 +75,4 @@ public class EditorConfigPlugin extends AbstractUIPlugin {
 		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, message, thr));
 	}
 
-	@Override
-	protected void initializeImageRegistry(ImageRegistry registry) {
-		EditorConfigImages.initalize(registry);
-	}
 }

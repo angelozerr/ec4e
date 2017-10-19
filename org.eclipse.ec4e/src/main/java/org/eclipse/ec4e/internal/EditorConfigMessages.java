@@ -34,6 +34,9 @@ public class EditorConfigMessages extends NLS {
 	public static String NewEditorConfigFileWizardPage_project_noaccessible_error;
 	public static String NewEditorConfigFileWizardPage_folder_already_editorconfig_error;
 
+	// Search
+	public static String editorconfigSearchQuery;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, EditorConfigMessages.class);
 	}
