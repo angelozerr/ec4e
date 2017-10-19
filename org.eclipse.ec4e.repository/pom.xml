@@ -41,6 +41,24 @@
 			</properties>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.jboss.tools.tycho-plugins</groupId>
+						<artifactId>repository-utils</artifactId>
+						<version>0.26.1</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>generate-repository-facade</goal>
+								</goals>
+								<configuration>
+									<associateSites>
+										<associateSite>http://download.eclipse.org/tm4e/snapshots</associateSite>
+									</associateSites>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 					<!-- Upload the repo to the server -->
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
@@ -70,7 +88,7 @@
 			<id>release</id>
 			<properties>
 				<url.suffix>releases</url.suffix>
-			</properties>	
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
