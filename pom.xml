@@ -143,6 +143,18 @@
 			<url>http://download.eclipse.org/tm4e/snapshots/</url>
 		</repository>		
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>cbi</id>
+			<url>https://repo.eclipse.org/content/groups/cbi</url>
+			<snapshots><enabled>true</enabled></snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>jboss</id>
+			<url>https://repository.jboss.org/</url>
+			<snapshots><enabled>true</enabled></snapshots>
+		</pluginRepository>
+	</pluginRepositories>	
 	<name>EditorConfig 4 Eclipse - Parent</name>
 	<description>Support for EditorConfig in the Eclipse IDE</description>
 </project>
