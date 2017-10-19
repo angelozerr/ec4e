@@ -9,6 +9,7 @@
 		<module>org.eclipse.ec4e</module>
 		<module>org.eclipse.ec4e.repository</module>
 		<module>ec4e-feature</module>
+		<module>target-platform</module>
 	</modules>
 
 	<scm>
@@ -35,8 +36,15 @@
 				<inherited>true</inherited>
 				<configuration>
 					<resolver>p2</resolver>
-					<includePackedArtifacts>false</includePackedArtifacts>
+					<includePackedArtifacts>true</includePackedArtifacts>
 					<pomDependencies>consider</pomDependencies>
+					<target>
+						<artifact>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>target-platform</artifactId>
+							<version>${project.version}</version>
+						</artifact>
+					</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -132,29 +140,7 @@
 			</releases>
 			<url>http://repository-opensagres.forge.cloudbees.com/snapshot/</url>
 		</repository>
-		<repository>
-			<id>oxygen</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/oxygen/</url>
-		</repository>
-		<repository>
-			<id>tm4e</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/tm4e/snapshots/</url>
-		</repository>		
 	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>cbi</id>
-			<url>https://repo.eclipse.org/content/groups/cbi</url>
-			<snapshots><enabled>true</enabled></snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>jboss</id>
-			<url>https://repository.jboss.org/</url>
-			<snapshots><enabled>true</enabled></snapshots>
-		</pluginRepository>
-	</pluginRepositories>	
 	<name>EditorConfig 4 Eclipse - Parent</name>
 	<description>Support for EditorConfig in the Eclipse IDE</description>
 </project>
