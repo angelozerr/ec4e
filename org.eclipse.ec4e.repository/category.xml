@@ -18,4 +18,5 @@
    <category-def name="EditorConfig" label="EditorConfig"/>
    <category-def name="TextMate" label="TextMate"/>
    <category-def name="Dependencies" label="Dependencies"/>
+   <repository-reference location="http://download.eclipse.org/tm4e/snapshots" enabled="true" />
 </site>
