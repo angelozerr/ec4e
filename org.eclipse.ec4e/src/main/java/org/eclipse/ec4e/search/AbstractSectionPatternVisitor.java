@@ -1,5 +1,6 @@
 package org.eclipse.ec4e.search;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.runtime.CoreException;
@@ -17,7 +18,7 @@ public abstract class AbstractSectionPatternVisitor implements IResourceProxyVis
 	@Override
 	public boolean visit(IResourceProxy proxy) throws CoreException {
 		IPath path = proxy.requestFullPath();
-		if (section.match(path.toString())) {
+		if (proxy.getType() == IResource.FILE && section.match(path.toString())) {
 			collect(proxy);
 		}
 		return true;
