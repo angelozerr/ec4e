@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature id="ec4e-feature" version="0.0.0">
@@ -15,28 +14,6 @@
    </bundle>
    <category-def name="Dependencies" label="Dependencies"/>
    <category-def name="ec4e" label="ec4e"/>
-</site>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <bundle id="org.eclipse.ec4e" version="0.1.0.qualifier">
-      <category name="EditorConfig"/>
-   </bundle>
-   <bundle id="org.eclipse.ec4j" version="0.1.0.qualifier">
-      <category name="EditorConfig"/>
-   </bundle>
-   <feature id="tm-feature">
-      <category name="TextMate"/>
-   </feature>   
-   <bundle id="org.joni" version="0.0.0">
-      <category name="Dependencies"/>
-   </bundle>
-   <bundle id="org.jcodings" version="0.0.0">
-      <category name="Dependencies"/>
-   </bundle>
-   <category-def name="EditorConfig" label="EditorConfig"/>
-   <category-def name="TextMate" label="TextMate"/>
-   <category-def name="Dependencies" label="Dependencies"/>
    <repository-reference location="http://download.eclipse.org/tm4e/snapshots" enabled="true" />
 </site>
->>>>>>> branch 'master' of https://github.com/angelozerr/ec4e.git
+
