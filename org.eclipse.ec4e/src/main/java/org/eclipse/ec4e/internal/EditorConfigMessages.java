@@ -35,7 +35,9 @@ public class EditorConfigMessages extends NLS {
 	public static String NewEditorConfigFileWizardPage_folder_already_editorconfig_error;
 
 	// Search
-	public static String editorconfigSearchQuery;
+	public static String EditorConfigSearchQuery_label;
+	public static String EditorConfigSearchQuery_singularReference;
+	public static String EditorConfigSearchQuery_pluralReferences;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, EditorConfigMessages.class);
