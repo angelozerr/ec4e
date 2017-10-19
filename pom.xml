@@ -123,7 +123,7 @@
 		</dependencies>
 	<repositories>
 		<repository>
-			<id>cloudbees</id>
+			<id>cloudbees</id> <!-- for ec4j snapshots -->
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
