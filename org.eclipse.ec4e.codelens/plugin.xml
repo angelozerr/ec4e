@@ -23,7 +23,6 @@
 	 
 	<extension
       point="org.eclipse.codelens.codeLensProviders">
-       <!-- LS CodeLens -->
 	   <codeLensProvider
 	   		 name="%EditorConfigCodeLensProvider.name"
 	         class="org.eclipse.ec4e.codelens.EditorConfigCodeLensProvider"
