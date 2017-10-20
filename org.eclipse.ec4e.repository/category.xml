@@ -12,8 +12,15 @@
    <bundle id="org.jcodings" version="0.0.0">
       <category name="Dependencies"/>
    </bundle>
+   <feature id="org.eclipse.codelens.feature" version="0.0.0">
+      <category name="ec4e - codelens"/>
+   </feature>
+   <bundle id="org.eclipse.ec4e.codelens" version="0.0.0">
+      <category name="ec4e - codelens"/>
+   </bundle>
    <category-def name="Dependencies" label="Dependencies"/>
    <category-def name="ec4e" label="ec4e"/>
+   <category-def name="ec4e - codelens" label="ec4e - codelens"/>
    <repository-reference location="http://download.eclipse.org/tm4e/snapshots" enabled="true" />
+   <repository-reference location="http://oss.opensagres.fr/org.eclipse.codelens.repository/snapshots/" enabled="true" />
 </site>
-
