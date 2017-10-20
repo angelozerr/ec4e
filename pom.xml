@@ -5,6 +5,20 @@
 	<artifactId>org.eclipse.ec4e.parent</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
+    <organization>
+      <name>EditorConfig for Eclipse</name>
+      <url>https://github.com/angelozerr/ec4e</url>
+    </organization>
+    <inceptionYear>2017</inceptionYear>
+      
+    <licenses>
+      <license>
+        <name>Eclipse Public License</name>
+        <url>http://www.eclipse.org/legal/epl-v10.html</url>
+        <distribution>repo</distribution>
+      </license>
+    </licenses>  
 	<modules>
 		<module>org.eclipse.ec4e</module>
         <module>org.eclipse.ec4e.codelens</module>
