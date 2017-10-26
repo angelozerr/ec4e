@@ -1,14 +1,14 @@
 package org.eclipse.ec4e.codelens;
 
-import org.eclipse.ec4e.IDEEditorConfigManager;
-import org.eclipse.ec4j.model.EditorConfigHandler;
-import org.eclipse.ec4j.model.Option;
-import org.eclipse.ec4j.model.Section;
+import org.eclipse.ec4j.core.model.EditorConfigHandler;
+import org.eclipse.ec4j.core.model.Option;
+import org.eclipse.ec4j.core.model.Section;
+import org.eclipse.ec4j.core.model.optiontypes.OptionTypeRegistry;
 
 public class SectionsHandler extends EditorConfigHandler {
 
-	public SectionsHandler(String dirPath) {
-		super(IDEEditorConfigManager.getInstance().getRegistry(), IDEEditorConfigManager.getInstance().getVersion());
+	public SectionsHandler(String dirPath, OptionTypeRegistry registry, String version) {
+		super(registry, version);
 		getEditorConfig().setDirPath(dirPath);
 	}
 

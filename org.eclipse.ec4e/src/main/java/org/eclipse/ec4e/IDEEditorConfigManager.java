@@ -10,13 +10,9 @@
  */
 package org.eclipse.ec4e;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -25,62 +21,44 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.ec4j.AbstractEditorConfigManager;
-import org.eclipse.ec4j.EditorConfigConstants;
-import org.eclipse.ec4j.ResourceProvider;
-import org.eclipse.ec4j.model.EditorConfig;
+import org.eclipse.ec4e.internal.resource.FileResource;
+import org.eclipse.ec4j.core.Caches.Cache;
+import org.eclipse.ec4j.core.EditorConfigConstants;
+import org.eclipse.ec4j.core.EditorConfigException;
+import org.eclipse.ec4j.core.EditorConfigLoader;
+import org.eclipse.ec4j.core.EditorConfigSession;
+import org.eclipse.ec4j.core.Resources.Resource;
+import org.eclipse.ec4j.core.model.EditorConfig;
+import org.eclipse.ec4j.core.model.Option;
 
 /**
  * IDE editorconfig manager.
  *
  */
-public class IDEEditorConfigManager extends AbstractEditorConfigManager<IResource> {
-
-	private static final ResourceProvider<IResource> ECLIPSE_RESOURCE_PROVIDER = new ResourceProvider<IResource>() {
-
-		@Override
-		public IResource getParent(IResource file) {
-			IContainer parent = file.getParent();
-			if (parent != null && parent.getType() != IResource.ROOT) {
-				return parent;
-			}
-			return null;
-		}
-
-		@Override
-		public IResource getResource(IResource parent, String child) {
-			return ((IContainer) parent).getFile(new Path(child));
-		}
-
-		@Override
-		public boolean exists(IResource file) {
-			return file.exists();
-		}
-
-		@Override
-		public String getPath(IResource file) {
-			return file.getLocation().toString().replaceAll("[\\\\]", "/");
-		}
-
-		@Override
-		public Reader getContent(IResource configFile) throws IOException {
-			try {
-				return new InputStreamReader(((IFile) configFile).getContents(), StandardCharsets.UTF_8);
-			} catch (CoreException e) {
-				throw new IOException(e);
-			}
-		}
-	};
+public class IDEEditorConfigManager {
 
 	/**
-	 * {@link EditorConfig} instance cache.
-	 *
+	 * An unchecked wrapper around {@link EditorConfigException} to be able to trow
+	 * properly from lambda expressions.
 	 */
-	private static class EditorConfigCache extends HashMap<IResource, EditorConfig>
-			implements IResourceChangeListener, IResourceDeltaVisitor {
+	private static class WrappedEditorConfigException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+		private final EditorConfigException cause;
+
+		WrappedEditorConfigException(EditorConfigException cause) {
+			this.cause = cause;
+		}
+	}
+
+	/**
+	 * {@link EditorConfig} instance cache. Uses {@link ConcurrentHashMap}
+	 * internally and can thus be accessed from concurrent threads.
+	 */
+	private static class EditorConfigCache implements IResourceChangeListener, IResourceDeltaVisitor, Cache {
 
 		private static final long serialVersionUID = 1L;
+
+		private final ConcurrentHashMap<Resource, EditorConfig> entries = new ConcurrentHashMap<>();
 
 		@Override
 		public void resourceChanged(IResourceChangeEvent event) {
@@ -111,20 +89,44 @@ public class IDEEditorConfigManager extends AbstractEditorConfigManager<IResourc
 				IFile file = (IFile) resource;
 				if (EditorConfigConstants.EDITORCONFIG.equals(file.getName())
 						&& delta.getKind() == IResourceDelta.CHANGED) {
-					super.remove(file);
+					entries.remove(new FileResource(file));
 				}
 			}
 			return false;
+		}
+
+		@Override
+		public EditorConfig get(Resource editorConfigFile, EditorConfigLoader loader) throws EditorConfigException {
+			try {
+				return entries.computeIfAbsent(editorConfigFile, k -> {
+					try {
+						return loader.load(k);
+					} catch (EditorConfigException e) {
+						throw new WrappedEditorConfigException(e);
+					}
+				});
+			} catch (WrappedEditorConfigException e) {
+				throw e.cause;
+			}
+		}
+
+		public void clear() {
+			entries.clear();
 		}
 	}
 
 	public static final IDEEditorConfigManager INSTANCE = new IDEEditorConfigManager();
 
-	private final EditorConfigCache caches;
+	private final EditorConfigSession session;
+
+	private final EditorConfigCache cache;
 
 	public IDEEditorConfigManager() {
-		super(ECLIPSE_RESOURCE_PROVIDER);
-		this.caches = new EditorConfigCache();
+		this.cache = new EditorConfigCache();
+
+		session = EditorConfigSession.builder()//
+				.cache(cache) //
+				.build();
 	}
 
 	public static IDEEditorConfigManager getInstance() {
@@ -132,21 +134,20 @@ public class IDEEditorConfigManager extends AbstractEditorConfigManager<IResourc
 	}
 
 	public void init() {
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(caches);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(cache);
+	}
+
+	public EditorConfigSession getSession() {
+		return session;
 	}
 
 	public void dispose() {
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(caches);
-		caches.clear();
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(cache);
+		cache.clear();
 	}
 
-	@Override
-	public EditorConfig getEditorConfig(IResource configFile) throws IOException {
-		EditorConfig config = caches.get(configFile);
-		if (config == null) {
-			config = super.getEditorConfig(configFile);
-			caches.put(configFile, config);
-		}
-		return config;
+	public Collection<Option> queryOptions(IFile file) throws EditorConfigException {
+		return session.queryOptions(new FileResource(file));
 	}
+
 }

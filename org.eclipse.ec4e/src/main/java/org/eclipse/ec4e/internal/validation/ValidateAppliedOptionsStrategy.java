@@ -23,9 +23,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4e.internal.validation.marker.MarkerUtils;
-import org.eclipse.ec4j.model.optiontypes.OptionNames;
-import org.eclipse.ec4j.model.optiontypes.OptionType;
-import org.eclipse.ec4j.model.optiontypes.OptionTypeRegistry;
+import org.eclipse.ec4j.core.model.optiontypes.OptionNames;
+import org.eclipse.ec4j.core.model.optiontypes.OptionType;
+import org.eclipse.ec4j.core.model.optiontypes.OptionTypeRegistry;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -60,7 +60,7 @@ public class ValidateAppliedOptionsStrategy
 	public ValidateAppliedOptionsStrategy(IPreferenceStore preferenceStore, IResource resource) {
 		this.preferenceStore = preferenceStore;
 		this.resource = resource;
-		OptionTypeRegistry registry = IDEEditorConfigManager.getInstance().getRegistry();
+		OptionTypeRegistry registry = IDEEditorConfigManager.getInstance().getSession().getLoader().getRegistry();
 		insertFinalNewlineType = registry.getType(OptionNames.insert_final_newline.name());
 		trimTrailingWhitespaceType = registry.getType(OptionNames.trim_trailing_whitespace.name());
 	}
@@ -146,7 +146,7 @@ public class ValidateAppliedOptionsStrategy
 	/**
 	 * Validate 'trim_trailing_whitespace' of the lines where region changed if
 	 * needed and update the given set of marker.
-	 * 
+	 *
 	 * @param partition
 	 *            the region which changed
 	 * @param remainingMarkers
@@ -216,7 +216,7 @@ public class ValidateAppliedOptionsStrategy
 
 	/**
 	 * Validate 'insert_final_newline' if needed and update the given set of marker.
-	 * 
+	 *
 	 * @param document
 	 *            the document to validate
 	 * @param remainingMarkers
@@ -244,7 +244,7 @@ public class ValidateAppliedOptionsStrategy
 
 	/**
 	 * Add or update marker error.
-	 * 
+	 *
 	 * @param start
 	 *            the start of the error.
 	 * @param end
@@ -273,7 +273,7 @@ public class ValidateAppliedOptionsStrategy
 
 	/**
 	 * Update marker.
-	 * 
+	 *
 	 * @param start
 	 *            the start of the error.
 	 * @param end
@@ -303,7 +303,7 @@ public class ValidateAppliedOptionsStrategy
 
 	/**
 	 * Returns the error message according the option type.
-	 * 
+	 *
 	 * @param type
 	 *            the option type.
 	 * @return the error message according the option type.
@@ -319,7 +319,7 @@ public class ValidateAppliedOptionsStrategy
 
 	/**
 	 * Return the existing marker and null otherwise.
-	 * 
+	 *
 	 * @param start
 	 *            the start of the error.
 	 * @param end

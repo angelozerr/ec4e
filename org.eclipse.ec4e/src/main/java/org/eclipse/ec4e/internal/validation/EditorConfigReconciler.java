@@ -11,7 +11,7 @@
 package org.eclipse.ec4e.internal.validation;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.ec4j.EditorConfigConstants;
+import org.eclipse.ec4j.core.EditorConfigConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;

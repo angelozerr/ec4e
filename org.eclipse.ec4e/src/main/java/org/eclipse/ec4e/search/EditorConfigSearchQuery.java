@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ec4e.EditorConfigPlugin;
 import org.eclipse.ec4e.internal.EditorConfigMessages;
-import org.eclipse.ec4j.model.Section;
+import org.eclipse.ec4j.core.model.Section;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.search.internal.ui.text.FileMatch;
 import org.eclipse.search.internal.ui.text.FileSearchQuery;

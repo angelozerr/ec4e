@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.jface.text,
  org.eclipse.codelens,
  org.eclipse.codelens.editors,
  org.eclipse.ec4e,
- org.eclipse.ec4j,
+ org.eclipse.ec4j.core,
+ org.eclipse.ec4j.services,
  org.eclipse.search
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.eclipse.ec4e.codelens.EditorConfigCodeLensPlugin

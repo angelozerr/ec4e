@@ -1,8 +1,8 @@
 package org.eclipse.ec4e.codelens;
 
-import org.eclipse.ec4j.model.EditorConfig;
-import org.eclipse.ec4j.model.Section;
-import org.eclipse.ec4j.parser.Location;
+import org.eclipse.ec4j.core.model.EditorConfig;
+import org.eclipse.ec4j.core.model.Section;
+import org.eclipse.ec4j.core.parser.Location;
 
 public class SectionWithLoc extends Section {
 

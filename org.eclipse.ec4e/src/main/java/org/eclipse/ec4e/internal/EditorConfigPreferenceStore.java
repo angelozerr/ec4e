@@ -14,11 +14,11 @@ import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ec4e.IDEEditorConfigManager;
-import org.eclipse.ec4j.EditorConfigException;
-import org.eclipse.ec4j.model.Option;
-import org.eclipse.ec4j.model.optiontypes.EndOfLineOption;
-import org.eclipse.ec4j.model.optiontypes.IndentStyleOption;
-import org.eclipse.ec4j.model.optiontypes.OptionNames;
+import org.eclipse.ec4j.core.EditorConfigException;
+import org.eclipse.ec4j.core.model.Option;
+import org.eclipse.ec4j.core.model.optiontypes.EndOfLineOption;
+import org.eclipse.ec4j.core.model.optiontypes.IndentStyleOption;
+import org.eclipse.ec4j.core.model.optiontypes.OptionNames;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension4;
@@ -58,7 +58,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 				spacesForTabs = null;
 				Integer oldTabWidth = tabWidth;
 				tabWidth = null;
-				Collection<Option> options = IDEEditorConfigManager.getInstance().getOptions(file, null);
+				Collection<Option> options = IDEEditorConfigManager.getInstance().queryOptions(file);
 				for (Option option : options) {
 					if (!option.isValid()) {
 						continue;

@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.tm4e.core,
  org.eclipse.tm4e.ui,
  org.eclipse.tm4e.languageconfiguration,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.ec4j,
+ org.eclipse.ec4j.core,
+ org.eclipse.ec4j.services,
  org.eclipse.search
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.eclipse.ec4e.EditorConfigPlugin
