@@ -5,7 +5,7 @@ import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.ec4j.model.Section;
+import org.eclipse.ec4j.core.model.Section;
 
 public abstract class AbstractSectionPatternVisitor implements IResourceProxyVisitor {
 

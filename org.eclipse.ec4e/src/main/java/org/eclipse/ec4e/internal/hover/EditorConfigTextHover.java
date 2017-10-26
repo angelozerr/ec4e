@@ -12,8 +12,8 @@ package org.eclipse.ec4e.internal.hover;
 
 import java.util.Iterator;
 
-import org.eclipse.ec4e.internal.DocumentContentProvider;
-import org.eclipse.ec4j.EditorConfigService;
+import org.eclipse.ec4e.internal.resource.DocumentRandomReader;
+import org.eclipse.ec4j.services.EditorConfigService;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
@@ -37,8 +37,7 @@ public class EditorConfigTextHover implements ITextHover {
 			return null;
 		}
 		try {
-			return EditorConfigService.getHover(hoverRegion.getOffset(), textViewer.getDocument(),
-					DocumentContentProvider.INSTANCE);
+			return EditorConfigService.getHover(hoverRegion.getOffset(), new DocumentRandomReader(textViewer.getDocument()));
 		} catch (Exception e) {
 			return null;
 		}
@@ -52,7 +51,7 @@ public class EditorConfigTextHover implements ITextHover {
 	/***
 	 * Returns true if it exists a marker annotation in the given offset and false
 	 * otherwise.
-	 * 
+	 *
 	 * @param textViewer
 	 * @param offset
 	 * @return true if it exists a marker annotation in the given offset and false

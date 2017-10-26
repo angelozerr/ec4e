@@ -7,9 +7,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4e.search.CountSectionPatternVisitor;
-import org.eclipse.ec4j.model.Section;
-import org.eclipse.ec4j.parser.EditorConfigParser;
+import org.eclipse.ec4j.core.EditorConfigLoader;
+import org.eclipse.ec4j.core.model.Section;
+import org.eclipse.ec4j.core.parser.EditorConfigParser;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.provisional.codelens.AbstractSyncCodeLensProvider;
 import org.eclipse.jface.text.provisional.codelens.ICodeLens;
@@ -26,7 +28,8 @@ public class EditorConfigCodeLensProvider extends AbstractSyncCodeLensProvider {
 			return null;
 		}
 		IDocument document = context.getViewer().getDocument();
-		SectionsHandler handler = new SectionsHandler(file.getParent().getFullPath().toString() + "/");
+		EditorConfigLoader loader = IDEEditorConfigManager.getInstance().getSession().getLoader();
+		SectionsHandler handler = new SectionsHandler(file.getParent().getFullPath().toString() + "/", loader.getRegistry(), loader.getVersion());
 		new EditorConfigParser<>(handler).setTolerant(true).parse(document.get());
 		List<Section> sections = handler.getEditorConfig().getSections();
 

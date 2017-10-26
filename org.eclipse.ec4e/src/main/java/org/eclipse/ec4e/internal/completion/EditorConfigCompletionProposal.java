@@ -11,9 +11,9 @@
 package org.eclipse.ec4e.internal.completion;
 
 import org.eclipse.ec4e.internal.EditorConfigImages;
-import org.eclipse.ec4j.completion.CompletionContextType;
-import org.eclipse.ec4j.completion.CompletionEntry;
-import org.eclipse.ec4j.model.optiontypes.OptionType;
+import org.eclipse.ec4j.services.completion.CompletionContextType;
+import org.eclipse.ec4j.services.completion.CompletionEntry;
+import org.eclipse.ec4j.core.model.optiontypes.OptionType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
 import org.eclipse.jface.text.DocumentEvent;

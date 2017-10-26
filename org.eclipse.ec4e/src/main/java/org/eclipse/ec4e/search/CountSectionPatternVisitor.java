@@ -1,7 +1,7 @@
 package org.eclipse.ec4e.search;
 
 import org.eclipse.core.resources.IResourceProxy;
-import org.eclipse.ec4j.model.Section;
+import org.eclipse.ec4j.core.model.Section;
 
 public class CountSectionPatternVisitor extends AbstractSectionPatternVisitor {
 

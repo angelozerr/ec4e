@@ -10,9 +10,9 @@
  */
 package org.eclipse.ec4e.internal.completion;
 
-import org.eclipse.ec4e.internal.DocumentContentProvider;
-import org.eclipse.ec4j.EditorConfigService;
-import org.eclipse.ec4j.completion.ICompletionEntryMatcher;
+import org.eclipse.ec4e.internal.resource.DocumentRandomReader;
+import org.eclipse.ec4j.services.EditorConfigService;
+import org.eclipse.ec4j.services.completion.ICompletionEntryMatcher;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -32,8 +32,8 @@ public class EditorConfigContentAssistProcessor implements IContentAssistProcess
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		IDocument document = viewer.getDocument();
 		try {
-			return EditorConfigService.getCompletionEntries(offset, document, ICompletionEntryMatcher.LCS,
-					EditorConfigCompletionProposal::new, DocumentContentProvider.INSTANCE)
+			return EditorConfigService.getCompletionEntries(offset, new DocumentRandomReader(document), ICompletionEntryMatcher.LCS,
+					EditorConfigCompletionProposal::new)
 					.stream().toArray(ICompletionProposal[]::new);
 		} catch (Exception e) {
 		}
