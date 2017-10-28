@@ -22,12 +22,12 @@ public class ContainerResourcePath implements ResourcePath {
 
 	@Override
 	public ResourcePath getParent() {
-		IContainer parent = container.getParent();
-		if (parent == null || parent.getType() == IResource.ROOT) {
+		if (container.getType() == IResource.PROJECT) {
+			// Stop the search of  '.editorconfig' files in the parent container
 			return null;
 		}
-		// Search '.editorconfig' files only in project and folders container.
-		return new ContainerResourcePath(parent);
+		IContainer parent = container.getParent();
+		return parent == null ? null : new ContainerResourcePath(parent);
 	}
 
 	@Override
