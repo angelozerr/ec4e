@@ -2,6 +2,7 @@ package org.eclipse.ec4e.internal.resource;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ec4j.core.ResourcePaths.ResourcePath;
 import org.eclipse.ec4j.core.Resources.Resource;
@@ -22,7 +23,11 @@ public class ContainerResourcePath implements ResourcePath {
 	@Override
 	public ResourcePath getParent() {
 		IContainer parent = container.getParent();
-		return parent == null ? null : new ContainerResourcePath(parent);
+		if (parent == null || parent.getType() == IResource.ROOT) {
+			return null;
+		}
+		// Search '.editorconfig' files only in project and folders container.
+		return new ContainerResourcePath(parent);
 	}
 
 	@Override
