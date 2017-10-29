@@ -29,7 +29,7 @@ import org.eclipse.ec4j.core.EditorConfigLoader;
 import org.eclipse.ec4j.core.EditorConfigSession;
 import org.eclipse.ec4j.core.Resources.Resource;
 import org.eclipse.ec4j.core.model.EditorConfig;
-import org.eclipse.ec4j.core.model.Option;
+import org.eclipse.ec4j.core.model.Property;
 
 /**
  * IDE editorconfig manager.
@@ -146,8 +146,8 @@ public class IDEEditorConfigManager {
 		cache.clear();
 	}
 
-	public Collection<Option> queryOptions(IFile file) throws EditorConfigException {
-		return session.queryOptions(new FileResource(file));
+	public Collection<Property> queryOptions(IFile file) throws EditorConfigException {
+		return session.queryProperties(new FileResource(file));
 	}
 
 }

@@ -15,16 +15,15 @@ import java.util.Collection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4j.core.EditorConfigException;
-import org.eclipse.ec4j.core.model.Option;
-import org.eclipse.ec4j.core.model.optiontypes.EndOfLineOption;
-import org.eclipse.ec4j.core.model.optiontypes.IndentStyleOption;
-import org.eclipse.ec4j.core.model.optiontypes.OptionNames;
+import org.eclipse.ec4j.core.model.Property;
+import org.eclipse.ec4j.core.model.propertytype.EndOfLineProperty;
+import org.eclipse.ec4j.core.model.propertytype.IndentStyleProperty;
+import org.eclipse.ec4j.core.model.propertytype.PropertyName;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.IEncodingSupport;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -58,23 +57,23 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 				spacesForTabs = null;
 				Integer oldTabWidth = tabWidth;
 				tabWidth = null;
-				Collection<Option> options = IDEEditorConfigManager.getInstance().queryOptions(file);
-				for (Option option : options) {
-					if (!option.isValid()) {
+				Collection<Property> properties = IDEEditorConfigManager.getInstance().queryOptions(file);
+				for (Property property : properties) {
+					if (!property.isValid()) {
 						continue;
 					}
-					OptionNames names = OptionNames.get(option.getName());
+					PropertyName names = PropertyName.get(property.getName());
 					switch (names) {
 					case indent_style:
-						IndentStyleOption styleOption = option.getValueAs();
-						spacesForTabs = styleOption == IndentStyleOption.SPACE;
+						IndentStyleProperty styleOption = property.getValueAs();
+						spacesForTabs = styleOption == IndentStyleProperty.SPACE;
 						if (oldSpacesForTabs != spacesForTabs) {
 							editorStore.firePropertyChangeEvent(EDITOR_SPACES_FOR_TABS, oldSpacesForTabs,
 									spacesForTabs);
 						}
 						break;
 					case indent_size:
-						tabWidth = option.getValueAs();
+						tabWidth = property.getValueAs();
 						if (oldTabWidth != tabWidth) {
 							editorStore.firePropertyChangeEvent(EDITOR_TAB_WIDTH, oldTabWidth, tabWidth);
 						}
@@ -83,22 +82,22 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 						IEditorInput editorInput = textEditor.getEditorInput();
 						IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
 						if (document instanceof IDocumentExtension4) {
-							EndOfLineOption endOfLineOption = option.getValueAs();
-							if (endOfLineOption != null) {
+							EndOfLineProperty endOfLineProperty = property.getValueAs();
+							if (endOfLineProperty != null) {
 								((IDocumentExtension4) document)
-										.setInitialLineDelimiter(endOfLineOption.getEndOfLineString());
+										.setInitialLineDelimiter(endOfLineProperty.getEndOfLineString());
 							}
 						}
 						break;
 					case charset:
 						IEncodingSupport encodingSupport = textEditor.getAdapter(IEncodingSupport.class);
 						if (encodingSupport != null) {
-							encodingSupport.setEncoding(option.getValue().toUpperCase());
+							encodingSupport.setEncoding(property.getSourceValue().toUpperCase());
 						}
 						break;
 					case trim_trailing_whitespace:
 						boolean oldTrimTrailingWhitespace = trimTrailingWhitespace;
-						trimTrailingWhitespace = option.getValueAs();
+						trimTrailingWhitespace = property.getValueAs();
 						if (oldTrimTrailingWhitespace != trimTrailingWhitespace) {
 							editorStore.firePropertyChangeEvent(EDITOR_TRIM_TRAILING_WHITESPACE,
 									oldTrimTrailingWhitespace, trimTrailingWhitespace);
@@ -106,7 +105,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 						break;
 					case insert_final_newline:
 						boolean oldInsertFinalNewline = insertFinalNewline;
-						insertFinalNewline = option.getValueAs();
+						insertFinalNewline = property.getValueAs();
 						if (oldInsertFinalNewline != insertFinalNewline) {
 							editorStore.firePropertyChangeEvent(EDITOR_INSERT_FINAL_NEWLINE, oldInsertFinalNewline,
 									insertFinalNewline);

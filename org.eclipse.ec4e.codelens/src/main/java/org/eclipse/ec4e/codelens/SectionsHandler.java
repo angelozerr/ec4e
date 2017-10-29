@@ -1,26 +1,30 @@
 package org.eclipse.ec4e.codelens;
 
-import org.eclipse.ec4j.core.model.EditorConfigHandler;
-import org.eclipse.ec4j.core.model.Option;
-import org.eclipse.ec4j.core.model.Section;
-import org.eclipse.ec4j.core.model.optiontypes.OptionTypeRegistry;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SectionsHandler extends EditorConfigHandler {
+import org.eclipse.ec4j.core.model.Version;
+import org.eclipse.ec4j.core.model.propertytype.PropertyTypeRegistry;
+import org.eclipse.ec4j.core.parser.EditorConfigModelHandler;
+import org.eclipse.ec4j.core.parser.Location;
+import org.eclipse.ec4j.core.parser.ParseContext;
 
-	public SectionsHandler(String dirPath, OptionTypeRegistry registry, String version) {
+public class SectionsHandler extends EditorConfigModelHandler {
+
+	public SectionsHandler(PropertyTypeRegistry registry, Version version) {
 		super(registry, version);
-		getEditorConfig().setDirPath(dirPath);
+	}
+
+	private final List<Location> sectionLocations = new ArrayList<>();
+
+	public List<Location> getSectionLocations() {
+		return sectionLocations;
 	}
 
 	@Override
-	public Section startSection() {
-		return new SectionWithLoc(getEditorConfig(), getLocation());
-	}
-
-	@Override
-	public Option endOptionName(String name) {
-		// No need to parse options.
-		return null;
+	public void startSection(ParseContext context) {
+		super.startSection(context);
+		sectionLocations.add(context.getLocation());
 	}
 
 }

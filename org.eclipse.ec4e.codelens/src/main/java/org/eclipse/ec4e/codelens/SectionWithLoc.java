@@ -1,19 +1,27 @@
 package org.eclipse.ec4e.codelens;
 
-import org.eclipse.ec4j.core.model.EditorConfig;
 import org.eclipse.ec4j.core.model.Section;
 import org.eclipse.ec4j.core.parser.Location;
 
-public class SectionWithLoc extends Section {
+public class SectionWithLoc {
+
+	public SectionWithLoc(Location start, Section section) {
+		super();
+		this.start = start;
+		this.section = section;
+	}
+
 
 	private final Location start;
+	private final Section section;
 
-	public SectionWithLoc(EditorConfig editorConfig, Location start) {
-		super(editorConfig);
-		this.start = start;
-	}
 
 	public Location getStart() {
 		return start;
+	}
+
+
+	public Section getSection() {
+		return section;
 	}
 }

@@ -11,9 +11,9 @@
 package org.eclipse.ec4e.internal.completion;
 
 import org.eclipse.ec4e.internal.EditorConfigImages;
+import org.eclipse.ec4j.core.model.propertytype.PropertyType;
 import org.eclipse.ec4j.services.completion.CompletionContextType;
 import org.eclipse.ec4j.services.completion.CompletionEntry;
-import org.eclipse.ec4j.core.model.optiontypes.OptionType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -111,15 +111,15 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 		proposal.apply(document);
 		int baseOffset = getReplacementOffset();
 
-		String[] possibleValues = getOptionType().getPossibleValues();
-		if (getContextType() == CompletionContextType.OPTION_NAME && possibleValues != null
+		String[] possibleValues = getPropertyType().getPossibleValues();
+		if (getContextType() == CompletionContextType.PROPERTY_NAME && possibleValues != null
 				&& getTextViewer() != null) {
 
 			try {
 				LinkedModeModel model = new LinkedModeModel();
 				LinkedPositionGroup group = new LinkedPositionGroup();
 
-				OptionType<?> optionType = getOptionType();
+				PropertyType<?> optionType = getPropertyType();
 				OptionValue value = new OptionValue(replacement.length() - optionType.getPossibleValues()[0].length(),
 						optionType);
 				value.updateOffset(baseOffset);
@@ -162,8 +162,8 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 	}
 
 	private String computeReplacementString(IDocument document, int offset) {
-		if (getContextType() == CompletionContextType.OPTION_NAME) {
-			String first = getOptionType().getPossibleValues()[0];
+		if (getContextType() == CompletionContextType.PROPERTY_NAME) {
+			String first = getPropertyType().getPossibleValues()[0];
 			return new StringBuilder(getReplacementString()).append(" = ").append(first).toString();
 		}
 		return getReplacementString();
@@ -185,7 +185,7 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 	@Override
 	public String getAdditionalProposalInfo() {
 		initIfNeeded();
-		OptionType<?> optionType = getOptionType();
+		PropertyType<?> optionType = getPropertyType();
 		return optionType != null ? optionType.getDescription() : null;
 	}
 
@@ -198,9 +198,9 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 	@Override
 	public Image getImage() {
 		switch (getContextType()) {
-		case OPTION_NAME:
+		case PROPERTY_NAME:
 			return EditorConfigImages.getImage(EditorConfigImages.IMG_PROPERTY);
-		case OPTION_VALUE:
+		case PROPERTY_VALUE:
 			return EditorConfigImages.getImage(EditorConfigImages.IMG_VALUE);
 		default:
 			return null;

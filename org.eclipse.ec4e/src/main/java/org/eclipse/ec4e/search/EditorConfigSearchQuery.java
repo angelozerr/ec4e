@@ -89,10 +89,10 @@ public class EditorConfigSearchQuery extends FileSearchQuery {
 		}
 		if (nMatches == 1) {
 			return NLS.bind(EditorConfigMessages.EditorConfigSearchQuery_singularReference,
-					new Object[] { section.getPattern(), time });
+					new Object[] { section.getGlob(), time });
 		}
 		return NLS.bind(EditorConfigMessages.EditorConfigSearchQuery_pluralReferences,
-				new Object[] { section.getPattern(), nMatches, time });
+				new Object[] { section.getGlob(), nMatches, time });
 	}
 
 	@Override
