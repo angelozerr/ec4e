@@ -42,16 +42,16 @@ public class FileResource implements Resource {
 	}
 
 	@Override
-	public RandomReader openRandomReader(Charset encoding) throws IOException {
-		try (Reader reader = openReader(encoding)) {
+	public RandomReader openRandomReader() throws IOException {
+		try (Reader reader = openReader()) {
 			return org.eclipse.ec4j.core.Resources.StringRandomReader.ofReader(reader);
 		}
 	}
 
 	@Override
-	public Reader openReader(Charset encoding) throws IOException {
+	public Reader openReader() throws IOException {
 		try {
-			return new InputStreamReader(file.getContents(), encoding);
+			return new InputStreamReader(file.getContents(), Charset.forName(file.getCharset()));
 		} catch (CoreException e) {
 			throw new IOException(e);
 		}

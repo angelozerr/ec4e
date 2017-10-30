@@ -17,7 +17,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ec4e.EditorConfigPlugin;
-import org.eclipse.ec4j.core.model.optiontypes.OptionType;
+import org.eclipse.ec4j.core.model.propertytype.PropertyType;
 import org.eclipse.ec4j.services.validation.Severity;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -38,16 +38,16 @@ public class MarkerUtils {
 	private static final String EC_ATTRIBUTE_OPTION_TYPE = "ecOptionType"; //$NON-NLS-1$
 	private static final String EC_PROBLEM_MARKER_TYPE = "org.eclipse.ec4e.problem"; //$NON-NLS-1$
 
-	public static OptionType<?> getOptionType(IMarker marker) throws CoreException {
-		return (OptionType<?>) marker.getAttribute(EC_ATTRIBUTE_OPTION_TYPE);
+	public static PropertyType<?> getOptionType(IMarker marker) throws CoreException {
+		return (PropertyType<?>) marker.getAttribute(EC_ATTRIBUTE_OPTION_TYPE);
 	}
 
 	public static boolean isOptionType(IMarker marker, String name) throws CoreException {
-		OptionType<?> type = getOptionType(marker);
+		PropertyType<?> type = getOptionType(marker);
 		return type != null && type.getName().equals(name);
 	}
 
-	public static void setOptionType(IMarker marker, OptionType<?> type) throws CoreException {
+	public static void setOptionType(IMarker marker, PropertyType<?> type) throws CoreException {
 		marker.setAttribute(EC_ATTRIBUTE_OPTION_TYPE, type);
 	}
 

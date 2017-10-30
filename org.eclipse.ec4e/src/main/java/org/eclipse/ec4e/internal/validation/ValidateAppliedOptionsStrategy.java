@@ -23,9 +23,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4e.internal.validation.marker.MarkerUtils;
-import org.eclipse.ec4j.core.model.optiontypes.OptionNames;
-import org.eclipse.ec4j.core.model.optiontypes.OptionType;
-import org.eclipse.ec4j.core.model.optiontypes.OptionTypeRegistry;
+import org.eclipse.ec4j.core.model.propertytype.PropertyName;
+import org.eclipse.ec4j.core.model.propertytype.PropertyType;
+import org.eclipse.ec4j.core.model.propertytype.PropertyTypeRegistry;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -54,15 +54,15 @@ public class ValidateAppliedOptionsStrategy
 
 	// Text viewer of the editor to validate
 	private ITextViewer textViewer;
-	private OptionType<?> insertFinalNewlineType;
-	private OptionType<?> trimTrailingWhitespaceType;
+	private PropertyType<?> insertFinalNewlineType;
+	private PropertyType<?> trimTrailingWhitespaceType;
 
 	public ValidateAppliedOptionsStrategy(IPreferenceStore preferenceStore, IResource resource) {
 		this.preferenceStore = preferenceStore;
 		this.resource = resource;
-		OptionTypeRegistry registry = IDEEditorConfigManager.getInstance().getSession().getLoader().getRegistry();
-		insertFinalNewlineType = registry.getType(OptionNames.insert_final_newline.name());
-		trimTrailingWhitespaceType = registry.getType(OptionNames.trim_trailing_whitespace.name());
+		PropertyTypeRegistry registry = IDEEditorConfigManager.getInstance().getSession().getLoader().getRegistry();
+		insertFinalNewlineType = registry.getType(PropertyName.insert_final_newline.name());
+		trimTrailingWhitespaceType = registry.getType(PropertyName.trim_trailing_whitespace.name());
 	}
 
 	@Override
@@ -256,7 +256,7 @@ public class ValidateAppliedOptionsStrategy
 	 * @param remainingMarkers
 	 *            set of markers to update.
 	 */
-	private void addOrUpdateMarker(int start, int end, OptionType<?> type, IDocument document,
+	private void addOrUpdateMarker(int start, int end, PropertyType<?> type, IDocument document,
 			Set<IMarker> remainingMarkers) {
 		try {
 			IMarker associatedMarker = getExistingMarkerFor(start, end, type, remainingMarkers);
@@ -285,7 +285,7 @@ public class ValidateAppliedOptionsStrategy
 	 * @param marker
 	 *            the marker to update.
 	 */
-	private void updateMarker(int start, int end, OptionType<?> type, IDocument document, IMarker marker) {
+	private void updateMarker(int start, int end, PropertyType<?> type, IDocument document, IMarker marker) {
 		try {
 			MarkerUtils.setOptionType(marker, type);
 			marker.setAttribute(IMarker.MESSAGE, getMessage(type));
@@ -308,7 +308,7 @@ public class ValidateAppliedOptionsStrategy
 	 *            the option type.
 	 * @return the error message according the option type.
 	 */
-	private String getMessage(OptionType<?> type) {
+	private String getMessage(PropertyType<?> type) {
 		if (insertFinalNewlineType == type) {
 			return "Insert final newline";
 		} else if (trimTrailingWhitespaceType == type) {
@@ -330,7 +330,7 @@ public class ValidateAppliedOptionsStrategy
 	 *            set of markers to update.
 	 * @return the existing marker and null otherwise.
 	 */
-	private IMarker getExistingMarkerFor(int start, int end, OptionType<?> type, Set<IMarker> remainingMarkers) {
+	private IMarker getExistingMarkerFor(int start, int end, PropertyType<?> type, Set<IMarker> remainingMarkers) {
 		try {
 			if (insertFinalNewlineType == type) {
 				for (IMarker marker : remainingMarkers) {

@@ -2,16 +2,18 @@ package org.eclipse.ec4e.codelens;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ec4e.search.EditorConfigSearchQuery;
+import org.eclipse.ec4j.core.model.Section;
+import org.eclipse.ec4j.core.parser.Location;
 import org.eclipse.jface.text.provisional.codelens.CodeLens;
 import org.eclipse.search.ui.NewSearchUI;
 
 public class EditorConfigCodeLens extends CodeLens {
 
-	private SectionWithLoc section;
+	private Section section;
 	private final IFile configFile;
 
-	public EditorConfigCodeLens(SectionWithLoc section, IFile configFile) {
-		super(section.getStart().line);
+	public EditorConfigCodeLens(Section section, Location sectionStart, IFile configFile) {
+		super(sectionStart.line);
 		this.section = section;
 		this.configFile = configFile;
 	}
@@ -23,7 +25,7 @@ public class EditorConfigCodeLens extends CodeLens {
 		NewSearchUI.runQueryInBackground(query);
 	}
 
-	public SectionWithLoc getSection() {
+	public Section getSection() {
 		return section;
 	}
 

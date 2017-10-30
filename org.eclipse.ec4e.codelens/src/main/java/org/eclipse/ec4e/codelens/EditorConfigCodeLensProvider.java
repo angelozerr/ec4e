@@ -1,5 +1,7 @@
 package org.eclipse.ec4e.codelens;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.eclipse.codelens.editors.IEditorCodeLensContext;
@@ -10,8 +12,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4e.search.CountSectionPatternVisitor;
 import org.eclipse.ec4j.core.EditorConfigLoader;
+import org.eclipse.ec4j.core.Resources;
 import org.eclipse.ec4j.core.model.Section;
 import org.eclipse.ec4j.core.parser.EditorConfigParser;
+import org.eclipse.ec4j.core.parser.Location;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.provisional.codelens.AbstractSyncCodeLensProvider;
 import org.eclipse.jface.text.provisional.codelens.ICodeLens;
@@ -29,13 +33,20 @@ public class EditorConfigCodeLensProvider extends AbstractSyncCodeLensProvider {
 		}
 		IDocument document = context.getViewer().getDocument();
 		EditorConfigLoader loader = IDEEditorConfigManager.getInstance().getSession().getLoader();
-		SectionsHandler handler = new SectionsHandler(file.getParent().getFullPath().toString() + "/", loader.getRegistry(), loader.getVersion());
-		new EditorConfigParser<>(handler).setTolerant(true).parse(document.get());
+		SectionsHandler handler = new SectionsHandler(loader.getRegistry(), loader.getVersion());
+		EditorConfigParser parser = EditorConfigParser.builder().tolerant().build();
+		try {
+			parser.parse(Resources.ofString(document.get()), handler);
+		} catch (IOException e) {
+			/* Will not happen with Resources.ofString() */
+			throw new RuntimeException(e);
+		}
 		List<Section> sections = handler.getEditorConfig().getSections();
+		List<Location> sectionLocations = handler.getSectionLocations();
 
 		ICodeLens[] lenses = new ICodeLens[sections.size()];
 		for (int i = 0; i < lenses.length; i++) {
-			lenses[i] = new EditorConfigCodeLens((SectionWithLoc) sections.get(i), file);
+			lenses[i] = new EditorConfigCodeLens(sections.get(i), sectionLocations.get(i), file);
 		}
 		return lenses;
 	}
