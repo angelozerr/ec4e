@@ -36,7 +36,7 @@ public class EditorConfigCodeLensProvider extends AbstractSyncCodeLensProvider {
 		SectionsHandler handler = new SectionsHandler(loader.getRegistry(), loader.getVersion());
 		EditorConfigParser parser = EditorConfigParser.builder().tolerant().build();
 		try {
-			parser.parse(Resources.ofString(document.get()), handler);
+			parser.parse(Resources.ofString(file.getFullPath().toString(), document.get()), handler);
 		} catch (IOException e) {
 			/* Will not happen with Resources.ofString() */
 			throw new RuntimeException(e);
