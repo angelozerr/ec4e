@@ -139,12 +139,12 @@
 	</build>
 		<dependencies>
 			<dependency>
-				<groupId>org.eclipse</groupId>
+				<groupId>fr.opensagres</groupId>
 				<artifactId>org.eclipse.ec4j.core</artifactId>
 				<version>0.1.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse</groupId>
+				<groupId>fr.opensagres</groupId>
 				<artifactId>org.eclipse.ec4j.services</artifactId>
 				<version>0.1.0-SNAPSHOT</version>
 			</dependency>
