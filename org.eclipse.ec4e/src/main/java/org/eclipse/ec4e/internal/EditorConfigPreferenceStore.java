@@ -59,61 +59,56 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 				Integer oldTabWidth = tabWidth;
 				tabWidth = null;
 				QueryResult result = IDEEditorConfigManager.getInstance().queryOptions(file);
-				Map<String, Property> properties = result.getProperties();
 
-				final Property indetStyle = properties.get(PropertyType.indent_style.getName());
-				if (indetStyle.isValid()) {
-					IndentStyleValue styleOption = indetStyle.getValueAs();
-					spacesForTabs = styleOption == IndentStyleValue.space;
+				final IndentStyleValue indetStyle = result.getValue(PropertyType.indent_style.getName(), null, false);
+				if (indetStyle != null) {
+					spacesForTabs = indetStyle == IndentStyleValue.space;
 					if (oldSpacesForTabs != spacesForTabs) {
 						editorStore.firePropertyChangeEvent(EDITOR_SPACES_FOR_TABS, oldSpacesForTabs,
 								spacesForTabs);
 					}
 				}
 
-				final Property indetSize = properties.get(PropertyType.indent_size.getName());
-				if (indetSize.isValid()) {
-					tabWidth = indetSize.getValueAs();
+				final Integer indetSize = result.getValue(PropertyType.indent_size.getName(), null, false);
+				if (indetSize != null) {
+					tabWidth = indetSize.intValue();
 					if (oldTabWidth != tabWidth) {
 						editorStore.firePropertyChangeEvent(EDITOR_TAB_WIDTH, oldTabWidth, tabWidth);
 					}
 				}
 
-				final Property eol = properties.get(PropertyType.end_of_line.getName());
-				if (eol.isValid()) {
+				final EndOfLineValue eol = result.getValue(PropertyType.end_of_line.getName(), null, false);
+				if (eol != null) {
 					IEditorInput editorInput = textEditor.getEditorInput();
 					IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
 					if (document instanceof IDocumentExtension4) {
-						EndOfLineValue endOfLineProperty = eol.getValueAs();
-						if (endOfLineProperty != null) {
 							((IDocumentExtension4) document)
-									.setInitialLineDelimiter(endOfLineProperty.getEndOfLineString());
-						}
+									.setInitialLineDelimiter(eol.getEndOfLineString());
 					}
 				}
 
-				final Property charset = properties.get(PropertyType.charset.getName());
-				if (charset.isValid()) {
+				final String charset = result.getValue(PropertyType.charset.getName(), null, false);
+				if (charset != null) {
 					IEncodingSupport encodingSupport = textEditor.getAdapter(IEncodingSupport.class);
 					if (encodingSupport != null) {
-						encodingSupport.setEncoding(charset.getSourceValue().toUpperCase());
+						encodingSupport.setEncoding(charset.toUpperCase());
 					}
 				}
 
-				final Property trimTrailigWs = properties.get(PropertyType.trim_trailing_whitespace.getName());
-				if (charset.isValid()) {
+				final Boolean trimTrailigWs = result.getValue(PropertyType.trim_trailing_whitespace.getName(), null, false);
+				if (trimTrailigWs != null) {
 					boolean oldTrimTrailingWhitespace = trimTrailingWhitespace;
-					trimTrailingWhitespace = trimTrailigWs.getValueAs();
+					trimTrailingWhitespace = trimTrailigWs.booleanValue();
 					if (oldTrimTrailingWhitespace != trimTrailingWhitespace) {
 						editorStore.firePropertyChangeEvent(EDITOR_TRIM_TRAILING_WHITESPACE,
 								oldTrimTrailingWhitespace, trimTrailingWhitespace);
 					}
 				}
 
-				final Property insertFinalNl = properties.get(PropertyType.insert_final_newline.getName());
-				if (insertFinalNl.isValid()) {
+				final Boolean insertFinalNl = result.getValue(PropertyType.insert_final_newline.getName(), null, false);
+				if (insertFinalNl != null) {
 					boolean oldInsertFinalNewline = insertFinalNewline;
-					insertFinalNewline = insertFinalNl.getValueAs();
+					insertFinalNewline = insertFinalNl.booleanValue();
 					if (oldInsertFinalNewline != insertFinalNewline) {
 						editorStore.firePropertyChangeEvent(EDITOR_INSERT_FINAL_NEWLINE, oldInsertFinalNewline,
 								insertFinalNewline);
