@@ -11,14 +11,19 @@
 package org.eclipse.ec4e.internal.folding;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ec4j.core.EditorConfigConstants;
 import org.eclipse.ec4j.core.PropertyTypeRegistry;
 import org.eclipse.ec4j.core.Resources;
+import org.eclipse.ec4j.core.model.Comments.CommentBlock;
+import org.eclipse.ec4j.core.model.Comments.CommentBlocks;
 import org.eclipse.ec4j.core.model.EditorConfig;
 import org.eclipse.ec4j.core.model.Section;
 import org.eclipse.ec4j.core.model.Version;
@@ -113,12 +118,18 @@ public class EditorConfigFoldingStrategy
 
 	private void updateFolding(EditorConfig editorConfig) {
 		List<Section> sections = editorConfig.getSections();
-		Annotation[] annotations = new Annotation[sections.size()];
+		CommentBlocks commentBlocks = editorConfig.getAdapter(CommentBlocks.class);
+		List<CommentBlock> comments = commentBlocks != null ? commentBlocks.getCommentBlocks()
+				: Collections.emptyList();
 		Map<Annotation, Position> newAnnotations = new HashMap<>();
-
-		for (int i = 0; i < sections.size(); i++) {
-			Section section = sections.get(i);
-			Span span = section.getAdapter(Span.class);
+		// Collection section and comment spans;
+		List<Span> spans = /*Stream.concat(sections.stream(), comments.stream())*/
+				sections.stream()
+				.map(a -> a.getAdapter(Span.class))
+				.sorted((s1, s2) -> s1.getStart().line - s2.getStart().line).collect(Collectors.toList());
+		Annotation[] annotations = new Annotation[spans.size()];
+		for (int i = 0; i < spans.size(); i++) {
+			Span span = spans.get(i);
 			int startOffset = span.getStart().offset;
 			int endOffset = span.getEnd().offset;
 			ProjectionAnnotation annotation = new ProjectionAnnotation();
@@ -138,7 +149,8 @@ public class EditorConfigFoldingStrategy
 				Version.CURRENT);
 		EditorConfigParser parser = EditorConfigParser.builder().build();
 		try {
-			parser.parse(Resources.ofString(EditorConfigConstants.EDITORCONFIG, document.get()), handler, ErrorHandler.THROWING);
+			parser.parse(Resources.ofString(EditorConfigConstants.EDITORCONFIG, document.get()), handler,
+					ErrorHandler.THROWING);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
