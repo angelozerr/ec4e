@@ -8,9 +8,12 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.ec4e.internal.validation;
+package org.eclipse.ec4e.internal;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.ec4e.internal.folding.EditorConfigFoldingStrategy;
+import org.eclipse.ec4e.internal.validation.ValidateAppliedOptionsStrategy;
+import org.eclipse.ec4e.internal.validation.ValidateEditorConfigStrategy;
 import org.eclipse.ec4j.core.EditorConfigConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
@@ -30,7 +33,7 @@ public class EditorConfigReconciler extends MonoReconciler {
 			// it's an .editorconfig file, add validation
 			CompositeReconcilingStrategy strategy = new CompositeReconcilingStrategy();
 			strategy.setReconcilingStrategies(new IReconcilingStrategy[] { new ValidateEditorConfigStrategy(resource),
-					new ValidateAppliedOptionsStrategy(preferenceStore, resource) });
+					new ValidateAppliedOptionsStrategy(preferenceStore, resource), new EditorConfigFoldingStrategy() });
 			return strategy;
 		}
 		return new ValidateAppliedOptionsStrategy(preferenceStore, resource);

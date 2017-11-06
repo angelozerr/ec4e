@@ -1,4 +1,4 @@
-package org.eclipse.ec4e.internal.validation;
+package org.eclipse.ec4e.internal;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
