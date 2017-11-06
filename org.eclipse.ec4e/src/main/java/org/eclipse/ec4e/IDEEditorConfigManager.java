@@ -10,6 +10,7 @@
  */
 package org.eclipse.ec4e;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,12 +25,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ec4e.internal.resource.FileResource;
 import org.eclipse.ec4j.core.Caches.Cache;
 import org.eclipse.ec4j.core.EditorConfigConstants;
-import org.eclipse.ec4j.core.EditorConfigException;
 import org.eclipse.ec4j.core.EditorConfigLoader;
 import org.eclipse.ec4j.core.EditorConfigSession;
+import org.eclipse.ec4j.core.PropertyTypeRegistry;
+import org.eclipse.ec4j.core.QueryResult;
 import org.eclipse.ec4j.core.Resources.Resource;
 import org.eclipse.ec4j.core.model.EditorConfig;
 import org.eclipse.ec4j.core.model.Property;
+import org.eclipse.ec4j.core.model.Version;
 
 /**
  * IDE editorconfig manager.
@@ -43,9 +46,9 @@ public class IDEEditorConfigManager {
 	 */
 	private static class WrappedEditorConfigException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
-		private final EditorConfigException cause;
+		private final IOException cause;
 
-		WrappedEditorConfigException(EditorConfigException cause) {
+		WrappedEditorConfigException(IOException cause) {
 			this.cause = cause;
 		}
 	}
@@ -96,12 +99,12 @@ public class IDEEditorConfigManager {
 		}
 
 		@Override
-		public EditorConfig get(Resource editorConfigFile, EditorConfigLoader loader) throws EditorConfigException {
+		public EditorConfig get(Resource editorConfigFile, EditorConfigLoader loader) throws IOException {
 			try {
 				return entries.computeIfAbsent(editorConfigFile, k -> {
 					try {
 						return loader.load(k);
-					} catch (EditorConfigException e) {
+					} catch (IOException e) {
 						throw new WrappedEditorConfigException(e);
 					}
 				});
@@ -121,11 +124,21 @@ public class IDEEditorConfigManager {
 
 	private final EditorConfigCache cache;
 
+	private final PropertyTypeRegistry registry;
+
+	private final EditorConfigLoader loader;
+
+	private final Version version;
+
 	public IDEEditorConfigManager() {
 		this.cache = new EditorConfigCache();
+		this.registry = PropertyTypeRegistry.getDefault();
+		this.version = Version.CURRENT;
+		this.loader = EditorConfigLoader.of(version, registry);
 
 		session = EditorConfigSession.builder()//
 				.cache(cache) //
+				.loader(loader) //
 				.build();
 	}
 
@@ -141,12 +154,24 @@ public class IDEEditorConfigManager {
 		return session;
 	}
 
+	public PropertyTypeRegistry getRegistry() {
+		return registry;
+	}
+
+	public EditorConfigLoader getLoader() {
+		return loader;
+	}
+
+	public Version getVersion() {
+		return version;
+	}
+
 	public void dispose() {
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(cache);
 		cache.clear();
 	}
 
-	public Collection<Property> queryOptions(IFile file) throws EditorConfigException {
+	public QueryResult queryOptions(IFile file) throws IOException  {
 		return session.queryProperties(new FileResource(file));
 	}
 

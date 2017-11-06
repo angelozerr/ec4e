@@ -11,7 +11,7 @@
 package org.eclipse.ec4e.internal.completion;
 
 import org.eclipse.ec4e.internal.EditorConfigImages;
-import org.eclipse.ec4j.core.model.propertytype.PropertyType;
+import org.eclipse.ec4j.core.model.PropertyType;
 import org.eclipse.ec4j.services.completion.CompletionContextType;
 import org.eclipse.ec4j.services.completion.CompletionEntry;
 import org.eclipse.jface.text.BadLocationException;
@@ -111,7 +111,8 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 		proposal.apply(document);
 		int baseOffset = getReplacementOffset();
 
-		String[] possibleValues = getPropertyType().getPossibleValues();
+		PropertyType<?> optionType = getPropertyType();
+		String[] possibleValues = optionType.getPossibleValues().toArray(new String[0]);
 		if (getContextType() == CompletionContextType.PROPERTY_NAME && possibleValues != null
 				&& getTextViewer() != null) {
 
@@ -119,8 +120,7 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 				LinkedModeModel model = new LinkedModeModel();
 				LinkedPositionGroup group = new LinkedPositionGroup();
 
-				PropertyType<?> optionType = getPropertyType();
-				OptionValue value = new OptionValue(replacement.length() - optionType.getPossibleValues()[0].length(),
+				OptionValue value = new OptionValue(replacement.length() - possibleValues[0].length(),
 						optionType);
 				value.updateOffset(baseOffset);
 
@@ -163,7 +163,7 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 
 	private String computeReplacementString(IDocument document, int offset) {
 		if (getContextType() == CompletionContextType.PROPERTY_NAME) {
-			String first = getPropertyType().getPossibleValues()[0];
+			String first = getPropertyType().getPossibleValues().iterator().next();
 			return new StringBuilder(getReplacementString()).append(" = ").append(first).toString();
 		}
 		return getReplacementString();
@@ -363,13 +363,16 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 				 * @see org.eclipse.jface.text.link.ILinkedModeListener#left(org.
 				 * eclipse.jface.text.link.LinkedModeModel, int)
 				 */
+				@Override
 				public void left(LinkedModeModel environment, int flags) {
 					ensurePositionCategoryRemoved(document);
 				}
 
+				@Override
 				public void suspend(LinkedModeModel environment) {
 				}
 
+				@Override
 				public void resume(LinkedModeModel environment, int flags) {
 				}
 			});
@@ -397,6 +400,7 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 			fDocument = document;
 		}
 
+		@Override
 		public ExitFlags doExit(LinkedModeModel environment, VerifyEvent event, int offset, int length) {
 
 			if (event.character == fExitCharacter) {

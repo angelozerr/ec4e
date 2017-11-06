@@ -17,13 +17,14 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ec4j.core.EditorConfigConstants;
+import org.eclipse.ec4j.core.PropertyTypeRegistry;
 import org.eclipse.ec4j.core.Resources;
 import org.eclipse.ec4j.core.model.EditorConfig;
 import org.eclipse.ec4j.core.model.Section;
 import org.eclipse.ec4j.core.model.Version;
-import org.eclipse.ec4j.core.model.propertytype.PropertyTypeRegistry;
 import org.eclipse.ec4j.core.parser.EditorConfigModelHandler;
 import org.eclipse.ec4j.core.parser.EditorConfigParser;
+import org.eclipse.ec4j.core.parser.ErrorHandler;
 import org.eclipse.ec4j.core.parser.LocationAwareModelHandler;
 import org.eclipse.ec4j.core.parser.Span;
 import org.eclipse.jface.text.IDocument;
@@ -137,7 +138,7 @@ public class EditorConfigFoldingStrategy
 				Version.CURRENT);
 		EditorConfigParser parser = EditorConfigParser.builder().build();
 		try {
-			parser.parse(Resources.ofString(EditorConfigConstants.EDITORCONFIG, document.get()), handler);
+			parser.parse(Resources.ofString(EditorConfigConstants.EDITORCONFIG, document.get()), handler, ErrorHandler.THROWING);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
