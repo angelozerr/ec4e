@@ -15,6 +15,7 @@ import org.eclipse.ec4j.core.EditorConfigLoader;
 import org.eclipse.ec4j.core.Resources;
 import org.eclipse.ec4j.core.model.Section;
 import org.eclipse.ec4j.core.parser.EditorConfigParser;
+import org.eclipse.ec4j.core.parser.ErrorHandler;
 import org.eclipse.ec4j.core.parser.Location;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.provisional.codelens.AbstractSyncCodeLensProvider;
@@ -32,11 +33,11 @@ public class EditorConfigCodeLensProvider extends AbstractSyncCodeLensProvider {
 			return null;
 		}
 		IDocument document = context.getViewer().getDocument();
-		EditorConfigLoader loader = IDEEditorConfigManager.getInstance().getSession().getLoader();
-		SectionsHandler handler = new SectionsHandler(loader.getRegistry(), loader.getVersion());
-		EditorConfigParser parser = EditorConfigParser.builder().tolerant().build();
+		IDEEditorConfigManager editorConfigManager = IDEEditorConfigManager.getInstance();
+		SectionsHandler handler = new SectionsHandler(editorConfigManager.getRegistry(), editorConfigManager.getVersion());
+		EditorConfigParser parser = EditorConfigParser.builder().build();
 		try {
-			parser.parse(Resources.ofString(file.getFullPath().toString(), document.get()), handler);
+			parser.parse(Resources.ofString(file.getFullPath().toString(), document.get()), handler, ErrorHandler.IGNORING);
 		} catch (IOException e) {
 			/* Will not happen with Resources.ofString() */
 			throw new RuntimeException(e);

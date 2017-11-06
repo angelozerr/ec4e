@@ -15,9 +15,10 @@ import org.eclipse.ec4j.core.model.EditorConfig;
 import org.eclipse.ec4j.core.model.Property;
 import org.eclipse.ec4j.core.model.Section;
 import org.eclipse.ec4j.core.model.Version;
-import org.eclipse.ec4j.core.model.propertytype.PropertyTypeRegistry;
+import org.eclipse.ec4j.core.PropertyTypeRegistry;
 import org.eclipse.ec4j.core.parser.EditorConfigModelHandler;
 import org.eclipse.ec4j.core.parser.EditorConfigParser;
+import org.eclipse.ec4j.core.parser.ErrorHandler;
 import org.eclipse.ec4j.core.parser.LocationAwareModelHandler;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -85,7 +86,7 @@ public class EditorConfigContentProvider
 				Version.CURRENT);
 		EditorConfigParser parser = EditorConfigParser.builder().build();
 		try {
-			parser.parse(Resources.ofString(EditorConfigConstants.EDITORCONFIG, document.get()), handler);
+			parser.parse(Resources.ofString(EditorConfigConstants.EDITORCONFIG, document.get()), handler, ErrorHandler.THROWING);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -106,7 +107,7 @@ public class EditorConfigContentProvider
 	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof Section) {
-			return ((Section) parentElement).getProperties().toArray();
+			return ((Section) parentElement).getProperties().values().toArray();
 		}
 		return null;
 	}

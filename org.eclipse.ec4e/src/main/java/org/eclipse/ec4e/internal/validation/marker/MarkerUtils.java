@@ -17,7 +17,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ec4e.EditorConfigPlugin;
-import org.eclipse.ec4j.core.model.propertytype.PropertyType;
+import org.eclipse.ec4j.core.model.PropertyType;
 import org.eclipse.ec4j.services.validation.Severity;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -29,7 +29,7 @@ import org.eclipse.text.undo.IDocumentUndoManager;
 
 /**
  * EditorConfig marker utilities.
- * 
+ *
  * @author azerr
  *
  */
@@ -77,7 +77,7 @@ public class MarkerUtils {
 			return IMarker.SEVERITY_ERROR;
 		}
 	}
-	
+
 	/**
 	 * Method will apply all edits to document as single modification. Needs to
 	 * be executed in UI thread.

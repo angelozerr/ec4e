@@ -23,9 +23,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4e.internal.validation.marker.MarkerUtils;
-import org.eclipse.ec4j.core.model.propertytype.PropertyName;
-import org.eclipse.ec4j.core.model.propertytype.PropertyType;
-import org.eclipse.ec4j.core.model.propertytype.PropertyTypeRegistry;
+import org.eclipse.ec4j.core.model.PropertyType;
+import org.eclipse.ec4j.core.PropertyTypeRegistry;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -54,15 +53,14 @@ public class ValidateAppliedOptionsStrategy
 
 	// Text viewer of the editor to validate
 	private ITextViewer textViewer;
-	private PropertyType<?> insertFinalNewlineType;
-	private PropertyType<?> trimTrailingWhitespaceType;
+	private final PropertyType<?> insertFinalNewlineType;
+	private final PropertyType<?> trimTrailingWhitespaceType;
 
 	public ValidateAppliedOptionsStrategy(IPreferenceStore preferenceStore, IResource resource) {
 		this.preferenceStore = preferenceStore;
 		this.resource = resource;
-		PropertyTypeRegistry registry = IDEEditorConfigManager.getInstance().getSession().getLoader().getRegistry();
-		insertFinalNewlineType = registry.getType(PropertyName.insert_final_newline.name());
-		trimTrailingWhitespaceType = registry.getType(PropertyName.trim_trailing_whitespace.name());
+		this.insertFinalNewlineType = PropertyType.insert_final_newline;
+		this.trimTrailingWhitespaceType = PropertyType.trim_trailing_whitespace;
 	}
 
 	@Override

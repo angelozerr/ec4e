@@ -3,12 +3,11 @@ package org.eclipse.ec4e.codelens;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.ec4j.core.PropertyTypeRegistry;
 import org.eclipse.ec4j.core.model.Version;
-import org.eclipse.ec4j.core.model.propertytype.PropertyTypeRegistry;
 import org.eclipse.ec4j.core.parser.EditorConfigModelHandler;
 import org.eclipse.ec4j.core.parser.Location;
 import org.eclipse.ec4j.core.parser.ParseContext;
-import org.eclipse.ec4j.core.parser.ParseException;
 
 public class SectionsHandler extends EditorConfigModelHandler {
 
@@ -28,8 +27,4 @@ public class SectionsHandler extends EditorConfigModelHandler {
 		sectionLocations.add(context.getLocation());
 	}
 
-	@Override
-	public void error(ParseException e) {
-		// Do nothing
-	}
 }

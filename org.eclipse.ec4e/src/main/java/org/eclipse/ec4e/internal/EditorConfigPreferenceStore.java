@@ -10,15 +10,16 @@
  */
 package org.eclipse.ec4e.internal;
 
-import java.util.Collection;
+import java.io.IOException;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ec4e.IDEEditorConfigManager;
-import org.eclipse.ec4j.core.EditorConfigException;
+import org.eclipse.ec4j.core.QueryResult;
 import org.eclipse.ec4j.core.model.Property;
-import org.eclipse.ec4j.core.model.propertytype.EndOfLineProperty;
-import org.eclipse.ec4j.core.model.propertytype.IndentStyleProperty;
-import org.eclipse.ec4j.core.model.propertytype.PropertyName;
+import org.eclipse.ec4j.core.model.PropertyType;
+import org.eclipse.ec4j.core.model.PropertyType.EndOfLineValue;
+import org.eclipse.ec4j.core.model.PropertyType.IndentStyleValue;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension4;
@@ -57,68 +58,69 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 				spacesForTabs = null;
 				Integer oldTabWidth = tabWidth;
 				tabWidth = null;
-				Collection<Property> properties = IDEEditorConfigManager.getInstance().queryOptions(file);
-				for (Property property : properties) {
-					if (!property.isValid()) {
-						continue;
-					}
-					PropertyName names = PropertyName.get(property.getName());
-					switch (names) {
-					case indent_style:
-						IndentStyleProperty styleOption = property.getValueAs();
-						spacesForTabs = styleOption == IndentStyleProperty.SPACE;
-						if (oldSpacesForTabs != spacesForTabs) {
-							editorStore.firePropertyChangeEvent(EDITOR_SPACES_FOR_TABS, oldSpacesForTabs,
-									spacesForTabs);
-						}
-						break;
-					case indent_size:
-						tabWidth = property.getValueAs();
-						if (oldTabWidth != tabWidth) {
-							editorStore.firePropertyChangeEvent(EDITOR_TAB_WIDTH, oldTabWidth, tabWidth);
-						}
-						break;
-					case end_of_line:
-						IEditorInput editorInput = textEditor.getEditorInput();
-						IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
-						if (document instanceof IDocumentExtension4) {
-							EndOfLineProperty endOfLineProperty = property.getValueAs();
-							if (endOfLineProperty != null) {
-								((IDocumentExtension4) document)
-										.setInitialLineDelimiter(endOfLineProperty.getEndOfLineString());
-							}
-						}
-						break;
-					case charset:
-						IEncodingSupport encodingSupport = textEditor.getAdapter(IEncodingSupport.class);
-						if (encodingSupport != null) {
-							encodingSupport.setEncoding(property.getSourceValue().toUpperCase());
-						}
-						break;
-					case trim_trailing_whitespace:
-						boolean oldTrimTrailingWhitespace = trimTrailingWhitespace;
-						trimTrailingWhitespace = property.getValueAs();
-						if (oldTrimTrailingWhitespace != trimTrailingWhitespace) {
-							editorStore.firePropertyChangeEvent(EDITOR_TRIM_TRAILING_WHITESPACE,
-									oldTrimTrailingWhitespace, trimTrailingWhitespace);
-						}
-						break;
-					case insert_final_newline:
-						boolean oldInsertFinalNewline = insertFinalNewline;
-						insertFinalNewline = property.getValueAs();
-						if (oldInsertFinalNewline != insertFinalNewline) {
-							editorStore.firePropertyChangeEvent(EDITOR_INSERT_FINAL_NEWLINE, oldInsertFinalNewline,
-									insertFinalNewline);
-						}
-						break;
-					default:
-						// Do nothing
+				QueryResult result = IDEEditorConfigManager.getInstance().queryOptions(file);
+				Map<String, Property> properties = result.getProperties();
+
+				final Property indetStyle = properties.get(PropertyType.indent_style.getName());
+				if (indetStyle.isValid()) {
+					IndentStyleValue styleOption = indetStyle.getValueAs();
+					spacesForTabs = styleOption == IndentStyleValue.space;
+					if (oldSpacesForTabs != spacesForTabs) {
+						editorStore.firePropertyChangeEvent(EDITOR_SPACES_FOR_TABS, oldSpacesForTabs,
+								spacesForTabs);
 					}
 				}
-			} catch (EditorConfigException e) {
-				e.printStackTrace();
-			} finally {
 
+				final Property indetSize = properties.get(PropertyType.indent_size.getName());
+				if (indetSize.isValid()) {
+					tabWidth = indetSize.getValueAs();
+					if (oldTabWidth != tabWidth) {
+						editorStore.firePropertyChangeEvent(EDITOR_TAB_WIDTH, oldTabWidth, tabWidth);
+					}
+				}
+
+				final Property eol = properties.get(PropertyType.end_of_line.getName());
+				if (eol.isValid()) {
+					IEditorInput editorInput = textEditor.getEditorInput();
+					IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
+					if (document instanceof IDocumentExtension4) {
+						EndOfLineValue endOfLineProperty = eol.getValueAs();
+						if (endOfLineProperty != null) {
+							((IDocumentExtension4) document)
+									.setInitialLineDelimiter(endOfLineProperty.getEndOfLineString());
+						}
+					}
+				}
+
+				final Property charset = properties.get(PropertyType.charset.getName());
+				if (charset.isValid()) {
+					IEncodingSupport encodingSupport = textEditor.getAdapter(IEncodingSupport.class);
+					if (encodingSupport != null) {
+						encodingSupport.setEncoding(charset.getSourceValue().toUpperCase());
+					}
+				}
+
+				final Property trimTrailigWs = properties.get(PropertyType.trim_trailing_whitespace.getName());
+				if (charset.isValid()) {
+					boolean oldTrimTrailingWhitespace = trimTrailingWhitespace;
+					trimTrailingWhitespace = trimTrailigWs.getValueAs();
+					if (oldTrimTrailingWhitespace != trimTrailingWhitespace) {
+						editorStore.firePropertyChangeEvent(EDITOR_TRIM_TRAILING_WHITESPACE,
+								oldTrimTrailingWhitespace, trimTrailingWhitespace);
+					}
+				}
+
+				final Property insertFinalNl = properties.get(PropertyType.insert_final_newline.getName());
+				if (insertFinalNl.isValid()) {
+					boolean oldInsertFinalNewline = insertFinalNewline;
+					insertFinalNewline = insertFinalNl.getValueAs();
+					if (oldInsertFinalNewline != insertFinalNewline) {
+						editorStore.firePropertyChangeEvent(EDITOR_INSERT_FINAL_NEWLINE, oldInsertFinalNewline,
+								insertFinalNewline);
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 
 		}
