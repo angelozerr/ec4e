@@ -1,7 +1,6 @@
 package org.eclipse.ec4e.codelens;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.eclipse.codelens.editors.IEditorCodeLensContext;
@@ -11,6 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4e.search.CountSectionPatternVisitor;
+import org.eclipse.ec4e.utils.EditorUtils;
 import org.eclipse.ec4j.core.EditorConfigLoader;
 import org.eclipse.ec4j.core.Resources;
 import org.eclipse.ec4j.core.model.Section;
@@ -27,7 +27,7 @@ public class EditorConfigCodeLensProvider extends AbstractSyncCodeLensProvider {
 	@Override
 	protected ICodeLens[] provideSyncCodeLenses(ICodeLensContext context, IProgressMonitor monitor) {
 		ITextEditor textEditor = ((IEditorCodeLensContext) context).getTextEditor();
-		IFile file = EditorConfigCodeLensControllerProvider.getFile(textEditor);
+		IFile file = EditorUtils.getFile(textEditor);
 		if (file == null) {
 			return null;
 		}
@@ -54,7 +54,7 @@ public class EditorConfigCodeLensProvider extends AbstractSyncCodeLensProvider {
 	@Override
 	protected ICodeLens resolveSyncCodeLens(ICodeLensContext context, ICodeLens codeLens, IProgressMonitor monitor) {
 		ITextEditor textEditor = ((IEditorCodeLensContext) context).getTextEditor();
-		IFile file = EditorConfigCodeLensControllerProvider.getFile(textEditor);
+		IFile file = EditorUtils.getFile(textEditor);
 		if (file == null) {
 			return null;
 		}

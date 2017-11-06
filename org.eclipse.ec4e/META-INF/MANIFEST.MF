@@ -19,10 +19,14 @@ Require-Bundle: org.eclipse.tm4e.core,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.ec4j.core,
  org.eclipse.ec4j.services,
- org.eclipse.search
+ org.eclipse.search,
+ org.eclipse.ui.views,
+ org.eclipse.ui.navigator,
+ org.eclipse.ui.genericeditor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.eclipse.ec4e.EditorConfigPlugin
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.ec4e,
- org.eclipse.ec4e.search
+ org.eclipse.ec4e.search,
+ org.eclipse.ec4e.utils
 

@@ -184,7 +184,55 @@
       </reconciler>
    </extension> -->
            
-   <!-- Wizards -->
+   <!-- EditorConfig Outline -->
+              
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.ui.internal.genericeditor.ExtensionBasedTextEditor"
+            class="org.eclipse.ec4e.internal.outline.EditorConfigToOutlineAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.views.contentoutline.IContentOutlinePage">
+         </adapter>
+      </factory>
+    </extension>
+    
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.eclipse.ec4e.internal.outline.EditorConfigContentProvider"
+            labelProvider="org.eclipse.ec4e.internal.outline.EditorConfigLabelProvider"
+            id="org.eclipse.ec4e.outline.content"
+            name="%EditorConfig.navigatorContent">
+         <triggerPoints>
+            <or>
+		        <and>
+					<instanceof value="org.eclipse.core.resources.IFile" />
+  					<test property="org.eclipse.core.resources.contentTypeId" value="org.eclipse.ec4e.editorconfig" args="useFilenameOnly"/>
+  				</and>				
+			</or>
+         </triggerPoints>
+      </navigatorContent>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer
+            viewerId="org.eclipse.ec4e.outline">
+      </viewer>
+      <viewerContentBinding
+            viewerId="org.eclipse.ec4e.outline">
+         <includes>
+            <contentExtension
+                  isRoot="true"
+                  pattern="org.eclipse.ec4e.outline.content">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+              
+   <!-- EditorConfig Wizards -->
    <extension
 	      point="org.eclipse.ui.newWizards">
 	 	<wizard
