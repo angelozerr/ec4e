@@ -10,7 +10,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ec4e.utils.EditorUtils;
 import org.eclipse.ec4j.core.EditorConfigConstants;
-import org.eclipse.ec4j.core.Resources;
+import org.eclipse.ec4j.core.Resource.Resources;
 import org.eclipse.ec4j.core.model.EditorConfig;
 import org.eclipse.ec4j.core.model.Property;
 import org.eclipse.ec4j.core.model.Section;
@@ -82,11 +82,12 @@ public class EditorConfigContentProvider
 	}
 
 	private EditorConfig parse(IDocument document) {
+		final ErrorHandler errorHandler = ErrorHandler.THROWING;
 		EditorConfigModelHandler handler = new LocationAwareModelHandler(PropertyTypeRegistry.getDefault(),
-				Version.CURRENT);
+				Version.CURRENT, errorHandler);
 		EditorConfigParser parser = EditorConfigParser.builder().build();
 		try {
-			parser.parse(Resources.ofString(EditorConfigConstants.EDITORCONFIG, document.get()), handler, ErrorHandler.THROWING);
+			parser.parse(Resources.ofString(EditorConfigConstants.EDITORCONFIG, document.get()), handler, errorHandler);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

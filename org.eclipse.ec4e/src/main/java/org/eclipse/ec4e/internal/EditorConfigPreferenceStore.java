@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ec4e.IDEEditorConfigManager;
-import org.eclipse.ec4j.core.QueryResult;
+import org.eclipse.ec4j.core.ResourceProperties;
 import org.eclipse.ec4j.core.model.Property;
 import org.eclipse.ec4j.core.model.PropertyType;
 import org.eclipse.ec4j.core.model.PropertyType.EndOfLineValue;
@@ -58,7 +58,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 				spacesForTabs = null;
 				Integer oldTabWidth = tabWidth;
 				tabWidth = null;
-				QueryResult result = IDEEditorConfigManager.getInstance().queryOptions(file);
+				ResourceProperties result = IDEEditorConfigManager.getInstance().queryOptions(file);
 
 				final IndentStyleValue indetStyle = result.getValue(PropertyType.indent_style.getName(), null, false);
 				if (indetStyle != null) {

@@ -23,13 +23,13 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ec4e.internal.resource.FileResource;
-import org.eclipse.ec4j.core.Caches.Cache;
+import org.eclipse.ec4j.core.Cache;
 import org.eclipse.ec4j.core.EditorConfigConstants;
 import org.eclipse.ec4j.core.EditorConfigLoader;
-import org.eclipse.ec4j.core.EditorConfigSession;
+import org.eclipse.ec4j.core.ResourcePropertiesService;
 import org.eclipse.ec4j.core.PropertyTypeRegistry;
-import org.eclipse.ec4j.core.QueryResult;
-import org.eclipse.ec4j.core.Resources.Resource;
+import org.eclipse.ec4j.core.Resource;
+import org.eclipse.ec4j.core.ResourceProperties;
 import org.eclipse.ec4j.core.model.EditorConfig;
 import org.eclipse.ec4j.core.model.Property;
 import org.eclipse.ec4j.core.model.Version;
@@ -120,7 +120,7 @@ public class IDEEditorConfigManager {
 
 	public static final IDEEditorConfigManager INSTANCE = new IDEEditorConfigManager();
 
-	private final EditorConfigSession session;
+	private final ResourcePropertiesService session;
 
 	private final EditorConfigCache cache;
 
@@ -136,7 +136,7 @@ public class IDEEditorConfigManager {
 		this.version = Version.CURRENT;
 		this.loader = EditorConfigLoader.of(version, registry);
 
-		session = EditorConfigSession.builder()//
+		session = ResourcePropertiesService.builder()//
 				.cache(cache) //
 				.loader(loader) //
 				.build();
@@ -150,7 +150,7 @@ public class IDEEditorConfigManager {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(cache);
 	}
 
-	public EditorConfigSession getSession() {
+	public ResourcePropertiesService getSession() {
 		return session;
 	}
 
@@ -171,7 +171,7 @@ public class IDEEditorConfigManager {
 		cache.clear();
 	}
 
-	public QueryResult queryOptions(IFile file) throws IOException  {
+	public ResourceProperties queryOptions(IFile file) throws IOException  {
 		return session.queryProperties(new FileResource(file));
 	}
 

@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ec4j.core.EditorConfigConstants;
 import org.eclipse.ec4j.core.PropertyTypeRegistry;
-import org.eclipse.ec4j.core.Resources;
+import org.eclipse.ec4j.core.Resource.Resources;
 import org.eclipse.ec4j.core.model.Comments.CommentBlock;
 import org.eclipse.ec4j.core.model.Comments.CommentBlocks;
 import org.eclipse.ec4j.core.model.EditorConfig;
@@ -145,12 +145,13 @@ public class EditorConfigFoldingStrategy
 	}
 
 	private EditorConfig parse(IDocument document) {
+		final ErrorHandler errorHandler = ErrorHandler.THROWING;
 		EditorConfigModelHandler handler = new LocationAwareModelHandler(PropertyTypeRegistry.getDefault(),
-				Version.CURRENT);
+				Version.CURRENT, errorHandler);
 		EditorConfigParser parser = EditorConfigParser.builder().build();
 		try {
 			parser.parse(Resources.ofString(EditorConfigConstants.EDITORCONFIG, document.get()), handler,
-					ErrorHandler.THROWING);
+					errorHandler );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
