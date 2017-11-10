@@ -117,6 +117,9 @@ public class EditorConfigFoldingStrategy
 	}
 
 	private void updateFolding(EditorConfig editorConfig) {
+		if (projectionAnnotationModel == null) {
+			return;
+		}
 		List<Section> sections = editorConfig.getSections();
 		CommentBlocks commentBlocks = editorConfig.getAdapter(CommentBlocks.class);
 		List<CommentBlock> comments = commentBlocks != null ? commentBlocks.getCommentBlocks()
