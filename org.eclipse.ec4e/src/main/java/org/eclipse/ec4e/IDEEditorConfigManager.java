@@ -11,7 +11,6 @@
 package org.eclipse.ec4e;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.resources.IFile;
@@ -31,8 +30,8 @@ import org.eclipse.ec4j.core.PropertyTypeRegistry;
 import org.eclipse.ec4j.core.QueryResult;
 import org.eclipse.ec4j.core.Resources.Resource;
 import org.eclipse.ec4j.core.model.EditorConfig;
-import org.eclipse.ec4j.core.model.Property;
 import org.eclipse.ec4j.core.model.Version;
+import org.eclipse.ec4j.core.parser.ErrorHandler;
 
 /**
  * IDE editorconfig manager.
@@ -134,7 +133,7 @@ public class IDEEditorConfigManager {
 		this.cache = new EditorConfigCache();
 		this.registry = PropertyTypeRegistry.getDefault();
 		this.version = Version.CURRENT;
-		this.loader = EditorConfigLoader.of(version, registry);
+		this.loader = EditorConfigLoader.of(version, registry, ErrorHandler.IGNORING);
 
 		session = EditorConfigSession.builder()//
 				.cache(cache) //
