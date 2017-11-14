@@ -4,8 +4,8 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.ec4j.core.ResourcePaths.ResourcePath;
-import org.eclipse.ec4j.core.Resources.Resource;
+import org.eclipse.ec4j.core.Resource;
+import org.eclipse.ec4j.core.ResourcePath;
 
 /**
  * A {@link ResourcePath} implementation based on {@link IContainer}.

@@ -12,7 +12,7 @@ import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4e.search.CountSectionPatternVisitor;
 import org.eclipse.ec4e.utils.EditorUtils;
 import org.eclipse.ec4j.core.EditorConfigLoader;
-import org.eclipse.ec4j.core.Resources;
+import org.eclipse.ec4j.core.Resource.Resources;
 import org.eclipse.ec4j.core.model.Section;
 import org.eclipse.ec4j.core.parser.EditorConfigParser;
 import org.eclipse.ec4j.core.parser.ErrorHandler;
@@ -34,10 +34,11 @@ public class EditorConfigCodeLensProvider extends AbstractSyncCodeLensProvider {
 		}
 		IDocument document = context.getViewer().getDocument();
 		IDEEditorConfigManager editorConfigManager = IDEEditorConfigManager.getInstance();
-		SectionsHandler handler = new SectionsHandler(editorConfigManager.getRegistry(), editorConfigManager.getVersion());
+		final ErrorHandler errorHandler = ErrorHandler.IGNORING;
+		SectionsHandler handler = new SectionsHandler(editorConfigManager.getRegistry(), editorConfigManager.getVersion(), errorHandler);
 		EditorConfigParser parser = EditorConfigParser.builder().build();
 		try {
-			parser.parse(Resources.ofString(file.getFullPath().toString(), document.get()), handler, ErrorHandler.IGNORING);
+			parser.parse(Resources.ofString(file.getFullPath().toString(), document.get()), handler, errorHandler );
 		} catch (IOException e) {
 			/* Will not happen with Resources.ofString() */
 			throw new RuntimeException(e);

@@ -6,13 +6,15 @@ import java.util.List;
 import org.eclipse.ec4j.core.PropertyTypeRegistry;
 import org.eclipse.ec4j.core.model.Version;
 import org.eclipse.ec4j.core.parser.EditorConfigModelHandler;
+import org.eclipse.ec4j.core.parser.ErrorHandler;
 import org.eclipse.ec4j.core.parser.Location;
 import org.eclipse.ec4j.core.parser.ParseContext;
 
 public class SectionsHandler extends EditorConfigModelHandler {
 
-	public SectionsHandler(PropertyTypeRegistry registry, Version version) {
-		super(registry, version);
+
+	public SectionsHandler(PropertyTypeRegistry registry, Version version, ErrorHandler errorHandler) {
+		super(registry, version, errorHandler);
 	}
 
 	private final List<Location> sectionLocations = new ArrayList<>();

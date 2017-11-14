@@ -8,9 +8,8 @@ import java.nio.charset.Charset;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ec4j.core.ResourcePaths.ResourcePath;
-import org.eclipse.ec4j.core.Resources.RandomReader;
-import org.eclipse.ec4j.core.Resources.Resource;
+import org.eclipse.ec4j.core.Resource;
+import org.eclipse.ec4j.core.ResourcePath;
 
 /**
  * A {@link Resource} implementation that uses an underlying {@link IFile}.
@@ -44,7 +43,7 @@ public class FileResource implements Resource {
 	@Override
 	public RandomReader openRandomReader() throws IOException {
 		try (Reader reader = openReader()) {
-			return org.eclipse.ec4j.core.Resources.StringRandomReader.ofReader(reader);
+			return org.eclipse.ec4j.core.Resource.Resources.StringRandomReader.ofReader(reader);
 		}
 	}
 
