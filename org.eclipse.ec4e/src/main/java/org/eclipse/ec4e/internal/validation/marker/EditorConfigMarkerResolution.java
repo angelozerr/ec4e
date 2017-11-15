@@ -13,9 +13,9 @@ package org.eclipse.ec4e.internal.validation.marker;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ec4j.core.model.PropertyType;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ec4j.core.model.PropertyType;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator2;
 

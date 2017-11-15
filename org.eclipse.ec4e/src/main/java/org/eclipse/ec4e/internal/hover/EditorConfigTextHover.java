@@ -12,8 +12,8 @@ package org.eclipse.ec4e.internal.hover;
 
 import java.util.Iterator;
 
+import org.ec4j.core.services.EditorConfigService;
 import org.eclipse.ec4e.internal.resource.DocumentRandomReader;
-import org.eclipse.ec4j.services.EditorConfigService;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;

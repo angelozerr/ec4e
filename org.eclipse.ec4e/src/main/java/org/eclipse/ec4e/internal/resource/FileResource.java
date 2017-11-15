@@ -5,11 +5,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
+import org.ec4j.core.Resource;
+import org.ec4j.core.ResourcePath;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ec4j.core.Resource;
-import org.eclipse.ec4j.core.ResourcePath;
 
 /**
  * A {@link Resource} implementation that uses an underlying {@link IFile}.
@@ -43,7 +43,7 @@ public class FileResource implements Resource {
 	@Override
 	public RandomReader openRandomReader() throws IOException {
 		try (Reader reader = openReader()) {
-			return org.eclipse.ec4j.core.Resource.Resources.StringRandomReader.ofReader(reader);
+			return org.ec4j.core.Resource.Resources.StringRandomReader.ofReader(reader);
 		}
 	}
 

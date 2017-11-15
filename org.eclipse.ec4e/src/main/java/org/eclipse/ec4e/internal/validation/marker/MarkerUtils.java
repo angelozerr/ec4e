@@ -13,12 +13,12 @@ package org.eclipse.ec4e.internal.validation.marker;
 import java.util.Arrays;
 import java.util.List;
 
+import org.ec4j.core.model.PropertyType;
+import org.ec4j.core.services.validation.Severity;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ec4e.EditorConfigPlugin;
-import org.eclipse.ec4j.core.model.PropertyType;
-import org.eclipse.ec4j.services.validation.Severity;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.RewriteSessionEditProcessor;

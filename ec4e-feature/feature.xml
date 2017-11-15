@@ -27,14 +27,14 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ec4j.core"
+         id="ec4j-core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ec4j.services"
+         id="ec4j-core-services"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -17,14 +17,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.ec4j.core.PropertyTypeRegistry;
+import org.ec4j.core.model.PropertyType;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4e.internal.validation.marker.MarkerUtils;
-import org.eclipse.ec4j.core.model.PropertyType;
-import org.eclipse.ec4j.core.PropertyTypeRegistry;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;

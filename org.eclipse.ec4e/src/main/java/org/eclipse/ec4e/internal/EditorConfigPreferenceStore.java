@@ -13,13 +13,13 @@ package org.eclipse.ec4e.internal;
 import java.io.IOException;
 import java.util.Map;
 
+import org.ec4j.core.ResourceProperties;
+import org.ec4j.core.model.Property;
+import org.ec4j.core.model.PropertyType;
+import org.ec4j.core.model.PropertyType.EndOfLineValue;
+import org.ec4j.core.model.PropertyType.IndentStyleValue;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ec4e.IDEEditorConfigManager;
-import org.eclipse.ec4j.core.ResourceProperties;
-import org.eclipse.ec4j.core.model.Property;
-import org.eclipse.ec4j.core.model.PropertyType;
-import org.eclipse.ec4j.core.model.PropertyType.EndOfLineValue;
-import org.eclipse.ec4j.core.model.PropertyType.IndentStyleValue;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension4;

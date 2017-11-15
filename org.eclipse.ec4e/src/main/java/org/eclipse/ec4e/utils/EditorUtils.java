@@ -1,7 +1,7 @@
 package org.eclipse.ec4e.utils;
 
+import org.ec4j.core.EditorConfigConstants;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.ec4j.core.EditorConfigConstants;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;

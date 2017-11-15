@@ -13,7 +13,7 @@ package org.eclipse.ec4e.internal.completion;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.ec4j.core.model.PropertyType;
+import org.ec4j.core.model.PropertyType;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.Image;

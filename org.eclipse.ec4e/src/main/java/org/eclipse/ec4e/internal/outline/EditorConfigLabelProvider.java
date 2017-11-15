@@ -1,8 +1,8 @@
 package org.eclipse.ec4e.internal.outline;
 
-import org.eclipse.ec4j.core.model.Property;
-import org.eclipse.ec4j.core.model.Section;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.ec4j.core.model.Property;
+import org.ec4j.core.model.Section;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.ui.IMemento;

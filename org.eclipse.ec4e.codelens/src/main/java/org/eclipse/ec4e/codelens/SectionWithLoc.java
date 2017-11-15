@@ -1,7 +1,7 @@
 package org.eclipse.ec4e.codelens;
 
-import org.eclipse.ec4j.core.model.Section;
-import org.eclipse.ec4j.core.parser.Location;
+import org.ec4j.core.model.Section;
+import org.ec4j.core.parser.Location;
 
 public class SectionWithLoc {
 
