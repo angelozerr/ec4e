@@ -6,15 +6,15 @@
    <feature id="tm-feature" version="0.0.0">
       <category name="Dependencies"/>
    </feature>
+   <feature id="org.eclipse.codelens.feature" version="0.0.0">
+      <category name="ec4e - codelens"/>
+   </feature>
    <bundle id="org.joni" version="0.0.0">
       <category name="Dependencies"/>
    </bundle>
    <bundle id="org.jcodings" version="0.0.0">
       <category name="Dependencies"/>
    </bundle>
-   <feature id="org.eclipse.codelens.feature" version="0.0.0">
-      <category name="ec4e - codelens"/>
-   </feature>
    <bundle id="org.eclipse.ec4e.codelens" version="0.0.0">
       <category name="ec4e - codelens"/>
    </bundle>

@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
+import org.ec4j.core.EditorConfigConstants;
+import org.ec4j.core.services.EditorConfigService;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -31,8 +33,6 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.ec4e.EditorConfigPlugin;
 import org.eclipse.ec4e.internal.EditorConfigMessages;
-import org.eclipse.ec4j.core.EditorConfigConstants;
-import org.eclipse.ec4j.services.EditorConfigService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;

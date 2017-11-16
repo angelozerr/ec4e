@@ -1,9 +1,9 @@
 package org.eclipse.ec4e.codelens;
 
+import org.ec4j.core.model.Section;
+import org.ec4j.core.parser.Location;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ec4e.search.EditorConfigSearchQuery;
-import org.eclipse.ec4j.core.model.Section;
-import org.eclipse.ec4j.core.parser.Location;
 import org.eclipse.jface.text.provisional.codelens.CodeLens;
 import org.eclipse.search.ui.NewSearchUI;
 

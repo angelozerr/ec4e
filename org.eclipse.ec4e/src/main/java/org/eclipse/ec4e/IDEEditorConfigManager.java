@@ -13,6 +13,17 @@ package org.eclipse.ec4e;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.ec4j.core.Cache;
+import org.ec4j.core.EditorConfigConstants;
+import org.ec4j.core.EditorConfigLoader;
+import org.ec4j.core.PropertyTypeRegistry;
+import org.ec4j.core.Resource;
+import org.ec4j.core.ResourceProperties;
+import org.ec4j.core.ResourcePropertiesService;
+import org.ec4j.core.model.EditorConfig;
+import org.ec4j.core.model.Property;
+import org.ec4j.core.model.Version;
+import org.ec4j.core.parser.ErrorHandler;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -22,16 +33,6 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ec4e.internal.resource.FileResource;
-import org.eclipse.ec4j.core.Cache;
-import org.eclipse.ec4j.core.EditorConfigConstants;
-import org.eclipse.ec4j.core.EditorConfigLoader;
-import org.eclipse.ec4j.core.ResourcePropertiesService;
-import org.eclipse.ec4j.core.PropertyTypeRegistry;
-import org.eclipse.ec4j.core.Resource;
-import org.eclipse.ec4j.core.ResourceProperties;
-import org.eclipse.ec4j.core.model.EditorConfig;
-import org.eclipse.ec4j.core.model.Version;
-import org.eclipse.ec4j.core.parser.ErrorHandler;
 
 /**
  * IDE editorconfig manager.

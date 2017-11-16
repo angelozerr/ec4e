@@ -10,11 +10,11 @@
  */
 package org.eclipse.ec4e.internal;
 
+import org.ec4j.core.EditorConfigConstants;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.ec4e.internal.folding.EditorConfigFoldingStrategy;
 import org.eclipse.ec4e.internal.validation.ValidateAppliedOptionsStrategy;
 import org.eclipse.ec4e.internal.validation.ValidateEditorConfigStrategy;
-import org.eclipse.ec4j.core.EditorConfigConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;

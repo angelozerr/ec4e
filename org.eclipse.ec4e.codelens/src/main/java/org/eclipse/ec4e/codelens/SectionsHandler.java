@@ -3,12 +3,12 @@ package org.eclipse.ec4e.codelens;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.ec4j.core.PropertyTypeRegistry;
-import org.eclipse.ec4j.core.model.Version;
-import org.eclipse.ec4j.core.parser.EditorConfigModelHandler;
-import org.eclipse.ec4j.core.parser.ErrorHandler;
-import org.eclipse.ec4j.core.parser.Location;
-import org.eclipse.ec4j.core.parser.ParseContext;
+import org.ec4j.core.PropertyTypeRegistry;
+import org.ec4j.core.model.Version;
+import org.ec4j.core.parser.EditorConfigModelHandler;
+import org.ec4j.core.parser.ErrorHandler;
+import org.ec4j.core.parser.Location;
+import org.ec4j.core.parser.ParseContext;
 
 public class SectionsHandler extends EditorConfigModelHandler {
 

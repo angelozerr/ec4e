@@ -2,7 +2,7 @@ package org.eclipse.ec4e.internal.resource;
 
 import java.io.IOException;
 
-import org.eclipse.ec4j.core.Resource.RandomReader;
+import org.ec4j.core.Resource.RandomReader;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 

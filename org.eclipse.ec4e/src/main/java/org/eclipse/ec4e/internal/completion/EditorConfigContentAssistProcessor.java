@@ -10,9 +10,9 @@
  */
 package org.eclipse.ec4e.internal.completion;
 
+import org.ec4j.core.services.EditorConfigService;
+import org.ec4j.core.services.completion.ICompletionEntryMatcher;
 import org.eclipse.ec4e.internal.resource.DocumentRandomReader;
-import org.eclipse.ec4j.services.EditorConfigService;
-import org.eclipse.ec4j.services.completion.ICompletionEntryMatcher;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;

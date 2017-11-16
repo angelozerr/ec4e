@@ -11,14 +11,14 @@
       <url>https://github.com/angelozerr/ec4e</url>
     </organization>
     <inceptionYear>2017</inceptionYear>
-      
+
     <licenses>
       <license>
         <name>Eclipse Public License</name>
         <url>http://www.eclipse.org/legal/epl-v10.html</url>
         <distribution>repo</distribution>
       </license>
-    </licenses>  
+    </licenses>
 	<modules>
 		<module>org.eclipse.ec4e</module>
         <module>org.eclipse.ec4e.codelens</module>
@@ -139,13 +139,13 @@
 	</build>
 		<dependencies>
 			<dependency>
-				<groupId>fr.opensagres</groupId>
-				<artifactId>org.eclipse.ec4j.core</artifactId>
+				<groupId>org.ec4j.core</groupId>
+				<artifactId>ec4j-core</artifactId>
 				<version>0.1.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>fr.opensagres</groupId>
-				<artifactId>org.eclipse.ec4j.services</artifactId>
+				<groupId>org.ec4j.core</groupId>
+				<artifactId>ec4j-core-services</artifactId>
 				<version>0.1.0-SNAPSHOT</version>
 			</dependency>
 		</dependencies>

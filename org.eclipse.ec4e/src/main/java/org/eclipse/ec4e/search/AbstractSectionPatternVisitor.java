@@ -1,11 +1,11 @@
 package org.eclipse.ec4e.search;
 
+import org.ec4j.core.model.Section;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.ec4j.core.model.Section;
 
 public abstract class AbstractSectionPatternVisitor implements IResourceProxyVisitor {
 
