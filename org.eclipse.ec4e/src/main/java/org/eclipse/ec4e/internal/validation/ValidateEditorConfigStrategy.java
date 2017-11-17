@@ -3,7 +3,6 @@ package org.eclipse.ec4e.internal.validation;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.ec4j.core.parser.ErrorType;
 import org.ec4j.core.services.EditorConfigService;
 import org.ec4j.core.services.validation.Severity;
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -67,7 +66,7 @@ public class ValidateEditorConfigStrategy
 					return false;
 				}
 			}).collect(Collectors.toSet());
-			EditorConfigService.validate(document.get(), (message, start, end, type, severity) -> {
+			EditorConfigService.validate(document.get(), (message, start, end, severity) -> {
 				int startOffset = start.offset;
 				int endOffset = startOffset;
 				if (end == null) {
@@ -75,7 +74,7 @@ public class ValidateEditorConfigStrategy
 				} else {
 					endOffset = end.offset;
 				}
-				addError(message, startOffset, endOffset, type, severity, remainingMarkers);
+				addError(message, startOffset, endOffset, severity, remainingMarkers);
 			});
 			for (IMarker marker : remainingMarkers) {
 				marker.delete();
@@ -106,7 +105,7 @@ public class ValidateEditorConfigStrategy
 		return null;
 	}
 
-	private void addError(String message, int start, int end, ErrorType type, Severity severity,
+	private void addError(String message, int start, int end, Severity severity,
 			Set<IMarker> remainingMarkers) {
 		try {
 			IMarker associatedMarker = getExistingMarkerFor(resource, message, start, end, remainingMarkers);
@@ -115,14 +114,14 @@ public class ValidateEditorConfigStrategy
 			} else {
 				remainingMarkers.remove(associatedMarker);
 			}
-			updateMarker(resource, message, start, end, type, severity, associatedMarker);
+			updateMarker(resource, message, start, end, severity, associatedMarker);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void updateMarker(IResource resource, String message, int start, int end, ErrorType type, Severity severity,
+	private void updateMarker(IResource resource, String message, int start, int end, Severity severity,
 			IMarker marker) {
 		try {
 			marker.setAttribute(IMarker.MESSAGE, message);
