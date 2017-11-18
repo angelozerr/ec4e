@@ -126,9 +126,9 @@ public class NewEditorConfigWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Returns the content of the .editorconfig file to generate.
-	 * 
+	 *
 	 * @param container
-	 * 
+	 *
 	 * @return the content of the .editorconfig file to generate.
 	 */
 	private InputStream openContentStream(IContainer container) {
@@ -136,7 +136,7 @@ public class NewEditorConfigWizard extends Wizard implements INewWizard {
 		boolean spacesForTabs = store.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS);
 		int tabWidth = store.getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
 		String lineDelimiter = getLineDelimiter(container);
-		String endOfLine = EditorConfigService.getEndOfLine(lineDelimiter);
+		String endOfLine = org.ec4j.core.model.PropertyType.EndOfLineValue.ofEndOfLineString(lineDelimiter).name();
 
 		StringBuilder content = new StringBuilder("# EditorConfig is awesome: http://EditorConfig.org");
 		content.append(lineDelimiter);

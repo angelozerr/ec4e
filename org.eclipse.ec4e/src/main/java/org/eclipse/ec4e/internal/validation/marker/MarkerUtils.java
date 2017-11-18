@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.ec4j.core.model.PropertyType;
-import org.ec4j.core.services.validation.Severity;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -67,15 +66,8 @@ public class MarkerUtils {
 		return resource.createMarker(EC_PROBLEM_MARKER_TYPE);
 	}
 
-	public static int getSeverity(Severity severity) {
-		switch (severity) {
-		case info:
-			return IMarker.SEVERITY_INFO;
-		case warning:
-			return IMarker.SEVERITY_WARNING;
-		default:
-			return IMarker.SEVERITY_ERROR;
-		}
+	public static int getSeverity(org.ec4j.core.parser.ErrorEvent.ErrorType errorType) {
+		return errorType.isSyntaxError() ?  IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING;
 	}
 
 	/**

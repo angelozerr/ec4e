@@ -3,8 +3,15 @@ package org.eclipse.ec4e.internal.validation;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
+import org.ec4j.core.parser.EditorConfigHandler;
+import org.ec4j.core.parser.EditorConfigParser;
+import org.ec4j.core.parser.ErrorEvent;
+import org.ec4j.core.parser.ErrorHandler;
+import org.ec4j.core.parser.ParseContext;
 import org.ec4j.core.services.EditorConfigService;
-import org.ec4j.core.services.validation.Severity;
+import org.ec4j.core.parser.ValidatingHandler;
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
@@ -66,16 +73,24 @@ public class ValidateEditorConfigStrategy
 					return false;
 				}
 			}).collect(Collectors.toSet());
-			EditorConfigService.validate(document.get(), (message, start, end, severity) -> {
-				int startOffset = start.offset;
-				int endOffset = startOffset;
-				if (end == null) {
-					startOffset--;
-				} else {
-					endOffset = end.offset;
-				}
-				addError(message, startOffset, endOffset, severity, remainingMarkers);
-			});
+
+			org.ec4j.core.Resource ec4jResource = org.ec4j.core.Resource.Resources.ofString(resource.getFullPath().toString(), document.get());
+			EditorConfigParser parser = EditorConfigParser.builder().build();
+			ValidatingHandler handler = new ValidatingHandler(org.ec4j.core.PropertyTypeRegistry.builder().defaults().build());
+			parser.parse(ec4jResource, handler, new ErrorHandler() {
+		        @Override
+		        public void error(ParseContext context, ErrorEvent errorEvent) {
+					int startOffset = errorEvent.getStart().offset;
+					int endOffset = startOffset;
+					if (errorEvent.getEnd() == null) {
+						startOffset--;
+					} else {
+						endOffset = errorEvent.getEnd().offset;
+					}
+					addError(errorEvent.getMessage(), startOffset, endOffset, MarkerUtils.getSeverity(errorEvent.getErrorType()), remainingMarkers);
+		        }
+		    });
+
 			for (IMarker marker : remainingMarkers) {
 				marker.delete();
 			}
@@ -105,7 +120,7 @@ public class ValidateEditorConfigStrategy
 		return null;
 	}
 
-	private void addError(String message, int start, int end, Severity severity,
+	private void addError(String message, int start, int end, int severity,
 			Set<IMarker> remainingMarkers) {
 		try {
 			IMarker associatedMarker = getExistingMarkerFor(resource, message, start, end, remainingMarkers);
@@ -121,11 +136,11 @@ public class ValidateEditorConfigStrategy
 
 	}
 
-	private void updateMarker(IResource resource, String message, int start, int end, Severity severity,
+	private void updateMarker(IResource resource, String message, int start, int end, int severity,
 			IMarker marker) {
 		try {
 			marker.setAttribute(IMarker.MESSAGE, message);
-			marker.setAttribute(IMarker.SEVERITY, MarkerUtils.getSeverity(severity));
+			marker.setAttribute(IMarker.SEVERITY, severity);
 			if (resource.getType() != IResource.FILE) {
 				return;
 			}

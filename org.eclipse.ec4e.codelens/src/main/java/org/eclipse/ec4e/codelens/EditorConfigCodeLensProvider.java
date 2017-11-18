@@ -35,7 +35,7 @@ public class EditorConfigCodeLensProvider extends AbstractSyncCodeLensProvider {
 		IDocument document = context.getViewer().getDocument();
 		IDEEditorConfigManager editorConfigManager = IDEEditorConfigManager.getInstance();
 		final ErrorHandler errorHandler = ErrorHandler.IGNORING;
-		SectionsHandler handler = new SectionsHandler(editorConfigManager.getRegistry(), editorConfigManager.getVersion(), errorHandler);
+		SectionsHandler handler = new SectionsHandler(editorConfigManager.getRegistry(), editorConfigManager.getVersion());
 		EditorConfigParser parser = EditorConfigParser.builder().build();
 		try {
 			parser.parse(Resources.ofString(file.getFullPath().toString(), document.get()), handler, errorHandler );
