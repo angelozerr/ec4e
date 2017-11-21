@@ -38,7 +38,7 @@ public class EditorConfigTextHover implements ITextHover {
 			return null;
 		}
 		try {
-			return IDEEditorConfigManager.INSTANCE.getEditorConfigService().getHover(hoverRegion.getOffset(), new DocumentRandomReader(textViewer.getDocument()));
+			return IDEEditorConfigManager.INSTANCE.getIdeSupportService().getHover(hoverRegion.getOffset(), new DocumentRandomReader(textViewer.getDocument()));
 		} catch (Exception e) {
 			return null;
 		}

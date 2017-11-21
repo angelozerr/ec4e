@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.ec4j.core.ide.IdeSupportService;
 import org.ec4j.core.parser.EditorConfigHandler;
 import org.ec4j.core.parser.EditorConfigParser;
 import org.ec4j.core.parser.ErrorEvent;
 import org.ec4j.core.parser.ErrorHandler;
 import org.ec4j.core.parser.ParseContext;
-import org.ec4j.core.services.EditorConfigService;
 import org.ec4j.core.parser.ValidatingHandler;
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;

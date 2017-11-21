@@ -145,7 +145,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.ec4j.core</groupId>
-				<artifactId>ec4j-core-services</artifactId>
+				<artifactId>ec4j-ide-support</artifactId>
 				<version>0.1.0-SNAPSHOT</version>
 			</dependency>
 		</dependencies>

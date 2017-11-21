@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.ec4j.core.EditorConfigConstants;
-import org.ec4j.core.services.EditorConfigService;
+import org.ec4j.core.ide.IdeSupportService;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;

@@ -20,10 +20,10 @@ import org.ec4j.core.PropertyTypeRegistry;
 import org.ec4j.core.Resource;
 import org.ec4j.core.ResourceProperties;
 import org.ec4j.core.ResourcePropertiesService;
+import org.ec4j.core.ide.IdeSupportService;
 import org.ec4j.core.model.EditorConfig;
 import org.ec4j.core.model.Version;
 import org.ec4j.core.parser.ErrorHandler;
-import org.ec4j.core.services.EditorConfigService;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -130,14 +130,14 @@ public class IDEEditorConfigManager {
 
 	private final Version version;
 
-	private final EditorConfigService editorConfigService;
+	private final IdeSupportService ideSupportService;
 
 	public IDEEditorConfigManager() {
 		this.cache = new EditorConfigCache();
 		this.registry = PropertyTypeRegistry.default_();
 		this.version = Version.CURRENT;
 		this.loader = EditorConfigLoader.of(version, registry, ErrorHandler.IGNORING);
-        this.editorConfigService = new EditorConfigService(registry);
+        this.ideSupportService = new IdeSupportService(registry);
 
 		resourcePropertiesService = ResourcePropertiesService.builder()//
 				.cache(cache) //
@@ -178,8 +178,8 @@ public class IDEEditorConfigManager {
 		return resourcePropertiesService.queryProperties(new FileResource(file));
 	}
 
-	public EditorConfigService getEditorConfigService() {
-		return editorConfigService;
+	public IdeSupportService getIdeSupportService() {
+		return ideSupportService;
 	}
 
 }

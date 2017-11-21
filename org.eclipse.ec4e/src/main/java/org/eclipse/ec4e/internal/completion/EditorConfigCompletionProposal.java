@@ -10,9 +10,9 @@
  */
 package org.eclipse.ec4e.internal.completion;
 
+import org.ec4j.core.ide.TokenContext.TokenContextType;
+import org.ec4j.core.ide.completion.CompletionEntry;
 import org.ec4j.core.model.PropertyType;
-import org.ec4j.core.services.TokenContext.TokenContextType;
-import org.ec4j.core.services.completion.CompletionEntry;
 import org.eclipse.ec4e.internal.EditorConfigImages;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
