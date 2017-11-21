@@ -21,9 +21,9 @@ import org.ec4j.core.Resource;
 import org.ec4j.core.ResourceProperties;
 import org.ec4j.core.ResourcePropertiesService;
 import org.ec4j.core.model.EditorConfig;
-import org.ec4j.core.model.Property;
 import org.ec4j.core.model.Version;
 import org.ec4j.core.parser.ErrorHandler;
+import org.ec4j.core.services.EditorConfigService;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -120,7 +120,7 @@ public class IDEEditorConfigManager {
 
 	public static final IDEEditorConfigManager INSTANCE = new IDEEditorConfigManager();
 
-	private final ResourcePropertiesService session;
+	private final ResourcePropertiesService resourcePropertiesService;
 
 	private final EditorConfigCache cache;
 
@@ -130,13 +130,16 @@ public class IDEEditorConfigManager {
 
 	private final Version version;
 
+	private final EditorConfigService editorConfigService;
+
 	public IDEEditorConfigManager() {
 		this.cache = new EditorConfigCache();
 		this.registry = PropertyTypeRegistry.default_();
 		this.version = Version.CURRENT;
 		this.loader = EditorConfigLoader.of(version, registry, ErrorHandler.IGNORING);
+        this.editorConfigService = new EditorConfigService(registry);
 
-		session = ResourcePropertiesService.builder()//
+		resourcePropertiesService = ResourcePropertiesService.builder()//
 				.cache(cache) //
 				.loader(loader) //
 				.build();
@@ -150,8 +153,8 @@ public class IDEEditorConfigManager {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(cache);
 	}
 
-	public ResourcePropertiesService getSession() {
-		return session;
+	public ResourcePropertiesService getResourcePropertiesService() {
+		return resourcePropertiesService;
 	}
 
 	public PropertyTypeRegistry getRegistry() {
@@ -172,7 +175,11 @@ public class IDEEditorConfigManager {
 	}
 
 	public ResourceProperties queryOptions(IFile file) throws IOException  {
-		return session.queryProperties(new FileResource(file));
+		return resourcePropertiesService.queryProperties(new FileResource(file));
+	}
+
+	public EditorConfigService getEditorConfigService() {
+		return editorConfigService;
 	}
 
 }
