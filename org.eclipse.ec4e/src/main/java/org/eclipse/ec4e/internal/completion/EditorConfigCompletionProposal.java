@@ -11,7 +11,7 @@
 package org.eclipse.ec4e.internal.completion;
 
 import org.ec4j.core.model.PropertyType;
-import org.ec4j.core.services.completion.CompletionContextType;
+import org.ec4j.core.services.completion.TokenContextType;
 import org.ec4j.core.services.completion.CompletionEntry;
 import org.eclipse.ec4e.internal.EditorConfigImages;
 import org.eclipse.jface.text.BadLocationException;
@@ -114,7 +114,7 @@ public class EditorConfigCompletionProposal implements ICompletionProposal,
 
 		PropertyType<?> optionType = completionEntry.getPropertyType();
 		String[] possibleValues = optionType.getPossibleValues().toArray(new String[0]);
-		if (completionEntry.getContextType() == CompletionContextType.PROPERTY_NAME && possibleValues != null
+		if (completionEntry.getContextType() == TokenContextType.PROPERTY_NAME && possibleValues != null
 				&& getTextViewer() != null) {
 
 			try {
@@ -163,7 +163,7 @@ public class EditorConfigCompletionProposal implements ICompletionProposal,
 	}
 
 	private String computeReplacementString(IDocument document, int offset) {
-		if (completionEntry.getContextType() == CompletionContextType.PROPERTY_NAME) {
+		if (completionEntry.getContextType() == TokenContextType.PROPERTY_NAME) {
 			String first = completionEntry.getPropertyType().getPossibleValues().iterator().next();
 			return new StringBuilder(getReplacementString()).append(" = ").append(first).toString();
 		}
