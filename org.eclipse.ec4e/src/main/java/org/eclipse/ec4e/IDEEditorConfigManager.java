@@ -132,7 +132,7 @@ public class IDEEditorConfigManager {
 
 	public IDEEditorConfigManager() {
 		this.cache = new EditorConfigCache();
-		this.registry = PropertyTypeRegistry.getDefault();
+		this.registry = PropertyTypeRegistry.default_();
 		this.version = Version.CURRENT;
 		this.loader = EditorConfigLoader.of(version, registry, ErrorHandler.IGNORING);
 

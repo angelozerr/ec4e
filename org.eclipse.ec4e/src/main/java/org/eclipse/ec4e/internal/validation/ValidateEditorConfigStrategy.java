@@ -75,7 +75,7 @@ public class ValidateEditorConfigStrategy
 			}).collect(Collectors.toSet());
 
 			org.ec4j.core.Resource ec4jResource = org.ec4j.core.Resource.Resources.ofString(resource.getFullPath().toString(), document.get());
-			EditorConfigParser parser = EditorConfigParser.builder().build();
+			EditorConfigParser parser = EditorConfigParser.default_();
 			ValidatingHandler handler = new ValidatingHandler(org.ec4j.core.PropertyTypeRegistry.builder().defaults().build());
 			parser.parse(ec4jResource, handler, new ErrorHandler() {
 		        @Override

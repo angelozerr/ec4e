@@ -83,9 +83,9 @@ public class EditorConfigContentProvider
 
 	private EditorConfig parse(IDocument document) {
 		final ErrorHandler errorHandler = ErrorHandler.THROWING;
-		EditorConfigModelHandler handler = new LocationAwareModelHandler(PropertyTypeRegistry.getDefault(),
+		EditorConfigModelHandler handler = new LocationAwareModelHandler(PropertyTypeRegistry.default_(),
 				Version.CURRENT, errorHandler);
-		EditorConfigParser parser = EditorConfigParser.builder().build();
+		EditorConfigParser parser = EditorConfigParser.default_();
 		try {
 			parser.parse(Resources.ofString(EditorConfigConstants.EDITORCONFIG, document.get()), handler, errorHandler);
 		} catch (IOException e) {

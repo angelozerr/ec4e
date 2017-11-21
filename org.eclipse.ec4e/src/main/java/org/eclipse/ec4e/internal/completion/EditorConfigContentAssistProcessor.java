@@ -32,9 +32,8 @@ public class EditorConfigContentAssistProcessor implements IContentAssistProcess
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		IDocument document = viewer.getDocument();
 		try {
-			return EditorConfigService.getCompletionEntries(offset, new DocumentRandomReader(document), ICompletionEntryMatcher.LCS,
-					EditorConfigCompletionProposal::new)
-					.stream().toArray(ICompletionProposal[]::new);
+			return EditorConfigService.getCompletionEntries(offset, new DocumentRandomReader(document), ICompletionEntryMatcher.LCS)
+					.stream().map(e -> new EditorConfigCompletionProposal(e)).toArray(ICompletionProposal[]::new);
 		} catch (Exception e) {
 		}
 		return null;
