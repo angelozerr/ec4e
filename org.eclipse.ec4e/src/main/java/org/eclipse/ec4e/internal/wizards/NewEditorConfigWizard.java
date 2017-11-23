@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.ec4j.core.EditorConfigConstants;
-import org.ec4j.core.services.EditorConfigService;
+import org.ec4j.core.ide.IdeSupportService;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -126,9 +126,9 @@ public class NewEditorConfigWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Returns the content of the .editorconfig file to generate.
-	 * 
+	 *
 	 * @param container
-	 * 
+	 *
 	 * @return the content of the .editorconfig file to generate.
 	 */
 	private InputStream openContentStream(IContainer container) {
@@ -136,7 +136,7 @@ public class NewEditorConfigWizard extends Wizard implements INewWizard {
 		boolean spacesForTabs = store.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS);
 		int tabWidth = store.getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
 		String lineDelimiter = getLineDelimiter(container);
-		String endOfLine = EditorConfigService.getEndOfLine(lineDelimiter);
+		String endOfLine = org.ec4j.core.model.PropertyType.EndOfLineValue.ofEndOfLineString(lineDelimiter).name();
 
 		StringBuilder content = new StringBuilder("# EditorConfig is awesome: http://EditorConfig.org");
 		content.append(lineDelimiter);

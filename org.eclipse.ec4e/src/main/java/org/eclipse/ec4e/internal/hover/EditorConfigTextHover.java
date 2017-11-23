@@ -12,7 +12,7 @@ package org.eclipse.ec4e.internal.hover;
 
 import java.util.Iterator;
 
-import org.ec4j.core.services.EditorConfigService;
+import org.eclipse.ec4e.IDEEditorConfigManager;
 import org.eclipse.ec4e.internal.resource.DocumentRandomReader;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
@@ -30,6 +30,7 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
  */
 public class EditorConfigTextHover implements ITextHover {
 
+
 	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		if (hasProblem(textViewer, hoverRegion.getOffset())) {
@@ -37,7 +38,7 @@ public class EditorConfigTextHover implements ITextHover {
 			return null;
 		}
 		try {
-			return EditorConfigService.getHover(hoverRegion.getOffset(), new DocumentRandomReader(textViewer.getDocument()));
+			return IDEEditorConfigManager.INSTANCE.getIdeSupportService().getHover(hoverRegion.getOffset(), new DocumentRandomReader(textViewer.getDocument()));
 		} catch (Exception e) {
 			return null;
 		}

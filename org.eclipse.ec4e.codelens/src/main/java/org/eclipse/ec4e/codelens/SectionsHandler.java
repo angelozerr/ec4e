@@ -13,8 +13,8 @@ import org.ec4j.core.parser.ParseContext;
 public class SectionsHandler extends EditorConfigModelHandler {
 
 
-	public SectionsHandler(PropertyTypeRegistry registry, Version version, ErrorHandler errorHandler) {
-		super(registry, version, errorHandler);
+	public SectionsHandler(PropertyTypeRegistry registry, Version version) {
+		super(registry, version);
 	}
 
 	private final List<Location> sectionLocations = new ArrayList<>();

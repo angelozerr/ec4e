@@ -10,9 +10,9 @@
  */
 package org.eclipse.ec4e.internal.completion;
 
+import org.ec4j.core.ide.TokenContext.TokenContextType;
+import org.ec4j.core.ide.completion.CompletionEntry;
 import org.ec4j.core.model.PropertyType;
-import org.ec4j.core.services.completion.CompletionContextType;
-import org.ec4j.core.services.completion.CompletionEntry;
 import org.eclipse.ec4e.internal.EditorConfigImages;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
@@ -48,7 +48,7 @@ import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
  * Completion proposal for .editorconfig option names, values.
  *
  */
-public class EditorConfigCompletionProposal extends CompletionEntry implements ICompletionProposal,
+public class EditorConfigCompletionProposal implements ICompletionProposal,
 		ICompletionProposalExtension, ICompletionProposalExtension2, ICompletionProposalExtension7 {
 
 	private StyledString fDisplayString;
@@ -61,9 +61,10 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 
 	private IRegion fSelectedRegion;
 	private IPositionUpdater fUpdater;
+	private final CompletionEntry completionEntry;
 
-	public EditorConfigCompletionProposal(String name) {
-		super(name);
+	public EditorConfigCompletionProposal(CompletionEntry completionEntry) {
+		this.completionEntry = completionEntry;
 	}
 
 	@Override
@@ -111,9 +112,9 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 		proposal.apply(document);
 		int baseOffset = getReplacementOffset();
 
-		PropertyType<?> optionType = getPropertyType();
+		PropertyType<?> optionType = completionEntry.getPropertyType();
 		String[] possibleValues = optionType.getPossibleValues().toArray(new String[0]);
-		if (getContextType() == CompletionContextType.PROPERTY_NAME && possibleValues != null
+		if (completionEntry.getContextType() == TokenContextType.PROPERTY_NAME && possibleValues != null
 				&& getTextViewer() != null) {
 
 			try {
@@ -162,8 +163,8 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 	}
 
 	private String computeReplacementString(IDocument document, int offset) {
-		if (getContextType() == CompletionContextType.PROPERTY_NAME) {
-			String first = getPropertyType().getPossibleValues().iterator().next();
+		if (completionEntry.getContextType() == TokenContextType.PROPERTY_NAME) {
+			String first = completionEntry.getPropertyType().getPossibleValues().iterator().next();
 			return new StringBuilder(getReplacementString()).append(" = ").append(first).toString();
 		}
 		return getReplacementString();
@@ -185,19 +186,19 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 	@Override
 	public String getAdditionalProposalInfo() {
 		initIfNeeded();
-		PropertyType<?> optionType = getPropertyType();
+		PropertyType<?> optionType = completionEntry.getPropertyType();
 		return optionType != null ? optionType.getDescription() : null;
 	}
 
 	@Override
 	public String getDisplayString() {
 		initIfNeeded();
-		return super.getName();
+		return completionEntry.getName();
 	}
 
 	@Override
 	public Image getImage() {
-		switch (getContextType()) {
+		switch (completionEntry.getContextType()) {
 		case PROPERTY_NAME:
 			return EditorConfigImages.getImage(EditorConfigImages.IMG_PROPERTY);
 		case PROPERTY_VALUE:
@@ -221,7 +222,7 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 		String pattern = getPatternToEmphasizeMatch(document, offset);
 		if (pattern != null && pattern.length() > 0) {
 			String displayString = styledDisplayString.getString();
-			int[] bestSequence = super.getMatcher().bestSubsequence(displayString, pattern);
+			int[] bestSequence = completionEntry.getMatcher().bestSubsequence(displayString, pattern);
 			int highlightAdjustment = 0;
 			for (int index : bestSequence) {
 				styledDisplayString.setStyle(index + highlightAdjustment, 1, boldStylerProvider.getBoldStyler());
@@ -239,11 +240,11 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 		if (getReplacementString() != null) {
 			return;
 		}
-		String name = super.getName();
-		String prefix = super.getPrefix();
+		String name = completionEntry.getName();
+		String prefix = completionEntry.getPrefix();
 		setReplacementString(name);
 		setCursorPosition(name.length());
-		setReplacementOffset(getInitialOffset() - prefix.length());
+		setReplacementOffset(completionEntry.getInitialOffset() - prefix.length());
 		setReplacementLength(prefix.length());
 		this.fDisplayString = new StyledString(name);
 	}
@@ -344,7 +345,7 @@ public class EditorConfigCompletionProposal extends CompletionEntry implements I
 		try {
 			int length = offset - replacementOffset;
 			String start = document.get(replacementOffset, length);
-			return super.updatePrefix(start);
+			return completionEntry.updatePrefix(start);
 		} catch (BadLocationException x) {
 		}
 
