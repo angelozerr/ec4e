@@ -80,12 +80,12 @@ public class ValidateEditorConfigStrategy
 			parser.parse(ec4jResource, handler, new ErrorHandler() {
 		        @Override
 		        public void error(ParseContext context, ErrorEvent errorEvent) {
-					int startOffset = errorEvent.getStart().offset;
+					int startOffset = errorEvent.getStart().getOffset();
 					int endOffset = startOffset;
 					if (errorEvent.getEnd() == null) {
 						startOffset--;
 					} else {
-						endOffset = errorEvent.getEnd().offset;
+						endOffset = errorEvent.getEnd().getOffset();
 					}
 					addError(errorEvent.getMessage(), startOffset, endOffset, MarkerUtils.getSeverity(errorEvent.getErrorType()), remainingMarkers);
 		        }

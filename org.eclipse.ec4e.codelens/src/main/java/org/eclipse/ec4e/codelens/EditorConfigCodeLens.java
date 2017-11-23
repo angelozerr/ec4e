@@ -13,7 +13,7 @@ public class EditorConfigCodeLens extends CodeLens {
 	private final IFile configFile;
 
 	public EditorConfigCodeLens(Section section, Location sectionStart, IFile configFile) {
-		super(sectionStart.line);
+		super(sectionStart.getLine());
 		this.section = section;
 		this.configFile = configFile;
 	}
