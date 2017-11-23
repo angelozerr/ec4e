@@ -129,12 +129,12 @@ public class EditorConfigFoldingStrategy
 		List<Span> spans = /*Stream.concat(sections.stream(), comments.stream())*/
 				sections.stream()
 				.map(a -> a.getAdapter(Span.class))
-				.sorted((s1, s2) -> s1.getStart().line - s2.getStart().line).collect(Collectors.toList());
+				.sorted((s1, s2) -> s1.getStart().getLine() - s2.getStart().getLine()).collect(Collectors.toList());
 		Annotation[] annotations = new Annotation[spans.size()];
 		for (int i = 0; i < spans.size(); i++) {
 			Span span = spans.get(i);
-			int startOffset = span.getStart().offset;
-			int endOffset = span.getEnd().offset;
+			int startOffset = span.getStart().getOffset();
+			int endOffset = span.getEnd().getOffset();
 			ProjectionAnnotation annotation = new ProjectionAnnotation();
 			newAnnotations.put(annotation, new Position(startOffset, endOffset - startOffset));
 			annotations[i] = annotation;
