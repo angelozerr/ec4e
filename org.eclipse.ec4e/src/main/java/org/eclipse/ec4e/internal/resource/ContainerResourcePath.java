@@ -2,6 +2,8 @@ package org.eclipse.ec4e.internal.resource;
 
 import org.ec4j.core.Resource;
 import org.ec4j.core.ResourcePath;
+import org.ec4j.core.model.Ec4jPath;
+import org.ec4j.core.model.Ec4jPath.Ec4jPaths;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -31,14 +33,27 @@ public class ContainerResourcePath implements ResourcePath {
 	}
 
 	@Override
-	public String getPath() {
-		return container.getLocation().toString().replaceAll("[\\\\]", "/");
+	public Ec4jPath getPath() {
+		return Ec4jPaths.of(container.getLocation().toString().replaceAll("[\\\\]", "/"));
 	}
 
 	@Override
 	public boolean hasParent() {
 		IContainer parent = container.getParent();
 		return parent != null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Resource relativize(Resource resource) {
+		if (resource instanceof FileResource) {
+			final FileResource fileResource = (FileResource) resource;
+			final IFile relativeFile = container.getFile(fileResource.file.getFullPath().makeRelativeTo(container.getFullPath()));
+			return new FileResource(relativeFile);
+		} else {
+			throw new IllegalArgumentException(this.getClass().getName()
+					+ ".relativize(Resource resource) can handle only instances of " + FileResource.class.getName());
+		}
 	}
 
 	@Override
