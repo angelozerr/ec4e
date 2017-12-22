@@ -7,6 +7,8 @@ import java.nio.charset.Charset;
 
 import org.ec4j.core.Resource;
 import org.ec4j.core.ResourcePath;
+import org.ec4j.core.model.Ec4jPath;
+import org.ec4j.core.model.Ec4jPath.Ec4jPaths;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -17,7 +19,7 @@ import org.eclipse.core.runtime.CoreException;
  * @author <a href="https://github.com/ppalaga">Peter Palaga</a>
  */
 public class FileResource implements Resource {
-	private final IFile file;
+	final IFile file;
 
 	public FileResource(IFile file) {
 		super();
@@ -36,8 +38,8 @@ public class FileResource implements Resource {
 	}
 
 	@Override
-	public String getPath() {
-		return file.getLocation().toString().replaceAll("[\\\\]", "/");
+	public Ec4jPath getPath() {
+		return Ec4jPaths.of(file.getLocation().toString().replaceAll("[\\\\]", "/"));
 	}
 
 	@Override

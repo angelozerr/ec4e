@@ -1,6 +1,7 @@
 package org.eclipse.ec4e.search;
 
 import org.ec4j.core.model.Section;
+import org.ec4j.core.model.Ec4jPath.Ec4jPaths;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
@@ -18,7 +19,7 @@ public abstract class AbstractSectionPatternVisitor implements IResourceProxyVis
 	@Override
 	public boolean visit(IResourceProxy proxy) throws CoreException {
 		IPath path = proxy.requestFullPath();
-		if (proxy.getType() == IResource.FILE && section.match(path.toString())) {
+		if (proxy.getType() == IResource.FILE && section.match(Ec4jPaths.of(path.toString()))) {
 			collect(proxy);
 		}
 		return true;
