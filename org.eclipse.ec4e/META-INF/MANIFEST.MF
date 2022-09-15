@@ -17,8 +17,6 @@ Require-Bundle: org.eclipse.tm4e.core,
  org.eclipse.tm4e.ui,
  org.eclipse.tm4e.languageconfiguration,
  org.eclipse.ui.workbench.texteditor,
- org.ec4j.core,
- org.ec4j.core.ide-support,
  org.eclipse.search,
  org.eclipse.ui.views,
  org.eclipse.ui.navigator,
@@ -29,4 +27,7 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.ec4e,
  org.eclipse.ec4e.search,
  org.eclipse.ec4e.utils
+Bundle-ClassPath: lib/ec4j-core-0.3.0.jar,
+ lib/ec4j-ide-support-0.3.0.jar,
+ .
 
