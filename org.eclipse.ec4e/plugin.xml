@@ -260,7 +260,25 @@
       		</enablement>
 		</commonWizard>
    </extension> 
-		           
+
+   <extension
+         point="org.eclipse.ui.workbench.texteditor.codeMiningProviders">
+      <codeMiningProvider
+            class="org.eclipse.ec4e.internal.codemining.EditorConfigCodeLensProvider"
+            id="org.eclipse.ec4e.codelens"
+            label="CodeLens">
+         <enabledWhen>
+         	<with variable="editorInput">
+	           <and>
+		          <adapt type="org.eclipse.core.resources.IFile">
+	              	<test property="org.eclipse.core.resources.contentTypeId" value="org.eclipse.ec4e.editorconfig" />
+	              </adapt>
+	           </and>
+		    </with>
+         </enabledWhen>
+      </codeMiningProvider>
+   </extension>
+
    <extension
 	       point="org.eclipse.ui.startup">	
 	       <startup class="org.eclipse.ec4e.internal.EditorConfigStartup" />       

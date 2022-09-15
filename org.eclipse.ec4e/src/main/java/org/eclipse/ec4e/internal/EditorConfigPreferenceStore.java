@@ -91,7 +91,7 @@ public class EditorConfigPreferenceStore implements IPreferenceStore {
 				if (charset != null) {
 					IEncodingSupport encodingSupport = textEditor.getAdapter(IEncodingSupport.class);
 					if (encodingSupport != null) {
-						encodingSupport.setEncoding(charset.toUpperCase());
+						encodingSupport.setEncoding(charset.trim().toUpperCase());
 					}
 				}
 

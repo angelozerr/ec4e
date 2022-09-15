@@ -3,10 +3,6 @@ package org.eclipse.ec4e.internal.validation;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
-
-import org.ec4j.core.ide.IdeSupportService;
-import org.ec4j.core.parser.EditorConfigHandler;
 import org.ec4j.core.parser.EditorConfigParser;
 import org.ec4j.core.parser.ErrorEvent;
 import org.ec4j.core.parser.ErrorHandler;
